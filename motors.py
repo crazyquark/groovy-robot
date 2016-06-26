@@ -41,6 +41,10 @@ THE SOFTWARE.
 import grove_i2c_motor_driver
 import time
 
+# VS Debug support
+import ptvsd
+ptvsd.enable_attach("kriekpi") 
+
 try:
 	# You can initialize with a different address too: grove_i2c_motor_driver.motor_driver(address=0x0a)
 	m= grove_i2c_motor_driver.motor_driver()
