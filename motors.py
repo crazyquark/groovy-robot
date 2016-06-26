@@ -45,6 +45,8 @@ import time
 import ptvsd
 ptvsd.enable_attach("kriekpi") 
 
+raw_input('press any key to continue...')
+
 try:
 	# You can initialize with a different address too: grove_i2c_motor_driver.motor_driver(address=0x0a)
 	m= grove_i2c_motor_driver.motor_driver()
