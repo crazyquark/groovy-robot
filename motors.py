@@ -49,19 +49,19 @@ import pygame
 from ptvsd import enable_attach as enableAttach
 enableAttach('kriekpi') 
 
+# Check if we're on an RPi
+runningOnPi = True
+try:
+	from grove_i2c_motor_driver import motor_driver as motorDriver
+except:
+	runningOnPi = False
+
 class Robot:
 	def __init__(self):
 		pygame.init();
 		self.screen = pygame.display.set_mode((640,480))
 
 		signal.signal(signal.SIGINT, self.signalHandler)
-
-		# Check if we're on an RPi
-		self.runningOnPi = True
-		try:
-			import grove_i2c_motor_driver.motor_driver as motorDriver
-		except:
-			self.runningOnPi = False
 
 		self.setupMotors()
 
@@ -72,7 +72,7 @@ class Robot:
 	def setupMotors(self):
 		try:
 			# You can initialize with a different address too: grove_i2c_motor_driver.motor_driver(address=0x0a)
-			if self.runningOnPi:
+			if runningOnPi:
 				m = motorDriver()
 			else:
 				m = ''
@@ -97,7 +97,7 @@ class Robot:
 	def left(self, m):
 		print('LEFT')
 
-		if not self.runningOnPi:
+		if not runningOnPi:
 			return
 
 		m.MotorSpeedSetAB(100,100)	#defines the speed of motor 1 and motor 2;
@@ -106,7 +106,7 @@ class Robot:
 	def right(self, m):
 		print('RIGHT')
 
-		if not self.runningOnPi:
+		if not runningOnPi:
 			return
 
 		m.MotorSpeedSetAB(100,100)	#defines the speed of motor 1 and motor 2;
@@ -115,7 +115,7 @@ class Robot:
 	def forward(self, m):
 		print('FORWARD')
 
-		if not self.runningOnPi:
+		if not runningOnPi:
 			return
 
 		m.MotorSpeedSetAB(100,100)	#defines the speed of motor 1 and motor 2;
@@ -124,7 +124,7 @@ class Robot:
 	def backward(self, m):
 		print('BACKWARD')
 
-		if not self.runningOnPi:
+		if not runningOnPi:
 			return
 
 		m.MotorSpeedSetAB(100,100)	#defines the speed of motor 1 and motor 2;
@@ -133,7 +133,7 @@ class Robot:
 	def stop(self, m):
 		print('STOP')
 
-		if not self.runningOnPi:
+		if not runningOnPi:
 			return
 
 		m.MotorSpeedSetAB(0,0)
