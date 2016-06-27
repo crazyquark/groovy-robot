@@ -49,8 +49,7 @@ import ptvsd
 ptvsd.enable_attach("kriekpi") 
 
 raw_input('press any key to start...')
-
-
+pygame.init();
 
 def signal_handler(signal, frame):
         print('Bye!')
@@ -61,7 +60,12 @@ try:
 	# You can initialize with a different address too: grove_i2c_motor_driver.motor_driver(address=0x0a)
 	m= grove_i2c_motor_driver.motor_driver()
 	while True:
-		pass
+		for event in pygame.event.get():
+			print event
+			if event.type == KEYDOWN:
+				pass
+			elif event.type == KEYUP:
+				pass
 
 except IOError as e:
 	print("Unable to find the motor driver, check the addrees and press reset on the motor driver and try again")
