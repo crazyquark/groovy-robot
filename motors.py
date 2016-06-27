@@ -89,12 +89,24 @@ class Robot:
 							self.forward(m)
 						elif event.key == pygame.K_s:
 							self.backward(m)
+						elif event.key == pygame.K_z:
+							self.speed(+5)
+						elif event.key == pygame.K_x:
+							self.speed(-5)
 					elif event.type == pygame.KEYUP:
 						self.stop(m)
 		except IOError as e:
 			print('Unable to find the motor driver, check the addrees and press reset on the motor driver and try again')
 			print('I/O error({0}): {1}'.format(e.errno, e.strerror))
 	
+	def speed(self, amount):
+		self.speed += amount
+
+		if self.speed >= 100:
+			self.speed = 100
+		elif self.speed <= 0:
+			self.speed = 0
+
 	def left(self, m):
 		print('LEFT')
 
