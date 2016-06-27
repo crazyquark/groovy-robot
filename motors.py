@@ -63,6 +63,7 @@ class Robot:
 
 		signal.signal(signal.SIGINT, self.signalHandler)
 
+		self.speed = 75 # 75%, let's save battery power
 		self.setupMotors()
 
 	def signalHandler(self,_):
@@ -100,8 +101,8 @@ class Robot:
 		if not runningOnPi:
 			return
 
-		m.MotorSpeedSetAB(100,100)	#defines the speed of motor 1 and motor 2;
-		m.MotorDirectionSet(0b1001)	#'0b1010' defines the output polarity, '10' means the M+ is 'positive' while the M- is 'negative'
+		m.MotorSpeedSetAB(self.speed,self.speed)	#defines the speed of motor 1 and motor 2;
+		m.MotorDirectionSet(0bself.speed1)	#'0b1010' defines the output polarity, '10' means the M+ is 'positive' while the M- is 'negative'
 	
 	def right(self, m):
 		print('RIGHT')
@@ -109,7 +110,7 @@ class Robot:
 		if not runningOnPi:
 			return
 
-		m.MotorSpeedSetAB(100,100)	#defines the speed of motor 1 and motor 2;
+		m.MotorSpeedSetAB(self.speed,self.speed)	#defines the speed of motor 1 and motor 2;
 		m.MotorDirectionSet(0b0110)	#'0b1010' defines the output polarity, '10' means the M+ is 'positive' while the M- is 'negative'
 
 	def forward(self, m):
@@ -118,7 +119,7 @@ class Robot:
 		if not runningOnPi:
 			return
 
-		m.MotorSpeedSetAB(100,100)	#defines the speed of motor 1 and motor 2;
+		m.MotorSpeedSetAB(self.speed,self.speed)	#defines the speed of motor 1 and motor 2;
 		m.MotorDirectionSet(0b1010)	#'0b1010' defines the output polarity, '10' means the M+ is 'positive' while the M- is 'negative'
 
 	def backward(self, m):
@@ -127,7 +128,7 @@ class Robot:
 		if not runningOnPi:
 			return
 
-		m.MotorSpeedSetAB(100,100)	#defines the speed of motor 1 and motor 2;
+		m.MotorSpeedSetAB(self.speed,self.speed)	#defines the speed of motor 1 and motor 2;
 		m.MotorDirectionSet(0b0101)	#'0b1010' defines the output polarity, '10' means the M+ is 'positive' while the M- is 'negative'
 
 	def stop(self, m):
