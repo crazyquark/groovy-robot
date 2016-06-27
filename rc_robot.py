@@ -100,7 +100,7 @@ class Robot:
 			print('I/O error({0}): {1}'.format(e.errno, e.strerror))
 	
 	def speedAdjust(self, amount):
-		print('SPEED: ' + amount)
+		print('SPEED: ' + str(amount))
 		self.speed += amount
 
 		if self.speed >= 100:
