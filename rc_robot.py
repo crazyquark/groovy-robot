@@ -59,14 +59,19 @@ except:
 class Robot:
 	def __init__(self):
 		pygame.init();
-		self.screen = pygame.display.set_mode((640,480))
+		self.screen = pygame.display.set_mode((800,600))
+
+		wallEpic = pygame.image.load('res/wall-e-800.jpg')
+		
+		self.screen.blit(wallEpic, (0,0))
+		pygame.display.flip()
 
 		signal.signal(signal.SIGINT, self.signalHandler)
 
 		self.speed = 75 # 75%, let's save battery power
 		self.setupMotors()
 
-	def signalHandler(self,_):
+	def signalHandler(self,smth,another):
 		print('Bye!')
 		sys.exit(0)
 
