@@ -20,7 +20,7 @@ GrovePi for the Raspberry Pi: an open source platform for connecting Grove Senso
 Copyright (C) 2015  Dexter Industries
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
+of this software and associated documentation files (the 'Software'), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
@@ -29,7 +29,7 @@ furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in
 all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -38,10 +38,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 '''
 
-runningOnPi = False
 
-if runningOnPi:
-	import grove_i2c_motor_driver as motorDriver
 
 import time
 import signal
@@ -50,15 +47,22 @@ import pygame
 
 # VS Debug support
 from ptvsd import enable_attach as enableAttach
-enableAttach("kriekpi") 
+enableAttach('kriekpi') 
 
 class Robot:
 	def __init__(self):
 		pygame.init();
-		self.screen = pygame.display.set_mode((320,240))
+		self.screen = pygame.display.set_mode((640,480))
 
 		signal.signal(signal.SIGINT, self.signalHandler)
-		
+
+		# Check if we're on an RPi
+		self.runningOnPi = True
+		try:
+			import grove_i2c_motor_driver as motorDriver
+		except:
+			self.runningOnPi = False
+
 		self.setupMotors()
 
 	def signalHandler(self,_):
@@ -68,41 +72,71 @@ class Robot:
 	def setupMotors(self):
 		try:
 			# You can initialize with a different address too: grove_i2c_motor_driver.motor_driver(address=0x0a)
-			if runningOnPi:
+			if self.runningOnPi:
 				m = motorDriver.motor_driver()
 			else:
 				m = ''
 
 			while True:
 				for event in pygame.event.get():
-					print event
 					if event.type == pygame.KEYDOWN:
-						if event.key == 'a' or event.key == 'A':
+						if event.key == pygame.K_a:
 							self.left(m)
+						elif event.key == pygame.K_d:
+							self.right(m)
+						elif event.key == pygame.K_w:
+							self.forward(m)
+						elif event.key == pygame.K_s:
+							self.backward(m)
 					elif event.type == pygame.KEYUP:
 						self.stop(m)
 		except IOError as e:
-			print("Unable to find the motor driver, check the addrees and press reset on the motor driver and try again")
-			print("I/O error({0}): {1}".format(e.errno, e.strerror))
+			print('Unable to find the motor driver, check the addrees and press reset on the motor driver and try again')
+			print('I/O error({0}): {1}'.format(e.errno, e.strerror))
 	
 	def left(self, m):
-		if not runningOnPi:
+		print('LEFT')
+
+		if not self.runningOnPi:
 			return
 
-		print("LEFT")
 		m.MotorSpeedSetAB(100,100)	#defines the speed of motor 1 and motor 2;
-		m.MotorDirectionSet(0b1001)	#"0b1010" defines the output polarity, "10" means the M+ is "positive" while the M- is "negative"
-		time.sleep(0.1)
+		m.MotorDirectionSet(0b1001)	#'0b1010' defines the output polarity, '10' means the M+ is 'positive' while the M- is 'negative'
+	
+	def right(self, m):
+		print('RIGHT')
+
+		if not self.runningOnPi:
+			return
+
+		m.MotorSpeedSetAB(100,100)	#defines the speed of motor 1 and motor 2;
+		m.MotorDirectionSet(0b0110)	#'0b1010' defines the output polarity, '10' means the M+ is 'positive' while the M- is 'negative'
+
+	def forward(self, m):
+		print('FORWARD')
+
+		if not self.runningOnPi:
+			return
+
+		m.MotorSpeedSetAB(100,100)	#defines the speed of motor 1 and motor 2;
+		m.MotorDirectionSet(0b1010)	#'0b1010' defines the output polarity, '10' means the M+ is 'positive' while the M- is 'negative'
+
+	def backward(self, m):
+		print('BACKWARD')
+
+		if not self.runningOnPi:
+			return
+
+		m.MotorSpeedSetAB(100,100)	#defines the speed of motor 1 and motor 2;
+		m.MotorDirectionSet(0b0101)	#'0b1010' defines the output polarity, '10' means the M+ is 'positive' while the M- is 'negative'
 
 	def stop(self, m):
-		if not runningOnPi:
+		print('STOP')
+
+		if not self.runningOnPi:
 			return
 
-		#STOP
-		print("Stop")
 		m.MotorSpeedSetAB(0,0)
-		time.sleep(1)
-
 
 if __name__ == '__main__':
 	robbie = Robot()
