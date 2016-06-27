@@ -59,7 +59,7 @@ class Robot:
 		# Check if we're on an RPi
 		self.runningOnPi = True
 		try:
-			import grove_i2c_motor_driver as motorDriver
+			import grove_i2c_motor_driver.motor_driver as motorDriver
 		except:
 			self.runningOnPi = False
 
@@ -73,7 +73,7 @@ class Robot:
 		try:
 			# You can initialize with a different address too: grove_i2c_motor_driver.motor_driver(address=0x0a)
 			if self.runningOnPi:
-				m = motorDriver.motor_driver()
+				m = motorDriver()
 			else:
 				m = ''
 
