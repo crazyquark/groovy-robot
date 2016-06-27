@@ -102,7 +102,7 @@ class Robot:
 			return
 
 		m.MotorSpeedSetAB(self.speed,self.speed)	#defines the speed of motor 1 and motor 2;
-		m.MotorDirectionSet(0bself.speed1)	#'0b1010' defines the output polarity, '10' means the M+ is 'positive' while the M- is 'negative'
+		m.MotorDirectionSet(0b1001)	#'0b1010' defines the output polarity, '10' means the M+ is 'positive' while the M- is 'negative'
 	
 	def right(self, m):
 		print('RIGHT')
