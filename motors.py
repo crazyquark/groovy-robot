@@ -40,43 +40,40 @@ THE SOFTWARE.
 
 import grove_i2c_motor_driver
 import time
+import signal
+import sys
+import pygame
 
 # VS Debug support
 import ptvsd
 ptvsd.enable_attach("kriekpi") 
 
-raw_input('press any key to continue...')
+raw_input('press any key to start...')
+
+
+
+def signal_handler(signal, frame):
+        print('Bye!')
+        sys.exit(0)
+signal.signal(signal.SIGINT, signal_handler)
 
 try:
 	# You can initialize with a different address too: grove_i2c_motor_driver.motor_driver(address=0x0a)
 	m= grove_i2c_motor_driver.motor_driver()
+	while True:
+		pass
 
-	#FORWARD
-	print("Forward")
+except IOError as e:
+	print("Unable to find the motor driver, check the addrees and press reset on the motor driver and try again")
+	print("I/O error({0}): {1}".format(e.errno, e.strerror))
+
+def left(m):
+	print("LEFT")
 	m.MotorSpeedSetAB(100,100)	#defines the speed of motor 1 and motor 2;
 	m.MotorDirectionSet(0b1001)	#"0b1010" defines the output polarity, "10" means the M+ is "positive" while the M- is "negative"
 	time.sleep(0.1)
-
-	#BACK
-	#print("Back")
-	#m.MotorSpeedSetAB(100,100)
-	#m.MotorDirectionSet(0b0101)	#0b0101  Rotating in the opposite direction
-	#time.sleep(2)
 
 	#STOP
 	print("Stop")
 	m.MotorSpeedSetAB(0,0)
 	time.sleep(1)
-
-	#Increase speed
-	#for i in range (100):
-	#	print("Speed:",i)
-	#	m.MotorSpeedSetAB(i,i)
-	#	time.sleep(.02)
-		
-	#print("Stop")
-	#m.MotorSpeedSetAB(0,0)	
-	
-except IOError as e:
-	print("Unable to find the motor driver, check the addrees and press reset on the motor driver and try again")
-	print("I/O error({0}): {1}".format(e.errno, e.strerror))
