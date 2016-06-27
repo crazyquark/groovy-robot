@@ -38,46 +38,71 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 '''
 
-import grove_i2c_motor_driver
+runningOnPi = False
+
+if runningOnPi:
+	import grove_i2c_motor_driver as motorDriver
+
 import time
 import signal
 import sys
 import pygame
 
 # VS Debug support
-import ptvsd
-ptvsd.enable_attach("kriekpi") 
+from ptvsd import enable_attach as enableAttach
+enableAttach("kriekpi") 
 
-raw_input('press any key to start...')
-pygame.init();
+class Robot:
+	def __init__(self):
+		pygame.init();
+		self.screen = pygame.display.set_mode((320,240))
 
-def signal_handler(signal, frame):
-        print('Bye!')
-        sys.exit(0)
-signal.signal(signal.SIGINT, signal_handler)
+		signal.signal(signal.SIGINT, self.signalHandler)
+		
+		self.setupMotors()
 
-try:
-	# You can initialize with a different address too: grove_i2c_motor_driver.motor_driver(address=0x0a)
-	m= grove_i2c_motor_driver.motor_driver()
-	while True:
-		for event in pygame.event.get():
-			print event
-			if event.type == KEYDOWN:
-				pass
-			elif event.type == KEYUP:
-				pass
+	def signalHandler(self,_):
+		print('Bye!')
+		sys.exit(0)
 
-except IOError as e:
-	print("Unable to find the motor driver, check the addrees and press reset on the motor driver and try again")
-	print("I/O error({0}): {1}".format(e.errno, e.strerror))
+	def setupMotors(self):
+		try:
+			# You can initialize with a different address too: grove_i2c_motor_driver.motor_driver(address=0x0a)
+			if runningOnPi:
+				m = motorDriver.motor_driver()
+			else:
+				m = ''
 
-def left(m):
-	print("LEFT")
-	m.MotorSpeedSetAB(100,100)	#defines the speed of motor 1 and motor 2;
-	m.MotorDirectionSet(0b1001)	#"0b1010" defines the output polarity, "10" means the M+ is "positive" while the M- is "negative"
-	time.sleep(0.1)
+			while True:
+				for event in pygame.event.get():
+					print event
+					if event.type == pygame.KEYDOWN:
+						if event.key == 'a' or event.key == 'A':
+							self.left(m)
+					elif event.type == pygame.KEYUP:
+						self.stop(m)
+		except IOError as e:
+			print("Unable to find the motor driver, check the addrees and press reset on the motor driver and try again")
+			print("I/O error({0}): {1}".format(e.errno, e.strerror))
+	
+	def left(self, m):
+		if not runningOnPi:
+			return
 
-	#STOP
-	print("Stop")
-	m.MotorSpeedSetAB(0,0)
-	time.sleep(1)
+		print("LEFT")
+		m.MotorSpeedSetAB(100,100)	#defines the speed of motor 1 and motor 2;
+		m.MotorDirectionSet(0b1001)	#"0b1010" defines the output polarity, "10" means the M+ is "positive" while the M- is "negative"
+		time.sleep(0.1)
+
+	def stop(self, m):
+		if not runningOnPi:
+			return
+
+		#STOP
+		print("Stop")
+		m.MotorSpeedSetAB(0,0)
+		time.sleep(1)
+
+
+if __name__ == '__main__':
+	robbie = Robot()

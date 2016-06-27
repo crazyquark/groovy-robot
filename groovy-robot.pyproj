@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{ef455c00-9a4c-4fe0-b4e8-feb5cf84495b}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>grove_i2c_motor_driver.py</StartupFile>
+    <StartupFile>motors.py</StartupFile>
     <SearchPath />
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
