@@ -60,6 +60,13 @@ class Robot:
 	def __init__(self):
 		pygame.init();
 
+		# Directions
+		# '0b1010' defines the output polarity, '10' means the M+ is 'positive' while the M- is 'negative'
+		self.backwardDir = 0b0101
+		self.forwardDir  = 0b1010
+		self.leftDir	 = 0b1001
+		self.rightDir	 = 0b0110
+
 		wallEpic = pygame.image.load('res/wall-e-800.jpg')
 		self.screen = pygame.display.set_mode(wallEpic.get_rect().size)
 
@@ -119,8 +126,8 @@ class Robot:
 		if not runningOnPi:
 			return
 
-		m.MotorSpeedSetAB(self.speed,self.speed)	#defines the speed of motor 1 and motor 2;
-		m.MotorDirectionSet(0b1001)	#'0b1010' defines the output polarity, '10' means the M+ is 'positive' while the M- is 'negative'
+		m.MotorSpeedSetAB(self.speed,self.speed)
+		m.MotorDirectionSet(self.leftDir)
 	
 	def right(self, m):
 		print('RIGHT')
@@ -128,8 +135,8 @@ class Robot:
 		if not runningOnPi:
 			return
 
-		m.MotorSpeedSetAB(self.speed,self.speed)	#defines the speed of motor 1 and motor 2;
-		m.MotorDirectionSet(0b0110)	#'0b1010' defines the output polarity, '10' means the M+ is 'positive' while the M- is 'negative'
+		m.MotorSpeedSetAB(self.speed,self.speed)	
+		m.MotorDirectionSet(self.rightDir)
 
 	def forward(self, m):
 		print('FORWARD')
@@ -137,8 +144,8 @@ class Robot:
 		if not runningOnPi:
 			return
 
-		m.MotorSpeedSetAB(self.speed,self.speed)	#defines the speed of motor 1 and motor 2;
-		m.MotorDirectionSet(0b1010)	#'0b1010' defines the output polarity, '10' means the M+ is 'positive' while the M- is 'negative'
+		m.MotorSpeedSetAB(self.speed,self.speed)	
+		m.MotorDirectionSet(self.forwardDir)	
 
 	def backward(self, m):
 		print('BACKWARD')
@@ -146,8 +153,8 @@ class Robot:
 		if not runningOnPi:
 			return
 
-		m.MotorSpeedSetAB(self.speed,self.speed)	#defines the speed of motor 1 and motor 2;
-		m.MotorDirectionSet(0b0101)	#'0b1010' defines the output polarity, '10' means the M+ is 'positive' while the M- is 'negative'
+		m.MotorSpeedSetAB(self.speed,self.speed)	
+		m.MotorDirectionSet(self.backwardDir)	
 
 	def stop(self, m):
 		print('STOP')
