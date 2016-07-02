@@ -7,6 +7,7 @@ from bottle import request, Bottle, abort, template
 from r_server.robot_server import RobotServer
 
 app = Bottle()
+robot = RobotServer()
 
 @app.route('/ws')
 def websocket():

@@ -22,7 +22,7 @@ class RobotServer(object):
 		if not self.onPi:
 			return
 
-		from driver.grove_i2c_motor_driver import motor_driver as motorDriver
+		from grovepi_driver.grove_i2c_motor_driver import motor_driver as motorDriver
 
 		self.motors = motorDriver()
 

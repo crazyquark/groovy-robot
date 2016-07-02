@@ -12,7 +12,7 @@ enableAttach('kriekpi')
 # Check if we're on an RPi
 runningOnPi = True
 try:
-	from driver.grove_i2c_motor_driver import motor_driver as motorDriver
+	from grovepi_driver.grove_i2c_motor_driver import motor_driver as motorDriver
 except:
 	runningOnPi = False
 
