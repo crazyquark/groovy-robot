@@ -2,7 +2,7 @@
 <html>
 <head>
   <script type="text/javascript">
-    var ws = new WebSocket("ws://localhost:8080/ws");
+    var ws = new WebSocket("{{ websocket }}");
     ws.onopen = function() {
         ws.send("Hello, world");
     };
