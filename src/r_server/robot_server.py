@@ -1,4 +1,4 @@
-import os
+import platform
 
 class RobotServer(object):
 	"""Server component for controlling a local GrovePi based robot"""
@@ -13,10 +13,10 @@ class RobotServer(object):
 		self.speed = 75 # 75% power output
 
 		# Check if this is the real deal
-		arch = os.uname()[4]
+		arch = platform.uname()[4]
 		self.onPi = True if arch.startswith('arm') else False
 
-		setupGrovePi()
+		self.setupGrovePi()
 
 	def setupGrovePi(self):
 		if not self.onPi:

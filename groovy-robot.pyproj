@@ -5,14 +5,15 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{ef455c00-9a4c-4fe0-b4e8-feb5cf84495b}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>motors.py</StartupFile>
+    <StartupFile>src\run_server.py</StartupFile>
     <SearchPath />
-    <WorkingDirectory>.</WorkingDirectory>
+    <WorkingDirectory>src</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
     <InterpreterId />
     <InterpreterVersion />
+    <IsWindowsApplication>False</IsWindowsApplication>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
@@ -21,11 +22,35 @@
     <PtvsTargetsFile>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets</PtvsTargetsFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="grove_i2c_motor_driver.py" />
-    <Compile Include="motors.py" />
+    <Compile Include="src\grovepi_driver\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\grovepi_driver\grove_i2c_motor_driver.py" />
+    <Compile Include="src\rc_robot.py" />
+    <Compile Include="src\run_server.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\r_server\bottle_server.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\r_server\robot_server.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\r_server\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="requirements.txt" />
+    <Content Include="res\wall-e-800.jpg" />
+    <Content Include="res\wall-e.jpg" />
+    <Content Include="src\r_server\main.tpl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="src\grovepi_driver\" />
+    <Folder Include="src\" />
+    <Folder Include="res\" />
+    <Folder Include="src\r_server\" />
   </ItemGroup>
   <Import Project="$(PtvsTargetsFile)" Condition="Exists($(PtvsTargetsFile))" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="!Exists($(PtvsTargetsFile))" />
