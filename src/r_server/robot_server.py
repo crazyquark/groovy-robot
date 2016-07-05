@@ -35,14 +35,15 @@ class RobotServer(object):
 		elif self.speed <= 0:
 			self.speed = 0
 
+		self.motors.MotorSpeedSetAB(self.speed,self.speed)
+
 	def forward(self, m):
 		print('FORWARD')
 
 		if not runningOnPi:
 			return
-
-		m.MotorSpeedSetAB(self.speed,self.speed)	
-		m.MotorDirectionSet(self.forwardDir)	
+	
+		self.motors.MotorDirectionSet(self.forwardDir)	
 
 	def stop(self, m):
 		print('STOP')
@@ -50,5 +51,5 @@ class RobotServer(object):
 		if not runningOnPi:
 			return
 
-		m.MotorSpeedSetAB(0,0)
+		self.motors.MotorSpeedSetAB(0,0)
 		

@@ -18,14 +18,24 @@ def websocket():
 	while True:
 		try:
 			message = wsock.receive()
-			wsock.send("Your message was: %r" % message)
+			if (message == 'hello'):
+				wsock.send('connected');
+			elif (message == 'w'):
+				robot.forward()
+			elif (message == 's'):
+				robot.backward()
+			elif (message == 'a'):
+				robot.left()
+			elif (message == 'd'):
+				robot.rightDir();
+
 		except WebSocketError:
 			break
 
 @app.route('/')
 def index():
 	host = request.get_header('host')
-	return template('r_server/main', websocket = 'ws://' + host + '/ws')
+	return template('r_server/main', host = host)
 
 
 from gevent.pywsgi import WSGIServer
