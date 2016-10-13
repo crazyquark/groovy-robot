@@ -3,7 +3,7 @@
 	See http://bottlepy.org/docs/dev/async.html
 '''
 
-from bottle import request, Bottle, abort, template
+from bottle import request, Bottle, abort, template, static_file
 from r_server.robot_server import RobotServer
 
 app = Bottle()
@@ -39,6 +39,9 @@ def index():
 	host = request.get_header('host')
 	return template('r_server/main.html', host = host)
 
+@app.route('/images/<filename>')
+def images(filename):
+    return static_file(filename, root='../res/')
 
 from gevent.pywsgi import WSGIServer
 from geventwebsocket import WebSocketError

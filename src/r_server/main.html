@@ -1,45 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <script type="text/javascript">
-    'use strict'
+    <title>Groovy Robot</title>
+    <script type="text/javascript">
+        'use strict'
 
-	var ws = new WebSocket("ws://{{ host }}/ws");
-    ws.onopen = function() {
-        ws.send("hello");
-    };
-    ws.onmessage = function (evt) {
-        console.log(evt.data);
-    };
+        var ws = new WebSocket("ws://{{ host }}/ws");
+        ws.onopen = function () {
+            ws.send("hello");
+        };
+        ws.onmessage = function (evt) {
+            console.log(evt.data);
+        };
 
-	document.addEventListener('keydown', (event) => {
-	  const keyName = event.key;
-	
-	  console.log('down: ' + keyName);
+        document.addEventListener('keydown', (event) => {
+            const keyName = event.key;
 
-	  if (keyName === 'w' || keyName === 'ArrowUp') {
-		ws.send('w');
-	  }
-	  else if (keyName === 's' || keyName === 'ArrowDown') {
-		ws.send('s');
-	  }
-	  else if (keyName === 'a' || keyName === 'ArrowLeft') {
-		ws.send('a');
-	  }
-	  else if (keyName === 'd' || keyName === 'ArrowRight') {
-		ws.send('d');
-	  }
-	}, false);
+            console.log('down: ' + keyName);
 
-	document.addEventListener('keyup', (event) => {
-	  const keyName = event.key;
+            if (keyName === 'w' || keyName === 'ArrowUp') {
+                ws.send('w');
+            }
+            else if (keyName === 's' || keyName === 'ArrowDown') {
+                ws.send('s');
+            }
+            else if (keyName === 'a' || keyName === 'ArrowLeft') {
+                ws.send('a');
+            }
+            else if (keyName === 'd' || keyName === 'ArrowRight') {
+                ws.send('d');
+            }
+        }, false);
 
-	  console.log('up: ' + keyName);
+        document.addEventListener('keyup', (event) => {
+            const keyName = event.key;
 
-	  ws.send('st');
+            console.log('up: ' + keyName);
 
-	}, false);
+            ws.send('st');
 
-  </script>
+        }, false);
+
+    </script>
 </head>
+<body>
+    <img src="images/wall-e.jpg" />
+</body>
 </html>
