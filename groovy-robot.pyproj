@@ -44,7 +44,7 @@
     <Content Include="requirements.txt" />
     <Content Include="res\wall-e-800.jpg" />
     <Content Include="res\wall-e.jpg" />
-    <Content Include="src\r_server\main.tpl" />
+    <Content Include="src\r_server\main.html" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\grovepi_driver\" />

@@ -37,7 +37,7 @@ def websocket():
 @app.route('/')
 def index():
 	host = request.get_header('host')
-	return template('r_server/main', host = host)
+	return template('r_server/main.html', host = host)
 
 
 from gevent.pywsgi import WSGIServer
