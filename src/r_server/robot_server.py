@@ -19,6 +19,8 @@ class RobotServer(object):
 		arch = platform.uname()[4]
 		self.runningOnPi = True if arch.startswith('arm') else False
 
+		print('We are running on: ', arch)
+
 		self.setupGrovePi()
 
 	def setupGrovePi(self):
