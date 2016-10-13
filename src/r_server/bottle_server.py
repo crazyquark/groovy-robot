@@ -21,13 +21,15 @@ def websocket():
 			if (message == 'hello'):
 				wsock.send('connected');
 			elif (message == 'w'):
-				robot.forward()
+				robot.move(1)
 			elif (message == 's'):
-				robot.backward()
+				robot.move(-1)
 			elif (message == 'a'):
-				robot.left()
+				robot.move(2)
 			elif (message == 'd'):
-				robot.rightDir();
+				robot.move(3);
+			elif (message == 'st'):
+				robot.stop()
 
 		except WebSocketError:
 			break

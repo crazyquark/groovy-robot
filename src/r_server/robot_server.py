@@ -12,14 +12,17 @@ class RobotServer(object):
 
 		self.speed = 75 # 75% power output
 
+		# Attempting to limit max speed to avoid crashes
+		self.maxSpeed = 95
+
 		# Check if this is the real deal
 		arch = platform.uname()[4]
-		self.onPi = True if arch.startswith('arm') else False
+		self.runningOnPi = True if arch.startswith('arm') else False
 
 		self.setupGrovePi()
 
 	def setupGrovePi(self):
-		if not self.onPi:
+		if not self.runningOnPi:
 			return
 
 		from grovepi_driver.grove_i2c_motor_driver import motor_driver as motorDriver
@@ -30,25 +33,34 @@ class RobotServer(object):
 		print 'SPEED: ' + str(amount)
 		self.speed += amount
 
-		if self.speed >= 100:
-			self.speed = 100
+		if self.speed >= self.maxSpeed:
+			self.speed = self.maxSpeed
 		elif self.speed <= 0:
 			self.speed = 0
 
 		self.motors.MotorSpeedSetAB(self.speed,self.speed)
 
-	def forward(self, m):
-		print('FORWARD')
+	def move(self, dir):
+		print('MOVE: ', dir)
 
-		if not runningOnPi:
+		if not self.runningOnPi:
 			return
-	
-		self.motors.MotorDirectionSet(self.forwardDir)	
+		
+		if dir == 1:
+			self.motors.MotorDirectionSet(self.forwardDir)
+		elif dir == -1:
+			self.motors.MotorDirectionSet(self.backwardDir)
+		elif dir == 2:
+			self.motors.MotorDirectionSet(self.leftDir)
+		elif dir == 3:
+			self.motors.MotorDirectionSet(self.rightDir)
+		
+		self.motors.MotorSpeedSetAB(self.speed,self.speed)
 
-	def stop(self, m):
+	def stop(self):
 		print('STOP')
 
-		if not runningOnPi:
+		if not self.runningOnPi:
 			return
 
 		self.motors.MotorSpeedSetAB(0,0)

@@ -36,6 +36,8 @@
 
 	  console.log('up: ' + keyName);
 
+	  ws.send('st');
+
 	}, false);
 
   </script>

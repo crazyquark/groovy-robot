@@ -28,7 +28,7 @@ class Robot:
 		self.leftDir	 = 0b0110
 
 		# Attempting to limit max speed to avoid crashes
-		self.maxSpeed = 85
+		self.maxSpeed = 95
 
 		wallEpic = pygame.image.load('res/wall-e-800.jpg')
 		self.screen = pygame.display.set_mode(wallEpic.get_rect().size)
