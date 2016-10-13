@@ -27,6 +27,9 @@ class Robot:
 		self.rightDir	 = 0b1001
 		self.leftDir	 = 0b0110
 
+		# Attempting to limit max speed to avoid crashes
+		self.maxSpeed = 85
+
 		wallEpic = pygame.image.load('res/wall-e-800.jpg')
 		self.screen = pygame.display.set_mode(wallEpic.get_rect().size)
 
@@ -75,8 +78,8 @@ class Robot:
 		print('SPEED: ' + str(amount))
 		self.speed += amount
 
-		if self.speed >= 100:
-			self.speed = 100
+		if self.speed >= self.maxSpeed:
+			self.speed = self.maxSpeed
 		elif self.speed <= 0:
 			self.speed = 0
 

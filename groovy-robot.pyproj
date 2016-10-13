@@ -5,9 +5,10 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{ef455c00-9a4c-4fe0-b4e8-feb5cf84495b}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>src\run_server.py</StartupFile>
+    <StartupFile>src\rc_robot.py</StartupFile>
     <SearchPath />
-    <WorkingDirectory>src</WorkingDirectory>
+    <WorkingDirectory>
+    </WorkingDirectory>
     <OutputPath>.</OutputPath>
     <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
