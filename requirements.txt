@@ -2,6 +2,5 @@ pygame
 ptvsd
 smbus
 bottle
-wsgiserver
 gevent
 gevent-websocket
