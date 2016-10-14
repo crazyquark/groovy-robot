@@ -11,15 +11,15 @@
     <script type="text/javascript">
         'use strict'
 
-        var ws = new WebSocket("ws://{{ host }}/ws");
+        var ws = new WebSocket('ws://{{ host }}/ws');
         ws.onopen = function () {
-            ws.send("hello");
+            ws.send('hello');
         };
         ws.onmessage = function (evt) {
             console.log(evt.data);
         };
 
-        document.addEventListener('keydown', (event) => {
+		var keydownHandler = (event) => {
             const keyName = event.key;
 
             console.log('down: ' + keyName);
@@ -36,21 +36,27 @@
             else if (keyName === 'd' || keyName === 'ArrowRight') {
                 ws.send('d');
             }
-        }, false);
+        };
 
-        document.addEventListener('keyup', (event) => {
+		var keyupHandler = (event) => {
             const keyName = event.key;
 
             console.log('up: ' + keyName);
 
             ws.send('st');
 
-        }, false);
+        };
+
+        document.addEventListener('keydown', keydownHandler, false);
+        document.addEventListener('keyup', keyupHandler, false);
+
+		document.getElementById('box').addEventListener('keydown', keydownHandler);
+		document.getElementById('box').addEventListener('keyup', keydupHandler);
 
     </script>
 </head>
 <body>
     <img src="images/wall-e.jpg" />
-	<input type="text" />
+	<input id="box" type="text" />
 </body>
 </html>
