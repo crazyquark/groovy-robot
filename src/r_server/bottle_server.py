@@ -22,17 +22,25 @@ def websocket():
 				wsock.send('connected');
 			elif (message == 'w'):
 				robot.move(1)
+			elif (message == 'W'):
+				robot.stop(1)
 			elif (message == 's'):
 				robot.move(-1)
+			elif (message == 'S'):
+				robot.stop(-1)
 			elif (message == 'a'):
 				robot.move(2)
+			elif (message == 'A'):
+				robot.stop(2)
 			elif (message == 'd'):
 				robot.move(3);
+			elif (message == 'D'):
+				robot.stop(3)
 			elif (message == 'x'):
 				robot.speedAdjust(1)
 			elif (message == 'z'):
 				robot.speedAdjust(-1)
-			elif (message == 'st'):
+			elif (message == ''):
 				robot.stop()
 
 		except WebSocketError:

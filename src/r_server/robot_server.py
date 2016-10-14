@@ -1,4 +1,4 @@
-import platform
+import platform, threading
 
 class RobotServer(object):
 	"""Server component for controlling a local GrovePi based robot"""
@@ -9,6 +9,8 @@ class RobotServer(object):
 		self.backwardDir = 0b1010
 		self.rightDir	 = 0b1001
 		self.leftDir	 = 0b0110
+
+		self.currentDir  = 0b0000
 
 		self.speed = 75 # 75% power output
 
@@ -25,6 +27,16 @@ class RobotServer(object):
 		print('We are running on: ', arch)
 
 		self.setupGrovePi()
+		
+		self.running = True
+		updateThread = threading.Thread(target = self.update)
+		updateThread.start()
+		
+	def update(self):
+		while(self.running):
+			if (self.runningOnPi):
+				self.motors.MotorSpeedSetAB(self.speed,self.speed)
+				self.motors.MotorDirectionSet(self.forwardDir)	
 
 	def setupGrovePi(self):
 		if not self.runningOnPi:
@@ -52,17 +64,15 @@ class RobotServer(object):
 			return
 		
 		if dir == 1:
-			self.motors.MotorDirectionSet(self.forwardDir)
+			self.currentDir &= self.forwardDir
 		elif dir == -1:
-			self.motors.MotorDirectionSet(self.backwardDir)
+			self.currentDir &= self.backwardDir
 		elif dir == 2:
-			self.motors.MotorDirectionSet(self.leftDir)
+			self.currentDir &= self.leftDir
 		elif dir == 3:
-			self.motors.MotorDirectionSet(self.rightDir)
-		
-		self.motors.MotorSpeedSetAB(self.speed,self.speed)
+			self.currentDir &= self.rightDir
 
-	def stop(self):
+	def stop(self, dir):
 		print('STOP')
 
 		if not self.runningOnPi:
