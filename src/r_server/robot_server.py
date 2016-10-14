@@ -45,8 +45,6 @@ class RobotServer(object):
 		elif self.speed <= 0:
 			self.speed = 0
 
-		self.motors.MotorSpeedSetAB(self.speed,self.speed)
-
 	def move(self, dir):
 		print('MOVE: ', dir)
 
