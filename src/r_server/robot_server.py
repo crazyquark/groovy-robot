@@ -14,6 +14,9 @@ class RobotServer(object):
 
 		# Attempting to limit max speed to avoid crashes
 		self.maxSpeed = 95
+		
+		# How much to increase speed at one time
+		self.speedIncrement = 5
 
 		# Check if this is the real deal
 		arch = platform.uname()[4]
@@ -31,7 +34,9 @@ class RobotServer(object):
 
 		self.motors = motorDriver()
 
-	def speedAdjust(self, amount):
+	def speedAdjust(self, dir):
+		amount = dir * self.speedIncrement
+
 		print 'SPEED: ' + str(amount)
 		self.speed += amount
 

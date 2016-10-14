@@ -28,6 +28,10 @@ def websocket():
 				robot.move(2)
 			elif (message == 'd'):
 				robot.move(3);
+			elif (message == 'x'):
+				robot.speedAdjust(1)
+			elif (message == 'z):
+				robot.speedAdjust(-1);
 			elif (message == 'st'):
 				robot.stop()
 
