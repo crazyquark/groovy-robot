@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Groovy Robot</title>
-    <style>
-    img {
-        max-width: 100%;
-        height: auto;
-    }
-    </style>
-    <script type="text/javascript">
+	<title>Groovy Robot</title>
+	<style>
+		img {
+			max-width: 100%;
+			height: auto;
+		}
+		body {
+		  background: url(/images/wall-e.jpg) no-repeat;
+		  background-size: 100%;
+		}
+	</style>
+	<script type="text/javascript">
         'use strict'
 
         var ws = new WebSocket('ws://{{ host }}/ws');
@@ -49,14 +53,8 @@
 
         document.addEventListener('keydown', keydownHandler, false);
         document.addEventListener('keyup', keyupHandler, false);
-
-		document.getElementById('box').addEventListener('keydown', keydownHandler);
-		document.getElementById('box').addEventListener('keyup', keydupHandler);
-
-    </script>
+	</script>
 </head>
 <body>
-    <img src="images/wall-e.jpg" />
-	<input id="box" type="text" />
 </body>
 </html>
