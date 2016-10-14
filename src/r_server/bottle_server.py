@@ -31,7 +31,7 @@ def websocket():
 			elif (message == 'x'):
 				robot.speedAdjust(1)
 			elif (message == 'z'):
-				robot.speedAdjust(-1);
+				robot.speedAdjust(-1)
 			elif (message == 'st'):
 				robot.stop()
 
