@@ -36,14 +36,14 @@ class RobotServer(object):
 
 	def speedAdjust(self, dir):
 		amount = dir * self.speedIncrement
-
-		print 'SPEED: ' + str(amount)
 		self.speed += amount
 
 		if self.speed >= self.maxSpeed:
 			self.speed = self.maxSpeed
 		elif self.speed <= 0:
 			self.speed = 0
+
+		print('SPEED: ', self.speed)
 
 	def move(self, dir):
 		print('MOVE: ', dir)
