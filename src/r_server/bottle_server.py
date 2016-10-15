@@ -4,7 +4,7 @@
 '''
 
 from bottle import request, Bottle, abort, template, static_file
-from r_server.robot_server import RobotServer
+from r_server.robot_server import RobotServer, Directions
 
 app = Bottle()
 robot = RobotServer()
@@ -21,21 +21,21 @@ def websocket():
 			if (message == 'hello'):
 				wsock.send('connected');
 			elif (message == 'w'):
-				robot.move(1)
+				robot.move(Directions.Forward)
 			elif (message == 'W'):
-				robot.stop(1)
+				robot.stop(Directions.Forward)
 			elif (message == 's'):
-				robot.move(-1)
+				robot.move(Directions.Back)
 			elif (message == 'S'):
-				robot.stop(-1)
+				robot.stop(Directions.Back)
 			elif (message == 'a'):
-				robot.move(2)
+				robot.move(Directions.Left)
 			elif (message == 'A'):
-				robot.stop(2)
+				robot.stop(Directions.Left)
 			elif (message == 'd'):
-				robot.move(3);
+				robot.move(Directions.Right);
 			elif (message == 'D'):
-				robot.stop(3)
+				robot.stop(Directions.Right)
 			elif (message == 'x'):
 				robot.speedAdjust(1)
 			elif (message == 'z'):
