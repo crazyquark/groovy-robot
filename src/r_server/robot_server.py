@@ -103,7 +103,7 @@ class RobotServer(object):
 			self.backPressed = isOn
 		elif dir == Directions.Left:
 			self.leftPressed = isOn
-		elif dir == 3:
+		elif dir == Directions.Right:
 			self.rightPressed = isOn	
 
 	def move(self, dir):
