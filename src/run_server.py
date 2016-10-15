@@ -4,5 +4,10 @@
 '''
 
 from r_server import bottle_server
+import sys
 
-bottle_server.run()
+try:
+	bottle_server.run()
+except:
+	bottle_server.halt()
+	sys.exit(0)

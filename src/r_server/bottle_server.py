@@ -63,3 +63,6 @@ def run():
 	server = WSGIServer(("0.0.0.0", 8080), app,
 						handler_class=WebSocketHandler)
 	server.serve_forever()
+
+def halt():
+	robot.halt()

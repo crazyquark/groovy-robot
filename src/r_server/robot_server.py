@@ -121,4 +121,7 @@ class RobotServer(object):
 			return
 
 		self.processPress(dir, False)
+
+	def halt(self):
+		self.running = False
 		
