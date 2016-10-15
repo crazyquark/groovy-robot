@@ -64,14 +64,14 @@ class RobotServer(object):
 					# In place left turn
 					self.motors.MotorDirectionSet(self.leftDir)
 					self.motors.MotorSpeedSetAB(self.speed, self.speed)
-				elif (self.fwdPressed and self.rightPressed):
+				elif ((self.fwdPressed or self.backPressed) and self.rightPressed):
 					# Attempt to turn right
 					self.motors.MotorDirectionSet(self.rightDir)
-					self.motors.MotorSpeedSetAB(0, self.speed)
-				elif (self.fwdPressed and self.leftPressed):
+					self.motors.MotorSpeedSetAB(self.speed / 4, self.speed)
+				elif ((self.fwdPressed or self.backPressed) and self.leftPressed):
 					# Attempt to turn left
 					self.motors.MotorDirectionSet(self.leftDir)
-					self.motors.MotorSpeedSetAB(self.speed, 0)
+					self.motors.MotorSpeedSetAB(self.speed, self.speed / 4)
 				else:
 					# I donno
 					self.motors.MotorSpeedSetAB(0, 0)
