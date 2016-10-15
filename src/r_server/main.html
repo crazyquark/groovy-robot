@@ -23,7 +23,7 @@
             console.log(evt.data);
         };
 
-		var sendKey = (key) => {
+		var sendKey = (keyName) => {
 			if (keyName === 'w' || keyName === 'ArrowUp') {
                 ws.send('w');
             }
