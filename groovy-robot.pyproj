@@ -26,6 +26,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\grovepi_driver\grove_i2c_motor_driver.py" />
+    <Compile Include="src\keyboard_controller.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="src\rc_robot.py" />
     <Compile Include="src\run_server.py">
       <SubType>Code</SubType>

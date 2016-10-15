@@ -59,6 +59,9 @@ from gevent.pywsgi import WSGIServer
 from geventwebsocket import WebSocketError
 from geventwebsocket.handler import WebSocketHandler
 
+def getRobotServer():
+	return robot
+
 def run():
 	server = WSGIServer(("0.0.0.0", 8080), app,
 						handler_class=WebSocketHandler)
