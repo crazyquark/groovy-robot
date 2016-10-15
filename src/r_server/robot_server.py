@@ -19,6 +19,7 @@ class RobotServer(object):
 		self.rightPressed = False
 
 		self.speed = 75 # 75% power output
+		self.turnFactor = 2 # controls how sharp the turns will be
 
 		# Attempting to limit max speed to avoid crashes
 		self.maxSpeed = 95
@@ -66,12 +67,12 @@ class RobotServer(object):
 					self.motors.MotorSpeedSetAB(self.speed, self.speed)
 				elif ((self.fwdPressed or self.backPressed) and self.rightPressed):
 					# Attempt to turn right
-					self.motors.MotorDirectionSet(self.forwardDir)
-					self.motors.MotorSpeedSetAB(self.speed / 2, self.speed)
+					self.motors.MotorDirectionSet(self.forwardDir if self.fwdPressed else self.backwardDir)
+					self.motors.MotorSpeedSetAB(self.speed, self.speed / self.turnFactor)
 				elif ((self.fwdPressed or self.backPressed) and self.leftPressed):
 					# Attempt to turn left
-					self.motors.MotorDirectionSet(self.forwardDir)
-					self.motors.MotorSpeedSetAB(self.speed, self.speed / 4)
+					self.motors.MotorDirectionSet(self.forwardDir if self.fwdPressed else self.backwardDir)
+					self.motors.MotorSpeedSetAB(self.speed / self.turnFactor, self.speed)
 				else:
 					# I donno
 					self.motors.MotorSpeedSetAB(0, 0)
