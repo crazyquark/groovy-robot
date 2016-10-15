@@ -4,7 +4,7 @@ class Directions:
 	Forward, Back, Left, Right = range(4)
 
 class RobotServer(object):
-	"""Server component for controlling a local GrovePi based robot"""
+	'''Server component for controlling a local GrovePi based robot'''
 	def __init__(self):
 		# Motor directions
 		# '0b1010' defines the output polarity, '10' means the M+ is 'positive' while the M- is 'negative'
