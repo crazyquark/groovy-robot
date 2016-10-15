@@ -4,7 +4,7 @@
 '''
 
 from r_server import bottle_server
-from keyboard_controller import KeyboardController
+#from keyboard_controller import KeyboardController
 import sys
 
 #keyboardController = KeyboardController(bottle_server.getRobotServer())
