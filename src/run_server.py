@@ -4,10 +4,17 @@
 '''
 
 from r_server import bottle_server
-#from keyboard_controller import KeyboardController
 import sys
 
-#keyboardController = KeyboardController(bottle_server.getRobotServer())
+enableKeyboard = True
+try:
+	from keyboard_controller import KeyboardController
+except:
+	print 'Keyboard error: probably there is no keyboard connected, disabling'
+	enableKeyboard = False
+
+if enableKeyboard:
+	keyboardController = KeyboardController(bottle_server.getRobotServer())
 
 try:
 	bottle_server.run()

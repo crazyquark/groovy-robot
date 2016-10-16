@@ -2,7 +2,7 @@
 import struct
 from subprocess import check_output
 import re
-from .nixcommon import EventDevice, EV_KEY, EV_REL, EV_MSC, EV_SYN, EV_ABS
+from .nixcommon import EV_KEY, EV_REL, EV_MSC, EV_SYN, EV_ABS, aggregate_devices
 from .mouse_event import ButtonEvent, WheelEvent, MoveEvent, LEFT, RIGHT, MIDDLE, X, X2, UP, DOWN
 
 import ctypes
@@ -57,12 +57,7 @@ button_by_code = {
 code_by_button = {button: code for code, button in button_by_code.items()}
     
     
-from glob import glob
-paths = glob('/dev/input/by-id/*-event-mouse')
-if paths:
-    device = EventDevice(paths[0])
-else:
-    device = None
+device = aggregate_devices('mouse')
 
 def listen(callback):
     while True:

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import time
+from threading import Lock, Thread
 
 import platform
 if platform.system() == 'Windows':
@@ -7,8 +8,10 @@ if platform.system() == 'Windows':
 else:
     from. import nixkeyboard as os_keyboard
 
-from .keyboard_event import KeyboardEvent, KEY_DOWN, KEY_UP, normalize_name    
+from .keyboard_event import KEY_DOWN, KEY_UP, normalize_name    
 from .generic import GenericListener
+
+all_modifiers = ('alt', 'alt gr', 'ctrl', 'shift')
 
 _pressed_events = {}
 class KeyboardListener(GenericListener):
@@ -34,7 +37,10 @@ def is_pressed(key):
     if isinstance(key, int):
         return key in _pressed_events
     elif len(key) and '+' in key:
-        return all(is_pressed(part) for part in key.split('+'))
+        parts = _split_combination(key)
+        if len(parts) > 1:
+            raise ValueError('Cannot check status of multi-step combination ({}).'.format(key))
+        return all(is_pressed(part) for part in parts[0])
     else:
         for event in _pressed_events.values():
             if event.matches(key):
@@ -42,22 +48,52 @@ def is_pressed(key):
         return False
 
 def _split_combination(hotkey):
-    if isinstance(hotkey, int) or len(hotkey) == 1:
+    """
+    Splits a user provided hotkey into a list of steps, each one made of a list
+    of key descriptions (name or scan code). When a combo is given (e.g.
+    'ctrl+a') spaces are ignored.
+    """
+    if isinstance(hotkey, int):
         return [[hotkey]]
     else:
-        return [step.split('+') for step in hotkey.split(', ')]
+        combination = []
+        for step in hotkey.replace(' ', '').split(','):
+            combination.append([])
+            for part in step.split('+'):
+                scan_code, modifiers = os_keyboard.map_char(normalize_name(part))
+                combination[-1].append(scan_code)
+        return combination
+
+def call_later(fn, args, delay=0.001):
+    """
+    Waits some amount of time then calls the provided function with the given
+    arguments in a separate thread. Useful for giving the system some time
+    to process an event, without blocking the current execution flow.
+    """
+    Thread(target=lambda: time.sleep(delay) or fn(*args)).start()
 
 hotkeys = {}
+def clear_all_hotkeys():
+    """
+    Removes all hotkey handlers. Note some functions such as 'wait' and 'record'
+    internally use hotkeys and will be affected by this call.
+    """
+    global hotkeys
+    hotkeys = {}
+    listener.handlers = []
+
 @listener.wrap
 def add_hotkey(hotkey, callback, args=(), blocking=True, timeout=1):
     """
     Adds a hotkey handler that invokes callback each time the hotkey is
     detected. Returns a handler that can be used to unregister it later. The
     hotkey must be in the format "ctrl+shift+a, s". This would trigger when the
-    user presses "ctrl+shift+a", releases, and then presses "s".
+    user presses "ctrl+shift+a", releases, and then presses "s". To represent
+    literal commas, pluses and spaces use their names ('comma', 'plus',
+    'space').
 
     `blocking` defines if the system should block processing other hotkeys
-    after a match is found.
+    after a match is found. This feature is Windows-only.
 
     `timeout` is the amount of time allowed to pass between key strokes before
     the combination state is reset.
@@ -88,7 +124,8 @@ def add_hotkey(hotkey, callback, args=(), blocking=True, timeout=1):
                 state.step += 1
                 if state.step == len(steps):
                     state.step = 0
-                    callback(*args)
+                    # Leave some time for Windows to process the last key.
+                    call_later(callback, args)
                     return blocking
 
     hotkeys[hotkey] = handler
@@ -108,7 +145,7 @@ def add_abbreviation(src, dst):
 
     Replaces every "tm" followed by a space with a ™ symbol.
     """
-    return add_hotkey(', '.join(src + ' '), lambda: write('\b'*len(src) + dst), timeout=0)
+    return add_hotkey(', '.join(src)+',space', lambda: write('\b'*(len(src)+1) + dst), blocking=False)
 
 remove_abbreviation = remove_hotkey
 
@@ -121,25 +158,35 @@ def write(text, delay=0):
 
     Delay is a number of seconds to wait between keypresses.
     """
+    starting_modifiers = {m for m in all_modifiers if is_pressed(m)}
     for letter in text:
         try:
             if letter in '\n\b\t ':
                 letter = normalize_name(letter)
-            scan_code, shifted = os_keyboard.map_char(letter)
+            scan_code, modifiers = os_keyboard.map_char(letter)
 
-            if shifted:
-                send('shift', True, False)
+            if is_pressed(scan_code):
+                release(scan_code)
+
+            for modifier in all_modifiers:
+                if modifier in modifiers:
+                    press(modifier)
+                else:
+                    release(modifier)
 
             os_keyboard.press(scan_code)
             os_keyboard.release(scan_code)
-
-            if shifted:
-                send('shift', False, True)
         except ValueError:
             os_keyboard.type_unicode(letter)
 
         if delay:
             time.sleep(delay)
+
+    for modifier in all_modifiers:
+        if modifier in starting_modifiers:
+            press(modifier)
+        else:
+            release(modifier)
 
 @listener.wrap
 def send(combination, do_press=True, do_release=True):
@@ -148,9 +195,7 @@ def send(combination, do_press=True, do_release=True):
 
     Ex: "ctrl+alt+del", "alt+F4, enter", "shift+s"
     """
-    for step in _split_combination(combination):
-        scan_codes = [os_keyboard.map_char(normalize_name(part))[0] for part in step]
-
+    for scan_codes in _split_combination(combination):
         if do_press:
             for scan_code in scan_codes:
                 os_keyboard.press(scan_code)
@@ -161,10 +206,12 @@ def send(combination, do_press=True, do_release=True):
 
 @listener.wrap
 def press(combination):
+    """ Sends a key press event to the OS. """
     send(combination, True, False)
 
 @listener.wrap
 def release(combination):
+    """ Sends a key release event to the OS. """
     send(combination, False, True)
 
 @listener.wrap
@@ -172,7 +219,6 @@ def wait(combination):
     """
     Blocks the program execution until a key combination is activated.
     """
-    from threading import Lock
     lock = Lock()
     lock.acquire()
     hotkey_handler = add_hotkey(combination, lock.release)
@@ -189,6 +235,11 @@ def record(until='escape'):
     listener.add_handler(recorded.append)
     wait(until)
     listener.remove_handler(recorded.append)
+
+    # Remove the press event that stopped the recording, otherwise a replay will
+    # press that key and never release.
+    recorded.pop()
+
     return recorded
 
 @listener.wrap
@@ -241,7 +292,5 @@ def get_typed_strings(events, allow_backspace=True):
 
 
 if __name__ == '__main__':
-    add_abbreviation('tm', '™')
-    input()
-    #print('Press esc twice to replay keyboard actions.')
-    #play(record('esc, esc'), 3)
+    print('Press esc twice to replay keyboard actions.')
+    play(record('esc, esc'), 3)

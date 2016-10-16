@@ -5,7 +5,7 @@ import string
 
 from. import keyboard
 
-from keyboard.keyboard_event import KeyboardEvent, canonical_names, KEY_DOWN, KEY_UP
+from .keyboard_event import KeyboardEvent, canonical_names, KEY_DOWN, KEY_UP
 
 # Fake events with fake scan codes for a totally deterministic test.
 all_names = list(canonical_names.values()) + list(string.ascii_lowercase) + ['shift']
@@ -28,7 +28,10 @@ class FakeOsKeyboard(object):
         self.append((KEY_UP, next(name for name, i in scan_codes_by_name.items() if i == scan_code)))
 
     def map_char(self, char):
-        return scan_codes_by_name[char.lower()], char.isupper()
+        try:
+            return scan_codes_by_name[char.lower()], char.isupper()
+        except KeyError:
+            raise ValueError()
 
 class TestKeyboard(unittest.TestCase):
     # Without this attribute Python2 tests fail for some unknown reason.
@@ -85,6 +88,13 @@ class TestKeyboard(unittest.TestCase):
             for key in reversed(group):
                 self.release(key)
         keyboard.remove_hotkey(combination)
+
+        # This line is required because hotkey processing wait a moment
+        # before invoking the function. This is required in Windows systems
+        # or else the rest of the system would process the key *after* the
+        # callback executed.
+        time.sleep(0.01)
+
         return self.triggered
 
     def test_register_hotkey(self):
@@ -160,7 +170,7 @@ class TestKeyboard(unittest.TestCase):
         self.press('b')
         self.release('b')
         self.release('shift')
-        self.click('esc')
+        self.press('esc')
         lock.acquire()
         self.assertEqual(self.flush_events(), [(KEY_DOWN, 'a'), (KEY_UP, 'a'), (KEY_DOWN, 'shift'), (KEY_DOWN, 'b'), (KEY_UP, 'b'), (KEY_UP, 'shift')])
 

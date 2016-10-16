@@ -22,6 +22,33 @@
     <PtvsTargetsFile>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets</PtvsTargetsFile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="lib\keyboard\build\lib\keyboard\generic.py" />
+    <Compile Include="lib\keyboard\build\lib\keyboard\keyboard.py" />
+    <Compile Include="lib\keyboard\build\lib\keyboard\keyboard_event.py" />
+    <Compile Include="lib\keyboard\build\lib\keyboard\keyboard_tests.py" />
+    <Compile Include="lib\keyboard\build\lib\keyboard\mouse.py" />
+    <Compile Include="lib\keyboard\build\lib\keyboard\mouse_event.py" />
+    <Compile Include="lib\keyboard\build\lib\keyboard\mouse_tests.py" />
+    <Compile Include="lib\keyboard\build\lib\keyboard\nixcommon.py" />
+    <Compile Include="lib\keyboard\build\lib\keyboard\nixkeyboard.py" />
+    <Compile Include="lib\keyboard\build\lib\keyboard\nixmouse.py" />
+    <Compile Include="lib\keyboard\build\lib\keyboard\winkeyboard.py" />
+    <Compile Include="lib\keyboard\build\lib\keyboard\winmouse.py" />
+    <Compile Include="lib\keyboard\build\lib\keyboard\__init__.py" />
+    <Compile Include="lib\keyboard\keyboard\generic.py" />
+    <Compile Include="lib\keyboard\keyboard\keyboard.py" />
+    <Compile Include="lib\keyboard\keyboard\keyboard_event.py" />
+    <Compile Include="lib\keyboard\keyboard\keyboard_tests.py" />
+    <Compile Include="lib\keyboard\keyboard\mouse.py" />
+    <Compile Include="lib\keyboard\keyboard\mouse_event.py" />
+    <Compile Include="lib\keyboard\keyboard\mouse_tests.py" />
+    <Compile Include="lib\keyboard\keyboard\nixcommon.py" />
+    <Compile Include="lib\keyboard\keyboard\nixkeyboard.py" />
+    <Compile Include="lib\keyboard\keyboard\nixmouse.py" />
+    <Compile Include="lib\keyboard\keyboard\winkeyboard.py" />
+    <Compile Include="lib\keyboard\keyboard\winmouse.py" />
+    <Compile Include="lib\keyboard\keyboard\__init__.py" />
+    <Compile Include="lib\keyboard\setup.py" />
     <Compile Include="src\grovepi_driver\__init__.py">
       <SubType>Code</SubType>
     </Compile>
@@ -44,12 +71,30 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="lib\keyboard\.coveragerc" />
+    <Content Include="lib\keyboard\.gitattributes" />
+    <Content Include="lib\keyboard\.gitignore" />
+    <Content Include="lib\keyboard\dist\keyboard-0.7.1-py2.7.egg" />
+    <Content Include="lib\keyboard\keyboard.egg-info\dependency_links.txt" />
+    <Content Include="lib\keyboard\keyboard.egg-info\PKG-INFO" />
+    <Content Include="lib\keyboard\keyboard.egg-info\SOURCES.txt" />
+    <Content Include="lib\keyboard\keyboard.egg-info\top_level.txt" />
+    <Content Include="lib\keyboard\README.md" />
     <Content Include="requirements.txt" />
     <Content Include="res\wall-e-800.jpg" />
     <Content Include="res\wall-e.jpg" />
     <Content Include="src\r_server\main.html" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="lib\" />
+    <Folder Include="lib\keyboard\" />
+    <Folder Include="lib\keyboard\build\" />
+    <Folder Include="lib\keyboard\build\bdist.win32\" />
+    <Folder Include="lib\keyboard\build\lib\" />
+    <Folder Include="lib\keyboard\build\lib\keyboard\" />
+    <Folder Include="lib\keyboard\dist\" />
+    <Folder Include="lib\keyboard\keyboard.egg-info\" />
+    <Folder Include="lib\keyboard\keyboard\" />
     <Folder Include="src\grovepi_driver\" />
     <Folder Include="src\" />
     <Folder Include="res\" />
