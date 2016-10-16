@@ -1,7 +1,7 @@
 #!/bin/bash
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 pushd $DIR/src
-sudo python run_server.py & 
-echo $! > server.pid
+PID=`cat server.pid`
+sudo pkill -TERM -P $PID
 popd
 
