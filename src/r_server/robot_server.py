@@ -96,7 +96,7 @@ class RobotServer(object):
 		self.oledDisplay = oledDisplay
 
 		oledDisplay.oled_init()
-		oledDisplay.clear_display()
+		oledDisplay.oled_clearDisplay()
 		oledDisplay.oled_setNormalDisplay()
 		time.sleep(.1)
 
