@@ -16,13 +16,16 @@ except:
 
 	enableKeyboard = False
 
-if enableKeyboard:
-	keyboardController = KeyboardController(bottle_server.getRobotServer())
-
 try:
+	if enableKeyboard:
+		keyboardController = KeyboardController(bottle_server.getRobotServer())
 	bottle_server.run()
 except:
-	bottle_server.halt()
-	#keyboardController.halt()
+	traceback.print_exc()
 
+	bottle_server.halt()
+	if enableKeyboard:
+		keyboardController.halt()
+	
+	print 'There was an error, halting...'
 	sys.exit(0)
