@@ -1,4 +1,4 @@
-import platform, threading, sys, traceback
+import platform, threading, sys, traceback, time
 
 class Directions:
 	Forward, Back, Left, Right = range(4)
@@ -91,6 +91,17 @@ class RobotServer(object):
 		from grovepi_driver.grove_i2c_motor_driver import motor_driver as motorDriver
 
 		self.motors = motorDriver()
+
+		import grove_oled as oledDisplay
+		self.oledDisplay = oledDisplay
+
+		oledDisplay.oled_init()
+		oledDisplay.clear_display()
+		oledDisplay.oled_setNormalDisplay()
+		time.sleep(.1)
+
+		oledDisplay.oled_setTextXY(0,0)
+		oledDisplay.oled_putString("Robot Ready!")
 
 	def speedAdjust(self, dir):
 		amount = dir * self.speedIncrement
