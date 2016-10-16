@@ -4,7 +4,7 @@
 '''
 
 from bottle import request, Bottle, abort, template, static_file
-from r_server.robot_server import RobotServer, Directions
+from r_server.robot_server import RobotServer, Directions, Throttle
 
 app = Bottle()
 robot = RobotServer()
@@ -37,9 +37,9 @@ def websocket():
 			elif (message == 'D'):
 				robot.stop(Directions.Right)
 			elif (message == 'x'):
-				robot.speedAdjust(1)
+				robot.speedAdjust(Throtle.Up)
 			elif (message == 'z'):
-				robot.speedAdjust(-1)
+				robot.speedAdjust(Throttle.Down)
 			elif (message == ''):
 				robot.stop()
 

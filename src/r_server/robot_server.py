@@ -3,6 +3,9 @@ import platform, threading
 class Directions:
 	Forward, Back, Left, Right = range(4)
 
+class Throttle:
+	Up, Down = (1, -1)
+
 class RobotServer(object):
 	'''Server component for controlling a local GrovePi based robot'''
 	def __init__(self):

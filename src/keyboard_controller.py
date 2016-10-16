@@ -4,25 +4,23 @@ path.insert(0, '../lib/keyboard/')
 
 from keyboard import keyboard
 
-from r_server.robot_server import Directions
+from r_server.robot_server import Directions, Throttle
 
 class KeyboardController:
 	'''Implements direct control using a connected USB keyboard'''
 	def __init__(self, robot):
-		self.robot = robot
-
 		# Press PAGE UP then PAGE DOWN to type "foobar".
-		self.wHook = keyboard.hook_key('w', lambda: robot.move(Directions.Forward), lambda: robot.stop(Directions.Forward))
-		#self.sHook = keyboard.add_hotkey('s', lambda: robot.move(Directions.Back))
-		#self.aHook = keyboard.add_hotkey('a', lambda: robot.move(Directions.Left))
-		#self.dHook = keyboard.add_hotkey('d', lambda: robot.move(Directions.Right))
+		self.hooks = []
+		self.hooks.append(keyboard.hook_key('w', lambda: robot.move(Directions.Forward), lambda: robot.stop(Directions.Forward)))
+		self.hooks.append(keyboard.hook_key('s', lambda: robot.move(Directions.Back), lambda: robot.stop(Directions.Back)))
+		self.hooks.append(keyboard.hook_key('a', lambda: robot.move(Directions.Left), lambda: robot.stop(Directions.Left)))
+		self.hooks.append(keyboard.hook_key('d', lambda: robot.move(Directions.Right), lambda: robot.stop(Directions.Right)))
+		
+		self.hooks.append(keyboard.hook_key('z', lambda: robot.speedAdjust(Throttle.Down), lambda: None))
+		self.hooks.append(keyboard.hook_key('x', lambda: robot.speedAdjust(Throttle.Up), lambda: None))
 	def halt(self):
-		keyboard.listener.remove_handler(self.wHook)
-		#keyboard.remove_hotkey('s')
-		#keyboard.remove_hotkey('a')
-		#keyboard.remove_hotkey('s')
-		#keyboard.remove_hotkey('d')
-		pass
+		for hook in self.hooks:
+			keyboard.listener.remove_handler(hook)
 
 
 
