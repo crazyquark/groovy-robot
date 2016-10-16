@@ -6,10 +6,11 @@ from keyboard import keyboard
 
 from r_server.robot_server import Directions, Throttle
 
-ARROW_UP = '\x1b[A'
-ARROW_DOWN = '\x1b[B'
-ARROW_LEFT = '\x1b[D'
-ARROW_RIGHT = '\x1b[C'
+# These seem to be different on Linux
+ARROW_UP = 103
+ARROW_DOWN = 108
+ARROW_LEFT = 105
+ARROW_RIGHT = 106
 
 class KeyboardController:
 	'''Implements direct control using a connected USB keyboard'''
