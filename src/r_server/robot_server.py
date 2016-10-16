@@ -1,4 +1,4 @@
-import platform, threading
+import platform, threading, sys, traceback
 
 class Directions:
 	Forward, Back, Left, Right = range(4)
@@ -45,42 +45,44 @@ class RobotServer(object):
 	def update(self):
 		while(self.running):
 			if (self.runningOnPi):
-				#self.motors.MotorSpeedSetAB(self.speed,self.speed)
-				#self.motors.MotorDirectionSet(self.forwardDir)
-				
-				if ((not self.forwardDir and not self.backPressed and  not self.leftPressed and not self.rightPressed) or
-					(self.fwdPressed and self.backPressed) or (self.leftPressed and self.rightPressed)):
-					# Full stop
-					self.motors.MotorSpeedSetAB(0, 0)
-				elif (not self.leftPressed and not self.rightPressed and self.fwdPressed):
-					# Full steam ahead!
-					self.motors.MotorDirectionSet(self.forwardDir)
-					self.motors.MotorSpeedSetAB(self.speed, self.speed)
-				elif (not self.leftPressed and not self.rightPressed and self.backPressed):
-					# All engines reverse!
-					self.motors.MotorDirectionSet(self.backwardDir)
-					self.motors.MotorSpeedSetAB(self.speed, self.speed)
-				elif (not self.backPressed and not self.fwdPressed and self.rightPressed):
-					# In place right turn
-					self.motors.MotorDirectionSet(self.rightDir)
-					self.motors.MotorSpeedSetAB(self.speed, self.speed)
-				elif (not self.backPressed and not self.fwdPressed and self.leftPressed):
-					# In place left turn
-					self.motors.MotorDirectionSet(self.leftDir)
-					self.motors.MotorSpeedSetAB(self.speed, self.speed)
-				elif ((self.fwdPressed or self.backPressed) and self.rightPressed):
-					# Attempt to turn right
-					self.motors.MotorDirectionSet(self.forwardDir if self.fwdPressed else self.backwardDir)
-					self.motors.MotorSpeedSetAB(self.speed, self.speed / self.turnFactor)
-				elif ((self.fwdPressed or self.backPressed) and self.leftPressed):
-					# Attempt to turn left
-					self.motors.MotorDirectionSet(self.forwardDir if self.fwdPressed else self.backwardDir)
-					self.motors.MotorSpeedSetAB(self.speed / self.turnFactor, self.speed)
-				else:
-					# I donno
-					self.motors.MotorSpeedSetAB(0, 0)
+				try:	
+					if ((not self.forwardDir and not self.backPressed and  not self.leftPressed and not self.rightPressed) or
+						(self.fwdPressed and self.backPressed) or (self.leftPressed and self.rightPressed)):
+						# Full stop
+						self.motors.MotorSpeedSetAB(0, 0)
+					elif (not self.leftPressed and not self.rightPressed and self.fwdPressed):
+						# Full steam ahead!
+						self.motors.MotorDirectionSet(self.forwardDir)
+						self.motors.MotorSpeedSetAB(self.speed, self.speed)
+					elif (not self.leftPressed and not self.rightPressed and self.backPressed):
+						# All engines reverse!
+						self.motors.MotorDirectionSet(self.backwardDir)
+						self.motors.MotorSpeedSetAB(self.speed, self.speed)
+					elif (not self.backPressed and not self.fwdPressed and self.rightPressed):
+						# In place right turn
+						self.motors.MotorDirectionSet(self.rightDir)
+						self.motors.MotorSpeedSetAB(self.speed, self.speed)
+					elif (not self.backPressed and not self.fwdPressed and self.leftPressed):
+						# In place left turn
+						self.motors.MotorDirectionSet(self.leftDir)
+						self.motors.MotorSpeedSetAB(self.speed, self.speed)
+					elif ((self.fwdPressed or self.backPressed) and self.rightPressed):
+						# Attempt to turn right
+						self.motors.MotorDirectionSet(self.forwardDir if self.fwdPressed else self.backwardDir)
+						self.motors.MotorSpeedSetAB(self.speed, self.speed / self.turnFactor)
+					elif ((self.fwdPressed or self.backPressed) and self.leftPressed):
+						# Attempt to turn left
+						self.motors.MotorDirectionSet(self.forwardDir if self.fwdPressed else self.backwardDir)
+						self.motors.MotorSpeedSetAB(self.speed / self.turnFactor, self.speed)
+					else:
+						# I donno
+						self.motors.MotorSpeedSetAB(0, 0)
+				except:
+					print 'Critical failure, shutting down'
+					print 'Possible cause: '
+					traceback.print_exc()
+					sys.exit(1)
 					
-
 	def setupGrovePi(self):
 		if not self.runningOnPi:
 			return
