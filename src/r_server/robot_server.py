@@ -81,7 +81,8 @@ class RobotServer(object):
 					print 'Critical failure, shutting down'
 					print 'Possible cause: '
 					traceback.print_exc()
-					sys.exit(1)
+					self.runnig = False
+					raise Exception('Motors failure')
 					
 	def setupGrovePi(self):
 		if not self.runningOnPi:
