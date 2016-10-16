@@ -6,10 +6,10 @@ from keyboard import keyboard
 
 from r_server.robot_server import Directions, Throttle
 
-ARROW_UP = 72
-ARROW_DOWN = 80
-ARROW_LEFT = 75
-ARROW_RIGHT = 77
+ARROW_UP = '\x1b[A'
+ARROW_DOWN = '\x1b[B'
+ARROW_LEFT = '\x1b[D'
+ARROW_RIGHT = '\x1b[C'
 
 class KeyboardController:
 	'''Implements direct control using a connected USB keyboard'''
