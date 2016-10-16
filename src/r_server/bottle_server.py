@@ -7,7 +7,6 @@ from bottle import request, Bottle, abort, template, static_file
 from r_server.robot_server import RobotServer, Directions, Throttle
 
 app = Bottle()
-robot = RobotServer()
 
 @app.route('/ws')
 def websocket():
@@ -59,10 +58,11 @@ from gevent.pywsgi import WSGIServer
 from geventwebsocket import WebSocketError
 from geventwebsocket.handler import WebSocketHandler
 
-def getRobotServer():
-	return robot
+robot = None
+def run(robotServer):
+	global robot
+	robot = robotServer
 
-def run():
 	server = WSGIServer(("0.0.0.0", 8080), app,
 						handler_class=WebSocketHandler)
 	server.serve_forever()

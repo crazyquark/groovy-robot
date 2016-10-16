@@ -4,6 +4,8 @@
 '''
 
 from r_server import bottle_server
+from r_server.robot_server import RobotServer
+
 import sys, traceback
 
 enableKeyboard = True
@@ -17,9 +19,12 @@ except:
 	enableKeyboard = False
 
 try:
+	robot = RobotServer()
+
 	if enableKeyboard:
-		keyboardController = KeyboardController(bottle_server.getRobotServer())
-	bottle_server.run()
+		keyboardController = KeyboardController(robot)
+
+	bottle_server.run(robot)
 except:
 	traceback.print_exc()
 
