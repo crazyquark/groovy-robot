@@ -116,7 +116,7 @@ class RobotServer(object):
 		self.processPress(dir, True)
 
 	def stop(self, dir):
-		print('STOP')
+		print('STOP: ', dir)
 
 		if not self.runningOnPi:
 			return

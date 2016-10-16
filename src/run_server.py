@@ -9,7 +9,7 @@ import sys
 enableKeyboard = True
 try:
 	from keyboard_controller import KeyboardController
-except e:
+except Exception as e:
 	print 'Keyboard error: probably there is no keyboard connected, disabling'
 	print 'Error is ' + e
 	enableKeyboard = False
