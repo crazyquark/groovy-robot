@@ -53,7 +53,24 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\grovepi_driver\grove_i2c_motor_driver.py" />
+    <Compile Include="src\keyboard\keyboard\generic.py" />
+    <Compile Include="src\keyboard\keyboard\keyboard.py" />
+    <Compile Include="src\keyboard\keyboard\keyboard_event.py" />
+    <Compile Include="src\keyboard\keyboard\keyboard_tests.py" />
+    <Compile Include="src\keyboard\keyboard\mouse.py" />
+    <Compile Include="src\keyboard\keyboard\mouse_event.py" />
+    <Compile Include="src\keyboard\keyboard\mouse_tests.py" />
+    <Compile Include="src\keyboard\keyboard\nixcommon.py" />
+    <Compile Include="src\keyboard\keyboard\nixkeyboard.py" />
+    <Compile Include="src\keyboard\keyboard\nixmouse.py" />
+    <Compile Include="src\keyboard\keyboard\winkeyboard.py" />
+    <Compile Include="src\keyboard\keyboard\winmouse.py" />
+    <Compile Include="src\keyboard\keyboard\__init__.py" />
+    <Compile Include="src\keyboard\setup.py" />
     <Compile Include="src\keyboard_controller.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\__init__.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\rc_robot.py" />
@@ -83,6 +100,11 @@
     <Content Include="requirements.txt" />
     <Content Include="res\wall-e-800.jpg" />
     <Content Include="res\wall-e.jpg" />
+    <Content Include="src\keyboard\.coveragerc" />
+    <Content Include="src\keyboard\.git" />
+    <Content Include="src\keyboard\.gitattributes" />
+    <Content Include="src\keyboard\.gitignore" />
+    <Content Include="src\keyboard\README.md" />
     <Content Include="src\r_server\main.html" />
   </ItemGroup>
   <ItemGroup>
@@ -98,6 +120,8 @@
     <Folder Include="src\grovepi_driver\" />
     <Folder Include="src\" />
     <Folder Include="res\" />
+    <Folder Include="src\keyboard\" />
+    <Folder Include="src\keyboard\keyboard\" />
     <Folder Include="src\r_server\" />
   </ItemGroup>
   <Import Project="$(PtvsTargetsFile)" Condition="Exists($(PtvsTargetsFile))" />

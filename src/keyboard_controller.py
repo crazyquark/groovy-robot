@@ -1,5 +1,7 @@
-import keyboard
-from keyboard.keyboard_event import normalize_name, KEY_DOWN, KEY_UP
+from sys import path
+path.insert(0, './keyboard')
+
+from keyboard import keyboard
 
 from r_server.robot_server import Directions
 

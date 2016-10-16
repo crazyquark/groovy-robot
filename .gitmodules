@@ -1,0 +1,3 @@
+[submodule "src/keyboard"]
+	path = src/keyboard
+	url = git@github.com:crazyquark/keyboard.git
