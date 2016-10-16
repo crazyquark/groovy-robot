@@ -1,3 +1,0 @@
-[submodule "lib/keyboard"]
-	path = lib/keyboard
-	url = git@github.com:crazyquark/keyboard.git
