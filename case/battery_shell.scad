@@ -4,13 +4,12 @@ and hold the RPi
 */
 
 include <PiHole.scad>
-include <camera.scad>
 
 // Battery pack specs
-BATTERY_PACK_SIZE = [64, 59, 31]; // W x L x H
-ARM_THICKNESS = 6; 
+BATTERY_PACK_SIZE = [63, 59, 31]; // W x L x H
+ARM_THICKNESS = 3.5; 
 BASE_THICKNESS = 1.1;
-TOP_COVER_THICKNESS = 3; // This is for the screw
+TOP_COVER_THICKNESS = 1.5; // This is for the screw
 TOP_ARM_THICKNESS = 5;   // This is for the battery pack
 TOP_EXTRA_SPACE = 15;
 ARM_WIDTH = 10;
@@ -21,7 +20,7 @@ BASE_MARGIN = 3.5;
 SCREW_DIST = 2.1; // Distance between screw holes on the base board
 
 // Screw specs
-M3_RADIUS = 1.6; // +0.1 for 3D printing shrinkage
+M3_RADIUS = 1.5;
 M3_CAP_HEIGHT = 2; // Screw cap height
 
 PI_SCREW_DIST = 48.5;
@@ -30,6 +29,11 @@ PI_HOLE_LOC_1 = piHoleLocations("3B")[0][0];
 PI_HOLE_LOC_2 = piHoleLocations("3B")[2][1];
 echo("Pi hole loc 1:", PI_HOLE_LOC_1);
 echo("Pi hole loc 2:", PI_HOLE_LOC_2);
+
+// Camera
+PI_CAM_WIDTH = 30; // case dimensions
+PI_CAM_LENGTH = 28;
+PI_CAM_HEIGHT = 8;
 
 $fn = 20;
 epsilon = 0.02;
@@ -64,7 +68,7 @@ module batteryHolderArm()
 {
     middle = BATTERY_PACK_SIZE[0] / 2;
 
-    boardAlign = BATTERY_PACK_SIZE[1] - PI_WIDITH;
+    boardAlign = (ARM_THICKNESS + BATTERY_PACK_SIZE[1] - PI_WIDITH) / 2;
     echo("Board align:", boardAlign);
 
     hole1 = PI_HOLE_LOC_1 + boardAlign;
@@ -109,12 +113,20 @@ module batteryHolderArm()
     }
 }
 
+module cameraHolder()
+{
+    import("camera_front.stl");
+    translate([PI_CAM_WIDTH / 2   , PI_CAM_LENGTH, 0])
+        #cube([PI_CAM_HEIGHT, 50, PI_CAM_HEIGHT], center = true);
+}
+
 module drawAll() 
 {
     color([0.0, 1.0, 0.0]) 
     {
-        rotate([90, 0, 0])
-            batteryHolderArm();
+        //rotate([90, 0, 0])
+        //    batteryHolderArm();
+        cameraHolder();
     }
 }
 
