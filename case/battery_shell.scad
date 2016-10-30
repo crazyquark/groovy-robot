@@ -115,9 +115,24 @@ module batteryHolderArm()
 
 module cameraHolder()
 {
-    import("camera_front.stl");
-    translate([PI_CAM_WIDTH / 2   , PI_CAM_LENGTH, 0])
-        #cube([PI_CAM_HEIGHT, 50, PI_CAM_HEIGHT], center = true);
+    holderLen = 15;
+    shellThickness = 1.5;
+
+    union()
+    {
+        import("camera_front.stl");
+        difference()
+        {
+            translate([PI_CAM_WIDTH / 2, PI_CAM_LENGTH + holderLen / 2, PI_CAM_HEIGHT / 2 - 0.1])
+                cube([PI_CAM_HEIGHT, holderLen, PI_CAM_HEIGHT], center = true);
+            translate([PI_CAM_WIDTH / 2, PI_CAM_LENGTH + holderLen / 2, PI_CAM_HEIGHT / 2 + 3])        
+                cube([PI_CAM_HEIGHT + 1, holderLen - 1.5, PI_CAM_HEIGHT - 0.5], center = true);
+            
+            translate([PI_CAM_WIDTH / 2, PI_CAM_LENGTH + 15, shellThickness + 4])
+                rotate([90, 0, 0])
+                    cylinder(r = shellThickness, h = 10, center = true);            
+        }
+    }
 }
 
 module drawAll() 
