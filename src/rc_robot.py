@@ -24,8 +24,8 @@ class Robot:
 		# '0b1010' defines the output polarity, '10' means the M+ is 'positive' while the M- is 'negative'
 		self.forwardDir  = 0b0101
 		self.backwardDir = 0b1010
-		self.rightDir	 = 0b1001
-		self.leftDir	 = 0b0110
+		self.leftDir	 = 0b1001
+		self.rightDir	 = 0b0110
 
 		# Attempting to limit max speed to avoid crashes
 		self.maxSpeed = 95
