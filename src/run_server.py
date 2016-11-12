@@ -47,6 +47,7 @@ try:
 
 	bottle_server.run(robot)
 except:
+	print 'Caught a bogie: '
 	traceback.print_exc()
 	
 	haltHandler()
