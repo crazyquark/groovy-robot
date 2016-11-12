@@ -7,10 +7,11 @@ class Camera(Thread):
 		Thread.__init__(self)
 
 	def run(self):
-		if os.path.isfile(self.streamerPath):
-			streamerPath = './lib/mjpeg-streamer/mjpeg-streamer-experimental'
+		streamerPath = './lib/mjpeg-streamer/mjpeg-streamer-experimental'
+		exePath = streamerPath + '/mjpg_streamer'
+		if os.path.isfile(exePath):
 
-			cmd = shlex.split(streamerPath + '/mjpg_streamer -o "output_http.so -w ./www -p 9090" -i "input_raspicam.so"')
+			cmd = shlex.split(exePath + ' -o "output_http.so -w ./www -p 9090" -i "input_raspicam.so"')
 
 			runEnv = os.environ.copy()
 			runEnv['LD_LIBRARY_PATH'] = streamerPath
