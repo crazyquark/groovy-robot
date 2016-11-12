@@ -34,8 +34,10 @@ class KeyboardController:
 		self.hooks.append(keyboard.hook_key('x', lambda: robot.speedAdjust(Throttle.Up), lambda: None))
 	def halt(self):
 		for hook in self.hooks:
-			keyboard.listener.remove_handler(hook)
-
+			try:
+				keyboard.listener.remove_handler(hook)
+			except:
+				print 'Failed to remove hook: ' + str(hook)
 
 
 		
