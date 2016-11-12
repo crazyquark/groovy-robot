@@ -7,7 +7,7 @@ class Camera(Thread):
 		Thread.__init__(self)
 
 	def run(self):
-		streamerPath = os.path.join(os.getcwd(), '../lib/mjpeg-streamer/mjpeg-streamer-experimental')
+		streamerPath = os.path.join(os.getcwd(), '../lib/mjpg-streamer/mjpg-streamer-experimental')
 		exePath = os.path.join(streamerPath, 'mjpg_streamer')
 
 		if os.path.isfile(exePath):
