@@ -5,6 +5,7 @@
 
 from r_server import bottle_server
 from r_server.robot_server import RobotServer
+from camera_server.camera import Camera
 
 import sys, traceback
 
@@ -20,6 +21,10 @@ except:
 
 try:
 	robot = RobotServer()
+
+	# Camera, lights, action!
+	camera = Camera()
+	camera.start()
 
 	if enableKeyboard:
 		keyboardController = KeyboardController(robot)
