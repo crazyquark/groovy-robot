@@ -61,7 +61,7 @@
         document.addEventListener('keyup', keyupHandler, false);
 
         var onLoad = () => {
-            document.getElementById('viewer').src = 'http://' + window.location.host + ':9090/?action=stream';
+            document.getElementById('viewer').src = 'http://' + window.location.hostname + ':9090/?action=stream';
         };
 	</script>
 </head>
