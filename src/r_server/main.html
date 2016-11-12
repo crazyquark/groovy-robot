@@ -61,13 +61,13 @@
         document.addEventListener('keyup', keyupHandler, false);
 
         var onLoad = () => {
-            document.getElementById('viewer').src = window.location.host + ':9090/?action=stream';
+            document.getElementById('viewer').src = 'http://' + window.location.host + ':9090/?action=stream';
         };
 	</script>
 </head>
 <body onload="onLoad()">
     <center>
-        <img src="empty" id="viewer"/>
+        <img src="empty.jpeg" id="viewer" name="viewer"/>
     </center>
 </body>
 </html>
