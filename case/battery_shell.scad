@@ -139,9 +139,9 @@ module drawAll()
 {
     color([0.0, 1.0, 0.0]) 
     {
-        //rotate([90, 0, 0])
-        //    batteryHolderArm();
-        cameraHolder();
+        rotate([90, 0, 0])
+            batteryHolderArm();
+        //cameraHolder();
     }
 }
 
