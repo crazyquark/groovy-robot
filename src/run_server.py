@@ -33,6 +33,7 @@ def haltHandler():
 		sys.exit(0)
 
 signal.signal(signal.SIGINT, haltHandler)
+signal.signal(signal.SIGTERM, haltHandler)
 
 try:
 	robot = RobotServer()
