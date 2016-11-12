@@ -59,11 +59,15 @@
 
         document.addEventListener('keydown', keydownHandler, false);
         document.addEventListener('keyup', keyupHandler, false);
+
+        var onLoad = () => {
+            document.getElementById('viewer').src = window.location.host + ':9090/?action=stream';
+        };
 	</script>
 </head>
-<body>
+<body onload="onLoad()">
     <center>
-        <img src="http://localhost:9090/?action=stream" />
+        <img src="empty" id="viewer"/>
     </center>
 </body>
 </html>
