@@ -25,7 +25,7 @@ except:
 
 	enableKeyboard = False
 
-def haltHandler():
+def haltHandler(*_):
 	camera.halt()
 	bottle_server.halt()
 	if enableKeyboard:
