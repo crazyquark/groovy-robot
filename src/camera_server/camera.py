@@ -13,7 +13,7 @@ class Camera(Thread):
 		if os.path.isfile(exePath):
 			wwwPath = os.path.join(streamerPath, 'www')
 
-			cmd = shlex.split(exePath + ' -o "output_http.so -w ' + wwwPath + ' -p 9090" -i "input_raspicam.so"')
+			cmd = shlex.split(exePath + ' -o "output_http.so -w ' + wwwPath + ' -p 9090" -i "input_raspicam.so -r 1280x720"')
 
 			runEnv = os.environ.copy()
 			runEnv['LD_LIBRARY_PATH'] = streamerPath
