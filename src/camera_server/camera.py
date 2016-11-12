@@ -7,8 +7,9 @@ class Camera(Thread):
 		Thread.__init__(self)
 
 	def run(self):
-		streamerPath = './lib/mjpeg-streamer/mjpeg-streamer-experimental'
-		exePath = streamerPath + '/mjpg_streamer'
+		streamerPath = os.path.join(os.getcwd(), 'lib/mjpeg-streamer/mjpeg-streamer-experimental')
+		exePath = os.path.join(streamerPath, 'mjpg_streamer')
+
 		if os.path.isfile(exePath):
 
 			cmd = shlex.split(exePath + ' -o "output_http.so -w ./www -p 9090" -i "input_raspicam.so"')
