@@ -32,7 +32,8 @@ try:
 	bottle_server.run(robot)
 except:
 	traceback.print_exc()
-
+	
+	camera.halt()
 	bottle_server.halt()
 	if enableKeyboard:
 		keyboardController.halt()

@@ -11,14 +11,19 @@ class Camera(Thread):
 		exePath = os.path.join(streamerPath, 'mjpg_streamer')
 
 		if os.path.isfile(exePath):
+			wwwPath = os.path.join(streamerPath, 'www')
 
-			cmd = shlex.split(exePath + ' -o "output_http.so -w ./www -p 9090" -i "input_raspicam.so"')
+			cmd = shlex.split(exePath + ' -o "output_http.so -w ' + wwwPath + ' -p 9090" -i "input_raspicam.so"')
 
 			runEnv = os.environ.copy()
 			runEnv['LD_LIBRARY_PATH'] = streamerPath
 
-			subprocess.Popen(cmd, env = runEnv)
+			self.streamer = subprocess.Popen(cmd, env = runEnv)
 		
 		else:
 			print 'Looks like we are missing mjpg-streamer'
+
+	def halt(self):
+		if (self.streamer):
+			self.streamer.kill()
 
