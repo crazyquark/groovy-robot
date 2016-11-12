@@ -9,6 +9,12 @@ from camera_server.camera import Camera
 
 import sys, traceback
 
+import signal
+import sys
+
+
+
+
 enableKeyboard = True
 try:
 	from keyboard_controller import KeyboardController
@@ -18,6 +24,15 @@ except:
 	traceback.print_exc()
 
 	enableKeyboard = False
+
+def haltHandler():
+	camera.halt()
+	bottle_server.halt()
+	if enableKeyboard:
+		keyboardController.halt()
+		sys.exit(0)
+
+signal.signal(signal.SIGINT, haltHandler)
 
 try:
 	robot = RobotServer()
@@ -33,10 +48,7 @@ try:
 except:
 	traceback.print_exc()
 	
-	camera.halt()
-	bottle_server.halt()
-	if enableKeyboard:
-		keyboardController.halt()
+	haltHandler()
 	
 	print 'There was an error, halting...'
 	sys.exit(0)

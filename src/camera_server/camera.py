@@ -24,6 +24,6 @@ class Camera(Thread):
 			print 'Looks like we are missing mjpg-streamer'
 
 	def halt(self):
-		if (self.streamer):
+		if (hasattr(self, 'streamer')):
 			self.streamer.kill()
 
