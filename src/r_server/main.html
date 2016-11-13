@@ -13,8 +13,8 @@
 		}
 
         #main {
-            width: 800px;
-            height: 600px;
+            width: '{{ resolution[0] }}px';
+            height: '{{ resolution[1] }}px';
             background-color: red;
 
             position: absolute;
@@ -73,16 +73,12 @@
 
         document.addEventListener('keydown', keydownHandler, false);
         document.addEventListener('keyup', keyupHandler, false);
-
-        var onLoad = () => {
-            document.getElementById('viewer').src = 'http://' + window.location.hostname + ':9090/?action=stream';
-        };
 	</script>
 </head>
 <body onload="onLoad()">
     <div id="main">
         <center>
-            <img src="empty.jpeg" id="viewer" name="viewer"/>
+            <img src="{{ url_for('stream') }}"/>
         </center>
     </div>
 </body>

@@ -4,7 +4,6 @@
 '''
 
 from bottle import request, Bottle, abort, template, static_file
-from r_server.robot_server import RobotServer, Directions, Throttle
 
 app = Bottle()
 
@@ -48,7 +47,7 @@ def websocket():
 @app.route('/')
 def index():
 	host = request.get_header('host')
-	return template('r_server/main.html', host = host)
+	return template('r_server/main.html', host = host, resolution = (800, 600))
 
 @app.route('/images/<filename>')
 def images(filename):
@@ -58,10 +57,15 @@ from gevent.pywsgi import WSGIServer
 from geventwebsocket import WebSocketError
 from geventwebsocket.handler import WebSocketHandler
 
+@app.route('/stream')
+def stream():
+	pass
+
 robot = None
-def run(robotServer):
-	global robot
+def run(robotServer, cameraServer):
+	global robot, camera
 	robot = robotServer
+	camera = cameraServer
 
 	server = WSGIServer(("0.0.0.0", 8080), app,
 						handler_class=WebSocketHandler)

@@ -1,4 +1,5 @@
-import platform, threading, sys, traceback, time
+import platform, sys, traceback, time
+from threading import Thread
 
 class Directions:
 	Forward, Back, Left, Right = range(4)
@@ -6,8 +7,11 @@ class Directions:
 class Throttle:
 	Up, Down = (1, -1)
 
-class RobotServer(object):
-	'''Server component for controlling a local GrovePi based robot'''
+class RobotServer(Thread):
+	'''
+		Server component for controlling a local GrovePi based robot
+		Uses an autostart thread to run its update loop
+	'''
 	def __init__(self):
 		# Motor directions
 		# '0b1010' defines the output polarity, '10' means the M+ is 'positive' while the M- is 'negative'
@@ -38,11 +42,11 @@ class RobotServer(object):
 
 		self.setupGrovePi()
 		
+		Thread.__init__(self)
 		self.running = True
-		updateThread = threading.Thread(target = self.update)
-		updateThread.start()
+		self.start()
 		
-	def update(self):
+	def run(self):
 		while(self.running):
 			if (self.runningOnPi):
 				try:	

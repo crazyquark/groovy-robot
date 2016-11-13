@@ -5,7 +5,7 @@
 
 from r_server import bottle_server
 from r_server.robot_server import RobotServer
-from camera_server.camera import Camera
+from camera_server.camera_server import CameraServer
 
 import sys, traceback
 
@@ -39,13 +39,12 @@ try:
 	robot = RobotServer()
 
 	# Camera, lights, action!
-	camera = Camera()
-	camera.start()
+	camera = CameraServer()
 
 	if enableKeyboard:
 		keyboardController = KeyboardController(robot)
 
-	bottle_server.run(robot)
+	bottle_server.run(robot, camera)
 except:
 	print 'Caught a bogie: '
 	traceback.print_exc()

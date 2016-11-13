@@ -4,3 +4,4 @@ smbus
 bottle
 gevent
 gevent-websocket
+picamera
