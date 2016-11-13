@@ -1,6 +1,3 @@
 [submodule "lib/keyboard"]
 	path = lib/keyboard
 	url = git@github.com:crazyquark/keyboard.git
-[submodule "lib/mjpg-streamer"]
-	path = lib/mjpg-streamer
-	url = https://github.com/jacksonliam/mjpg-streamer.git
