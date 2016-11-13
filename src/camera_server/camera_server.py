@@ -17,13 +17,17 @@ class CameraServer(Thread):
 
 		self.resolution = (800, 600)
 		self.running = True
+		self.dummyFrame() 
 		self.start()
+	
+	def dummyFrame(self):
+		if (not hasattr(self, 'frame')):
+			with open('../res/wall-e-800.jpg', 'rb') as image:
+				self.frame = image.read()
 
 	def run(self):
 		if (not runningOnPi):
-			if (not hasattr(self, 'frame')):
-				with open('../res/wall-e-800.jpg', 'rb') as image:
-					self.frame = image.read()
+			self.dummyFrame()
 			return
 
 		with picamera.PiCamera() as camera:
