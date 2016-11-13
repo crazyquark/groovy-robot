@@ -8,6 +8,7 @@ from flask_sockets import Sockets
 from robot_server import Directions, Throttle
 
 app = Flask(__name__, template_folder = '.', static_folder = '../../res/')
+app.debug = True
 sockets = Sockets(app)
 
 @sockets.route('/ws')
