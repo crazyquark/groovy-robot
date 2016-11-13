@@ -4,5 +4,4 @@ smbus
 flask
 flask_sockets
 gevent
-geventwebsocket
 picamera

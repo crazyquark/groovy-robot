@@ -27,7 +27,7 @@ except:
 
 def haltHandler(*_):
 	camera.halt()
-	bottle_server.halt()
+	flask_server.halt()
 	if enableKeyboard:
 		keyboardController.halt()
 		sys.exit(0)
