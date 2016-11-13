@@ -59,10 +59,13 @@ from geventwebsocket import WebSocketError
 from geventwebsocket.handler import WebSocketHandler
 
 def genStream(camera):
-    '''Video streaming generator function.'''
-    while True:
-        frame = camera.get_frame()
-        yield (b'--frame\r\n'
+	'''Video streaming generator function.'''
+	while True:
+		try:
+			frame = camera.getFrame()
+		except:
+			print 'Failed to get frame ' + str(frame)
+		yield (b'--frame\r\n'
 			   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
 @app.route('/stream')
