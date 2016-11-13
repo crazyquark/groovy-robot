@@ -3,7 +3,7 @@
 	Run the server
 '''
 
-from r_server import bottle_server
+from r_server import flask_server
 from r_server.robot_server import RobotServer
 from camera_server.camera_server import CameraServer
 
@@ -44,7 +44,7 @@ try:
 	if enableKeyboard:
 		keyboardController = KeyboardController(robot)
 
-	bottle_server.run(robot, camera)
+	flask_server.run(robot, camera)
 except:
 	print 'Caught a bogie: '
 	traceback.print_exc()

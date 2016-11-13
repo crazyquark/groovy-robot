@@ -55,7 +55,7 @@
     <Compile Include="src\run_server.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\r_server\bottle_server.py">
+    <Compile Include="src\r_server\flask_server.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\r_server\robot_server.py">
