@@ -29,7 +29,7 @@ class CameraServer(Thread):
 		with picamera.PiCamera() as camera:
 			# Camera setup
 			camera.resolution = (800, 600)
-            camera.hflip = True
+			camera.hflip = True
 			camera.vflip = True
 
 			# Let camera warm up (??)
