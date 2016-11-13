@@ -21,6 +21,9 @@ class CameraServer(Thread):
 
 	def run(self):
 		if (not runningOnPi):
+			if (not hasattr(self, 'frame')):
+				with open('../res/wall-e-800.jpg', 'rb') as image:
+					self.frame = image.read()
 			return
 
 		with picamera.PiCamera() as camera:
@@ -50,7 +53,6 @@ class CameraServer(Thread):
 				stream.truncate()
 
 	def getFrame(self):
-		Camera.last_access = time.time()
 		return self.frame
 
 	def halt(self):
