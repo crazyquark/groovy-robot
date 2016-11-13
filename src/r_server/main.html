@@ -13,8 +13,8 @@
 		}
 
         #main {
-            width: '{{ resolution[0] }}px';
-            height: '{{ resolution[1] }}px';
+            width: {{ resolution[0] }}px;
+            height: {{ resolution[1] }}px;
             background-color: red;
 
             position: absolute;
@@ -78,7 +78,7 @@
 <body onload="onLoad()">
     <div id="main">
         <center>
-            <img src="{{ url_for('stream') }}"/>
+            <img src="http://{{ host }}/stream"/>
         </center>
     </div>
 </body>
