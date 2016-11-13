@@ -3,10 +3,10 @@
 	See http://bottlepy.org/docs/dev/async.html
 '''
 
-from bottle import request, Bottle, abort, template, static_file, Response
+from flask import Flask, render_template as template, request, make_response, jsonify
 from robot_server import Directions, Throttle
 
-app = Bottle()
+app = Flask(__name__, template_folder = '.', static_folder = '../res/')
 
 @app.route('/ws')
 def websocket():
@@ -47,12 +47,11 @@ def websocket():
 
 @app.route('/')
 def index():
-	host = request.get_header('host')
-	return template('r_server/main.html', host = host, resolution = (800, 600))
+	return template('main.html', host = 'localhost', resolution = (800, 600))
 
 @app.route('/images/<filename>')
 def images(filename):
-    return static_file(filename, root='../res/')
+    return app.send_static_file(filename)
 
 from gevent.pywsgi import WSGIServer
 from geventwebsocket import WebSocketError
@@ -78,9 +77,7 @@ def run(robotServer, cameraServer):
 	robot = robotServer
 	camera = cameraServer
 
-	server = WSGIServer(("0.0.0.0", 8080), app,
-						handler_class=WebSocketHandler)
-	server.serve_forever()
+	app.run(debug = True, port = 8080)
 
 def halt():
 	robot.halt()

@@ -1,7 +1,5 @@
 pygame
 ptvsd
 smbus
-bottle
-gevent
-gevent-websocket
+flask
 picamera
