@@ -2,7 +2,7 @@
 from sys import path
 path.insert(0, '../lib/keyboard/')
 
-from keyboard import keyboard
+import keyboard
 
 from r_server.robot_server import Directions, Throttle
 
