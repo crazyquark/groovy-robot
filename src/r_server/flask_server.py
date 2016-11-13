@@ -26,6 +26,7 @@ def websocket(wsock):
 				robot.move(Directions.Back)
 			elif (message == 'S'):
 				robot.stop(Directions.Back)
+			elif (message == 'a'):
 				robot.move(Directions.Left)
 			elif (message == 'A'):
 				robot.stop(Directions.Left)
