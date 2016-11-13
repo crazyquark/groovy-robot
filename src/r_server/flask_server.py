@@ -4,17 +4,15 @@
 '''
 
 from flask import Flask, render_template as template, request, make_response, jsonify
+from flask_sockets import Sockets
 from robot_server import Directions, Throttle
 
 app = Flask(__name__, template_folder = '.', static_folder = '../../res/')
+sockets = Sockets(app)
 
-@app.route('/ws')
-def websocket():
-	wsock = request.environ.get('wsgi.websocket')
-	if not wsock:
-		abort(400, 'Expected WebSocket request.')
-
-	while True:
+@sockets.route('/ws')
+def websocket(wsock):
+	while not wsock.closed:
 		try:
 			message = wsock.receive()
 			if (message == 'hello'):
@@ -27,7 +25,6 @@ def websocket():
 				robot.move(Directions.Back)
 			elif (message == 'S'):
 				robot.stop(Directions.Back)
-			elif (message == 'a'):
 				robot.move(Directions.Left)
 			elif (message == 'A'):
 				robot.stop(Directions.Left)
@@ -36,18 +33,18 @@ def websocket():
 			elif (message == 'D'):
 				robot.stop(Directions.Right)
 			elif (message == 'x'):
-				robot.speedAdjust(Throtle.Up)
+				robot.speedAdjust(Throttle.Up)
 			elif (message == 'z'):
 				robot.speedAdjust(Throttle.Down)
 			elif (message == ''):
 				robot.stop()
-
-		except WebSocketError:
+		except WebSocketError as err:
+			print repr(err)
 			break
 
 @app.route('/')
 def index():
-	return template('main.html', host = 'localhost', resolution = (800, 600))
+	return template('main.html', host = 'localhost:8080', resolution = (800, 600))
 
 @app.route('/images/<filename>')
 def images(filename):
@@ -69,7 +66,7 @@ def genStream(camera):
 
 @app.route('/stream')
 def stream():
-	return Response(genStream(camera))
+	pass
 
 robot = None
 def run(robotServer, cameraServer):
@@ -77,7 +74,10 @@ def run(robotServer, cameraServer):
 	robot = robotServer
 	camera = cameraServer
 
-	app.run(debug = False, port = 8080)
+	from gevent import pywsgi
+	from geventwebsocket.handler import WebSocketHandler
+	server = pywsgi.WSGIServer(('', 8080), app, handler_class=WebSocketHandler)
+	server.serve_forever()
 
 def halt():
 	robot.halt()
