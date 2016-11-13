@@ -125,8 +125,8 @@ module cameraHolder()
         {
             translate([PI_CAM_WIDTH / 2, PI_CAM_LENGTH + holderLen / 2, PI_CAM_HEIGHT / 2 - 0.1])
                 cube([PI_CAM_HEIGHT, holderLen, PI_CAM_HEIGHT], center = true);
-            translate([PI_CAM_WIDTH / 2, PI_CAM_LENGTH + holderLen / 2, PI_CAM_HEIGHT / 2 + 3])        
-                cube([PI_CAM_HEIGHT + 1, holderLen - 1.5, PI_CAM_HEIGHT - 0.5], center = true);
+            translate([PI_CAM_WIDTH / 2, PI_CAM_LENGTH + holderLen / 2 - 0.5, PI_CAM_HEIGHT / 2 + 3])        
+                #cube([PI_CAM_HEIGHT + 1, holderLen - 2.5, PI_CAM_HEIGHT - 0.5], center = true);
             
             translate([PI_CAM_WIDTH / 2, PI_CAM_LENGTH + 15, shellThickness + 4])
                 rotate([90, 0, 0])
@@ -139,9 +139,9 @@ module drawAll()
 {
     color([0.0, 1.0, 0.0]) 
     {
-        rotate([90, 0, 0])
-            batteryHolderArm();
-        //cameraHolder();
+        //rotate([90, 0, 0])
+        //    batteryHolderArm();
+        cameraHolder();
     }
 }
 
