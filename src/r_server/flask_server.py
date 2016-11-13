@@ -45,7 +45,11 @@ def websocket(wsock):
 
 @app.route('/')
 def index():
-	return template('main.html', host = 'localhost:8080', resolution = (800, 600))
+	from urlparse import urlparse
+	parsedUrl = urlparse(request.url)
+	host = parsedUrl.hostname + (':' + str(parsedUrl.port) if parsedUrl.port else '')
+	
+	return template('main.html', host = host, resolution = (800, 600))
 
 @app.route('/images/<filename>')
 def images(filename):
