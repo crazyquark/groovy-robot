@@ -60,7 +60,7 @@ class CameraServer(Thread):
 	
 	def toGrayscale(self, frame):
 		data = np.fromstring(frame, dtype=np.uint8)
-		image = cv2.imdecode(data, 1)
+		image = cv2.imdecode(data, cv2.IMREAD_COLOR)
 		gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 		
 		retImage = cv2.imencode('.jpg', gray)
