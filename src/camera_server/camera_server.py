@@ -6,6 +6,8 @@ except:
 
 from threading import Thread
 import time, io
+import cv2
+import numpy as np
 
 class CameraServer(Thread):
 	'''
@@ -55,9 +57,19 @@ class CameraServer(Thread):
 				# reset stream for next frame
 				stream.seek(0)
 				stream.truncate()
+	
+	def toGrayscale(self, frame):
+		data = np.fromstring(frame, dtype=np.uint8)
+		image = cv2.imdecode(data, 1)
+		gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+		
+		retImage = cv2.imencode('.jpg', gray)
+		retData = np.array(retImage[1], dtype=np.uint8).tostring()
+	
+		return retData
 
 	def getFrame(self):
-		return self.frame
+		return self.toGrayscale(self.frame)
 
 	def halt(self):
 		self.running = False
