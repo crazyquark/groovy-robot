@@ -1,5 +1,5 @@
 '''
-	Server implementation using bottle
+	Server implementation using flask
 	See http://bottlepy.org/docs/dev/async.html
 '''
 
