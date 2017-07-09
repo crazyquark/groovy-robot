@@ -93,10 +93,10 @@ module batteryHolderArm()
 
         }
         translate([0, -0.2, 0])
-            cube(BATTERY_PACK_SIZE + [0, 0.4, 0]);
+            #cube(BATTERY_PACK_SIZE + [0, 0.4, 0]);
         
         translate([0, -0.2, BATTERY_PACK_SIZE[2] + TOP_ARM_THICKNESS])
-            cube([BATTERY_PACK_SIZE[0], BATTERY_PACK_SIZE[1] + 0.4, TOP_EXTRA_SPACE]);
+            #cube([BATTERY_PACK_SIZE[0], BATTERY_PACK_SIZE[1] + 0.4, TOP_EXTRA_SPACE]);
         
         holeDist = SCREW_DIST + M3_RADIUS * 2;
 
@@ -139,9 +139,9 @@ module drawAll()
 {
     color([0.0, 1.0, 0.0]) 
     {
-        //rotate([90, 0, 0])
-        //    batteryHolderArm();
-        cameraHolder();
+        rotate([90, 0, 0])
+            batteryHolderArm();
+        //cameraHolder();
     }
 }
 
