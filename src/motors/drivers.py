@@ -2,7 +2,7 @@
     Motor drivers available: Adafruit DC Motors Hat and GrovePi motor module
 '''
 
-class Motors:
+class Motors(object):
     '''
         Generic motors implementation
     '''
@@ -12,8 +12,6 @@ class Motors:
         # Attempting to limit max speed to avoid crashes
         self.max_speed = 95
 
-        self.turnFactor = 2 # controls how sharp the turns will be
-
         from platform import uname
         self.running_on_pi = uname()[4].startswith('arm')
 
@@ -21,25 +19,26 @@ class Motors:
         '''
             Increase/decrease speed
         '''
-        print('SPEED: ' + str(amount))
+        print 'SPEED: ' + str(amount)
         self.speed += amount
 
         if self.speed >= self.max_speed:
             self.speed = self.max_speed
         elif self.speed <= 0:
             self.speed = 0
-    
+
     def control_motors(self, left_power, right_power):
+        '''
+            Control the 2 motors independetly by applying a power factor
+        '''
         if not self.running_on_pi:
             return
 
-    def stop(self, m):
-        print('STOP')
-
-        if not self.running_on_pi:
-            return
-
-        m.MotorSpeedSetAB(0,0)
+    def stop(self):
+        '''
+            Emergency stop
+        '''
+        self.speed = 0
 
 class GrovePiMotors(Motors):
     '''
@@ -64,9 +63,15 @@ class GrovePiMotors(Motors):
         else:
             self.motors = None
 
-    def left(self):
+    def control_motors(self, left_power, right_power):
         Motors.left(self)
 
-        self.motors.MotorSpeedSetAB(self.speed, self.speed)
-        self.motors.MotorDirectionSet(self.left_dir)
-    
+        self.motors.MotorSpeedSetAB(self.speed * abs(left_power), self.speed * abs(right_power))
+        if left_power >= left_power and right_power >= 0:
+            self.motors.MotorDirectionSet(self.forward_dir)
+        elif left_power < 0 and right_power < 0:
+            self.motors.MotorDirectionSet(self.backward_dir)
+        elif left_power < 0 and right_power >= 0:
+            self.motors.MotorDirectionSet(self.right_dir)
+        elif left_power >= 0 and right_power < 0:
+            self.motors.MotorDirectionSet(self.left_dir)
