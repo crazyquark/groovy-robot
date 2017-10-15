@@ -1,3 +1,0 @@
-'''
-	Grove Pi drivers
-'''
