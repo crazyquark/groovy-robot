@@ -28,6 +28,10 @@ class Motors:
             self.speed = self.max_speed
         elif self.speed <= 0:
             self.speed = 0
+    
+    def control_motors(self, left_power, right_power):
+        if not self.running_on_pi:
+            return
 
     def stop(self, m):
         print('STOP')
