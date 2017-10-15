@@ -9,8 +9,8 @@ class Motors(object):
     def __init__(self):
         self.speed = 0
 
-        # Attempting to limit max speed to avoid crashes
-        self.max_speed = 95
+        # Default speed values: 0 - 100
+        self.max_speed = 100
 
         from platform import uname
         self.running_on_pi = uname()[4].startswith('arm')
@@ -59,12 +59,12 @@ class GrovePiMotors(Motors):
             from grovepi_driver.grove_i2c_motor_driver import motor_driver
             # You can initialize with a different address too:
             # grove_i2c_motor_driver.motor_driver(address=0x0a)
-            self.motors = motor_driver() if self.running_on_pi else ''
+            self.motors = motor_driver()
         else:
             self.motors = None
 
     def control_motors(self, left_power, right_power):
-        Motors.left(self)
+        Motors.control_motors(self)
 
         self.motors.MotorSpeedSetAB(self.speed * abs(left_power), self.speed * abs(right_power))
         if left_power >= left_power and right_power >= 0:
@@ -75,3 +75,35 @@ class GrovePiMotors(Motors):
             self.motors.MotorDirectionSet(self.right_dir)
         elif left_power >= 0 and right_power < 0:
             self.motors.MotorDirectionSet(self.left_dir)
+
+class AdafruitMotors(Motors):
+    def __init__(self, addr = 0x60, left_id = 1, right_id = 2):
+        Motors.__init__(self)
+        
+        # Speed values are 0 - 255
+        self.max_speed = 255
+
+        if self.running_on_pi:
+            from Adafruit_MotorHAT import Adafruit_MotorHAT
+            import atexit
+
+            # default I2C address is 0x60
+            self.motors = Adafruit_MotorHAT(addr)
+
+            self.left_motor = self.motors.getMotor(left_id)
+            self.right_motor = self.motors.getMotor(right_id)
+
+            # Start with motors turned off.
+            self.left_motor.run(Adafruit_MotorHAT.RELEASE)
+            self.right_motor.run(Adafruit_MotorHAT.RELEASE)
+
+            # Configure all motors to stop at program exit if desired.
+            atexit.register(self.stop)
+        else:
+            self.motors = None
+
+    def stop(self):
+        if self.running_on_pi:
+            from Adafruit_MotorHAT import Adafruit_MotorHAT
+            self.left_motor.run(Adafruit_MotorHAT.RELEASE)
+            self.right_motor.run(Adafruit_MotorHAT.RELEASE)
