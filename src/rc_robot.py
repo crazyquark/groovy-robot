@@ -43,20 +43,20 @@ class Robot:
         try:
             while True:
                 for event in pygame.event.get():
-                    if event.type == pygame.key.KEYDOWN:
-                        if event.key == pygame.key.K_a:
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_a:
                             self.left(m)
-                        elif event.key == pygame.key.K_d:
+                        elif event.key == pygame.K_d:
                             self.right(m)
-                        elif event.key == pygame.key.K_w:
+                        elif event.key == pygame.K_w:
                             self.forward(m)
-                        elif event.key == pygame.key.K_s:
+                        elif event.key == pygame.K_s:
                             self.backward(m)
-                        elif event.key == pygame.key.K_z:
+                        elif event.key == pygame.K_z:
                             self.speedAdjust(+5)
-                        elif event.key == pygame.key.K_x:
+                        elif event.key == pygame.K_x:
                             self.speedAdjust(-5)
-                    elif event.type == pygame.key.KEYUP:
+                    elif event.type == pygame.KEYUP:
                         self.stop(m)
         except IOError as e:
             print('Unable to find the motor driver, check the address and press reset on the motor driver and try again')
