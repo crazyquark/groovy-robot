@@ -16,6 +16,7 @@ class AdafruitMotors(Motors):
         Motors.__init__(self)
 
         # Speed values are 0 - 255
+        self.speed = 0
         self.max_speed = 255
 
         if self.running_on_pi:
