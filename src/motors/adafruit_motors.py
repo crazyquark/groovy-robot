@@ -16,7 +16,6 @@ class AdafruitMotors(Motors):
         Motors.__init__(self)
 
         # Speed values are 0 - 255
-        self.speed = 0
         self.max_speed = 255
 
         if self.running_on_pi:
@@ -39,8 +38,8 @@ class AdafruitMotors(Motors):
 
     def control_motors(self, power_left, power_right):
         if self.running_on_pi:
-            self.left_motor.speed(abs(power_left) / 100 * self.speed)
-            self.right_motor.speed(abs(power_right) / 100 * self.speed)
+            self.left_motor.setSpeed(abs(power_left) / 100 * self.speed)
+            self.right_motor.setSpeed(abs(power_right) / 100 * self.speed)
             self.right_motor.run(Adafruit_MotorHAT.FORWARD if power_left >= 0 else Adafruit_MotorHAT.BACKWARD)
             self.left_motor.run(Adafruit_MotorHAT.FORWARD if power_right >= 0 else Adafruit_MotorHAT.BACKWARD)
 
