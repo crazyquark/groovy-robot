@@ -21,10 +21,7 @@ class Motors(object):
         '''
         self.speed += amount
 
-        if self.speed >= self.max_speed:
-            self.speed = self.max_speed
-        elif self.speed <= 0:
-            self.speed = 0
+        self.speed = min(self.speed, self.max_speed)
 
         print 'SPEED: ' + str(self.speed)
 
