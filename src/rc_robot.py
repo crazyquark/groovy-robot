@@ -9,12 +9,7 @@ import pygame
 from ptvsd import enable_attach as enableAttach
 enableAttach('kriekpi') 
 
-# Check if we're on an RPi
-runningOnPi = True
-try:
-    from grovepi_driver.grove_i2c_motor_driver import motor_driver as motorDriver
-except:
-    runningOnPi = False
+from motors.adafruit_motors import AdafruitMotors
 
 class Robot:
     def __init__(self):
@@ -41,79 +36,28 @@ class Robot:
 
     def setupMotors(self):
         try:
+            self.motors = AdafruitMotors()
+
             while True:
                 for event in pygame.event.get():
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_a:
-                            self.left(m)
+                            self.motors.control_motors(100, -50)
                         elif event.key == pygame.K_d:
-                            self.right(m)
+                            self.motors.control_motors(-50, 100)
                         elif event.key == pygame.K_w:
-                            self.forward(m)
+                            self.motors.control_motors(100, 100)
                         elif event.key == pygame.K_s:
-                            self.backward(m)
+                            self.motors.control_motors(-100, -100)
                         elif event.key == pygame.K_z:
-                            self.speedAdjust(+5)
+                            self.motors.change_speed(+5)
                         elif event.key == pygame.K_x:
-                            self.speedAdjust(-5)
+                            self.motors.change_speed(-5)
                     elif event.type == pygame.KEYUP:
-                        self.stop(m)
+                        self.motors.change_speed(0)
         except IOError as e:
             print('Unable to find the motor driver, check the address and press reset on the motor driver and try again')
             print('I/O error({0}): {1}'.format(e.errno, e.strerror))
-    
-    def speedAdjust(self, amount):
-        print('SPEED: ' + str(amount))
-        self.speed += amount
-
-        if self.speed >= self.maxSpeed:
-            self.speed = self.maxSpeed
-        elif self.speed <= 0:
-            self.speed = 0
-
-    def left(self, m):
-        print('LEFT')
-
-        if not runningOnPi:
-            return
-
-        m.MotorSpeedSetAB(self.speed,self.speed)
-        m.MotorDirectionSet(self.leftDir)
-    
-    def right(self, m):
-        print('RIGHT')
-
-        if not runningOnPi:
-            return
-
-        m.MotorSpeedSetAB(self.speed,self.speed)	
-        m.MotorDirectionSet(self.rightDir)
-
-    def forward(self, m):
-        print('FORWARD')
-
-        if not runningOnPi:
-            return
-
-        m.MotorSpeedSetAB(self.speed,self.speed)	
-        m.MotorDirectionSet(self.forwardDir)	
-
-    def backward(self, m):
-        print('BACKWARD')
-
-        if not runningOnPi:
-            return
-
-        m.MotorSpeedSetAB(self.speed,self.speed)	
-        m.MotorDirectionSet(self.backwardDir)	
-
-    def stop(self, m):
-        print('STOP')
-
-        if not runningOnPi:
-            return
-
-        m.MotorSpeedSetAB(0,0)
 
 if __name__ == '__main__':
     robbie = Robot()
