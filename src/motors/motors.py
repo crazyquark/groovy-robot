@@ -19,13 +19,14 @@ class Motors(object):
         '''
             Increase/decrease speed
         '''
-        print 'SPEED: ' + str(amount)
         self.speed += amount
 
         if self.speed >= self.max_speed:
             self.speed = self.max_speed
         elif self.speed <= 0:
             self.speed = 0
+
+        print 'SPEED: ' + str(self.speed)
 
     def control_motors(self, left_power, right_power):
         '''

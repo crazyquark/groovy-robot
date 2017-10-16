@@ -36,6 +36,13 @@ class AdafruitMotors(Motors):
         else:
             self.motors = None
 
+    def control_motors(self, power_left, power_right):
+        if self.running_on_pi:
+            self.left_motor.speed(abs(power_left) / 100 * self.speed)
+            self.right_motor.speed(abs(power_right) / 100 * self.speed)
+            self.right_motor.run(Adafruit_MotorHAT.FORWARD if power_left >= 0 else Adafruit_MotorHAT.BACKWARD)
+            self.left_motor.run(Adafruit_MotorHAT.FORWARD if power_right >= 0 else Adafruit_MotorHAT.BACKWARD)
+
     def stop(self):
         if self.running_on_pi:
             self.left_motor.run(Adafruit_MotorHAT.RELEASE)

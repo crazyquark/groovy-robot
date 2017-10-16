@@ -54,7 +54,7 @@ class Robot:
                         elif event.key == pygame.K_x:
                             self.motors.change_speed(-5)
                     elif event.type == pygame.KEYUP:
-                        self.motors.change_speed(0)
+                        self.motors.stop()
         except IOError as e:
             print('Unable to find the motor driver, check the address and press reset on the motor driver and try again')
             print('I/O error({0}): {1}'.format(e.errno, e.strerror))
