@@ -12,10 +12,6 @@ import sys, traceback
 import signal
 import sys
 
-# VS Debug support
-from ptvsd import enable_attach
-enable_attach('kriekpi') 
-
 enableKeyboard = True
 try:
 	from keyboard_controller import KeyboardController
