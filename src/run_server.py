@@ -13,8 +13,8 @@ import signal
 import sys
 
 # VS Debug support
-from ptvsd import enable_attach as enableAttach
-enableAttach('kriekpi') 
+from ptvsd import enable_attach
+enable_attach('kriekpi') 
 
 enableKeyboard = True
 try:

@@ -200,7 +200,7 @@
             "request": "attach",
             "localRoot": "${workspaceRoot}",
             "remoteRoot": "${workspaceRoot}",
-            "port": 3000,
+            "port": 5678,
             "secret": "kriekpi",
             "host": "192.168.1.144"
         }
