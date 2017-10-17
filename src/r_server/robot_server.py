@@ -94,7 +94,7 @@ class RobotServer(Thread):
             self.rightPressed = isOn	
 
     def move(self, direction):
-        print('MOVE: ', dir)
+        print('MOVE: ', direction)
 
         if not self.runningOnPi:
             return
