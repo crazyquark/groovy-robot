@@ -37,6 +37,7 @@ class Robot:
     def setupMotors(self):
         try:
             self.motors = AdafruitMotors()
+            self.motors.change_speed(int(0.5 * float(self.motors.max_speed)))
 
             while True:
                 for event in pygame.event.get():
