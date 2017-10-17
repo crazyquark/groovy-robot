@@ -46,7 +46,7 @@ class RobotServer(Thread):
         while(self.running):
             if (self.runningOnPi):
                 try:	
-                    if ((not self.forwardDir and not self.backPressed and  not self.leftPressed and not self.rightPressed) or
+                    if ((not self.fwdPressed and not self.backPressed and not self.leftPressed and not self.rightPressed) or
                         (self.fwdPressed and self.backPressed) or (self.leftPressed and self.rightPressed)):
                         # Full stop
                         self.motors.control_motors(0, 0)
