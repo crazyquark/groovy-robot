@@ -1,6 +1,8 @@
 import platform, sys, traceback, time
 from threading import Thread
 
+from motors.adafruit_motors import AdafruitMotors
+
 class Directions:
     Forward, Back, Left, Right = range(4)
 
@@ -13,13 +15,6 @@ class RobotServer(Thread):
         Uses an autostart thread to run its update loop
     '''
     def __init__(self):
-        # Motor directions
-        # '0b1010' defines the output polarity, '10' means the M+ is 'positive' while the M- is 'negative'
-        self.forwardDir  = 0b0101
-        self.backwardDir = 0b1010
-        self.leftDir	 = 0b1001
-        self.rightDir	 = 0b0110
-
         self.fwdPressed = False
         self.backPressed = False
         self.leftPressed = False
@@ -40,7 +35,8 @@ class RobotServer(Thread):
 
         print('We are running on: ', arch)
 
-        self.setupGrovePi()
+        if self.runningOnPi:
+            self.motors = AdafruitMotors()
         
         Thread.__init__(self)
         self.running = True
@@ -53,31 +49,25 @@ class RobotServer(Thread):
                     if ((not self.forwardDir and not self.backPressed and  not self.leftPressed and not self.rightPressed) or
                         (self.fwdPressed and self.backPressed) or (self.leftPressed and self.rightPressed)):
                         # Full stop
-                        self.motors.MotorSpeedSetAB(0, 0)
+                        self.motors.control_motors(0, 0)
                     elif (not self.leftPressed and not self.rightPressed and self.fwdPressed):
                         # Full steam ahead!
-                        self.motors.MotorDirectionSet(self.forwardDir)
-                        self.motors.MotorSpeedSetAB(self.speed, self.speed)
+                        self.motors.control_motors(100, 100)
                     elif (not self.leftPressed and not self.rightPressed and self.backPressed):
                         # All engines reverse!
-                        self.motors.MotorDirectionSet(self.backwardDir)
-                        self.motors.MotorSpeedSetAB(self.speed, self.speed)
+                        self.motors.control_motors(-100, -100)
                     elif (not self.backPressed and not self.fwdPressed and self.rightPressed):
                         # In place right turn
-                        self.motors.MotorDirectionSet(self.rightDir)
-                        self.motors.MotorSpeedSetAB(self.speed, self.speed)
+                        self.motors.control_motors(-100, 100)
                     elif (not self.backPressed and not self.fwdPressed and self.leftPressed):
                         # In place left turn
-                        self.motors.MotorDirectionSet(self.leftDir)
-                        self.motors.MotorSpeedSetAB(self.speed, self.speed)
+                        self.motors.control_motors(100, -100)
                     elif ((self.fwdPressed or self.backPressed) and self.rightPressed):
                         # Attempt to turn right
-                        self.motors.MotorDirectionSet(self.forwardDir if self.fwdPressed else self.backwardDir)
-                        self.motors.MotorSpeedSetAB(self.speed / self.turnFactor, self.speed)
+                        self.motors.control_motors(100 / self.turnFactor, 100)
                     elif ((self.fwdPressed or self.backPressed) and self.leftPressed):
                         # Attempt to turn left
-                        self.motors.MotorDirectionSet(self.forwardDir if self.fwdPressed else self.backwardDir)
-                        self.motors.MotorSpeedSetAB(self.speed, self.speed / self.turnFactor)
+                        self.motors.control_motors(100, 100 / self.turnFactor)
                     else:
                         # I donno
                         self.motors.MotorSpeedSetAB(0, 0)
@@ -87,62 +77,37 @@ class RobotServer(Thread):
                     traceback.print_exc()
                     self.runnig = False
                     raise Exception('Motors failure')
-                    
-    def setupGrovePi(self):
-        if not self.runningOnPi:
-            return
 
-        from grovepi_driver.grove_i2c_motor_driver import motor_driver as motorDriver
+    def speedAdjust(self, direction):
+        if self.runningOnPi:
+            amount = direction * self.speedIncrement
+            self.motors.change_speed(amount)
 
-        self.motors = motorDriver()
-
-        import grove_oled as oledDisplay
-        self.oledDisplay = oledDisplay
-
-        oledDisplay.oled_init()
-        oledDisplay.oled_clearDisplay()
-        oledDisplay.oled_setNormalDisplay()
-        time.sleep(.1)
-
-        oledDisplay.oled_setTextXY(0,0)
-        oledDisplay.oled_putString("Robot Ready!")
-
-    def speedAdjust(self, dir):
-        amount = dir * self.speedIncrement
-        self.speed += amount
-
-        if self.speed >= self.maxSpeed:
-            self.speed = self.maxSpeed
-        elif self.speed <= 0:
-            self.speed = 0
-
-        print('SPEED: ', self.speed)
-
-    def processPress(self, dir, isOn):
-        if dir == Directions.Forward:
+    def processPress(self, direction, isOn):
+        if direction == Directions.Forward:
             self.fwdPressed = isOn
-        elif dir == Directions.Back:
+        elif direction == Directions.Back:
             self.backPressed = isOn
-        elif dir == Directions.Left:
+        elif direction == Directions.Left:
             self.leftPressed = isOn
-        elif dir == Directions.Right:
+        elif direction == Directions.Right:
             self.rightPressed = isOn	
 
-    def move(self, dir):
+    def move(self, direction):
         print('MOVE: ', dir)
 
         if not self.runningOnPi:
             return
         
-        self.processPress(dir, True)
+        self.processPress(direction, True)
 
-    def stop(self, dir):
-        print('STOP: ', dir)
+    def stop(self, direction):
+        print('STOP: ', direction)
 
         if not self.runningOnPi:
             return
 
-        self.processPress(dir, False)
+        self.processPress(direction, False)
 
     def halt(self):
         self.running = False
