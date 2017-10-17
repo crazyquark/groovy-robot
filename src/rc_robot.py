@@ -41,9 +41,9 @@ class Robot:
             while True:
                 for event in pygame.event.get():
                     if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_a:
+                        if event.key == pygame.K_d:
                             self.motors.control_motors(100, -50)
-                        elif event.key == pygame.K_d:
+                        elif event.key == pygame.K_a:
                             self.motors.control_motors(-50, 100)
                         elif event.key == pygame.K_w:
                             self.motors.control_motors(100, 100)
