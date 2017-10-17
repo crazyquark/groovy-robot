@@ -15,6 +15,9 @@ class AdafruitMotors(Motors):
     def __init__(self, addr=0x60, left_id=1, right_id=2):
         Motors.__init__(self)
 
+        # Start at ~50% speed
+        self.speed = 125
+
         # Speed values are 0 - 255
         self.max_speed = 255
 
