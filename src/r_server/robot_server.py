@@ -20,12 +20,9 @@ class RobotServer(Thread):
         self.leftPressed = False
         self.rightPressed = False
 
-        self.speed = 75 # 75% power output
+
         self.turnFactor = 2 # controls how sharp the turns will be
 
-        # Attempting to limit max speed to avoid crashes
-        self.maxSpeed = 95
-        
         # How much to increase speed at one time
         self.speedIncrement = 5
 
@@ -70,7 +67,7 @@ class RobotServer(Thread):
                         self.motors.control_motors(100, 100 / self.turnFactor)
                     else:
                         # I donno
-                        self.motors.MotorSpeedSetAB(0, 0)
+                        self.motors.control_motors(0, 0)
                 except:
                     print 'Critical failure, shutting down'
                     print 'Possible cause: '
