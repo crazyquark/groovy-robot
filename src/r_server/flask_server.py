@@ -20,29 +20,40 @@ def websocket(wsock):
         try:
             message = wsock.receive()
             if message == 'hello':
-                wsock.send('connected')
+                print 'connected'
             elif message == 'w':
                 robot.move(Directions.Forward)
+                wsock.send('ack')
             elif message == 'W':
                 robot.stop(Directions.Forward)
+                wsock.send('ack')
             elif message == 's':
                 robot.move(Directions.Back)
+                wsock.send('ack')
             elif message == 'S':
                 robot.stop(Directions.Back)
+                wsock.send('ack')
             elif message == 'a':
                 robot.move(Directions.Left)
+                wsock.send('ack')
             elif message == 'A':
                 robot.stop(Directions.Left)
+                wsock.send('ack')
             elif message == 'd':
                 robot.move(Directions.Right)
+                wsock.send('ack')
             elif message == 'D':
                 robot.stop(Directions.Right)
+                wsock.send('ack')
             elif message == 'x':
                 robot.speed_adjust(Throttle.Up)
+                wsock.send('ack')
             elif message == 'z':
                 robot.speed_adjust(Throttle.Down)
+                wsock.send('ack')
             elif message == '':
                 robot.stop()
+                wsock.send('ack')
         except WebSocketError as err:
             print repr(err)
             break
