@@ -53,16 +53,15 @@ class AdafruitMotors(Motors):
                 # Adjust left motor if we have to
                 self.power_left = power_left
                 self.left_motor.setSpeed(int(float(abs(power_left)) / 100.0 * self.speed))
+                self.left_motor.run(
+                    Adafruit_MotorHAT.FORWARD if power_left >= 0 else Adafruit_MotorHAT.BACKWARD)
 
             if self.power_right != power_right:
                 # Same for right motor
                 self.power_right = power_right
                 self.right_motor.setSpeed(int(float(abs(power_right)) / 100.0 * self.speed))
-
-            self.right_motor.run(
-                Adafruit_MotorHAT.FORWARD if self.power_right >= 0 else Adafruit_MotorHAT.BACKWARD)
-            self.right_motor.run(
-                Adafruit_MotorHAT.FORWARD if self.power_left >= 0 else Adafruit_MotorHAT.BACKWARD)
+                self.right_motor.run(
+                    Adafruit_MotorHAT.FORWARD if power_right >= 0 else Adafruit_MotorHAT.BACKWARD)
 
     def stop(self):
         if self.running_on_pi:
