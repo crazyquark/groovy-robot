@@ -35,9 +35,9 @@ def websocket(wsock):
 			elif (message == 'D'):
 				robot.stop(Directions.Right)
 			elif (message == 'x'):
-				robot.speedAdjust(Throttle.Up)
+				robot.speed_adjust(Throttle.Up)
 			elif (message == 'z'):
-				robot.speedAdjust(Throttle.Down)
+				robot.speed_adjust(Throttle.Down)
 			elif (message == ''):
 				robot.stop()
 		except WebSocketError as err:

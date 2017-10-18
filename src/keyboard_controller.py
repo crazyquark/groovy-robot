@@ -30,8 +30,8 @@ class KeyboardController:
 		self.hooks.append(keyboard.hook_key('d', lambda: robot.move(Directions.Right), lambda: robot.stop(Directions.Right)))
 		self.hooks.append(keyboard.hook_key(ARROW_RIGHT, lambda: robot.move(Directions.Right), lambda: robot.stop(Directions.Right)))
 		
-		self.hooks.append(keyboard.hook_key('z', lambda: robot.speedAdjust(Throttle.Down), lambda: None))
-		self.hooks.append(keyboard.hook_key('x', lambda: robot.speedAdjust(Throttle.Up), lambda: None))
+		self.hooks.append(keyboard.hook_key('z', lambda: robot.speed_adjust(Throttle.Down), lambda: None))
+		self.hooks.append(keyboard.hook_key('x', lambda: robot.speed_adjust(Throttle.Up), lambda: None))
 	def halt(self):
 		for hook in self.hooks:
 			try:
