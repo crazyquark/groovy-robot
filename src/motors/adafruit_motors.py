@@ -21,6 +21,11 @@ class AdafruitMotors(Motors):
         # Speed values are 0 - 255
         self.max_speed = 255
 
+        # We need to make the motors stateful
+        # They don't seem to deal well with quick on/off actions
+        self.power_left = 0
+        self.power_right = 0
+
         if self.running_on_pi:
             import atexit
 
@@ -43,13 +48,25 @@ class AdafruitMotors(Motors):
         if self.running_on_pi:
             if power_left == power_right == 0:
                 return self.stop()
-            
-            self.left_motor.setSpeed(int(float(abs(power_left)) / 100.0 * self.speed))
-            self.right_motor.setSpeed(int(float(abs(power_right)) / 100.0 * self.speed))
-            self.right_motor.run(Adafruit_MotorHAT.FORWARD if power_left >= 0 else Adafruit_MotorHAT.BACKWARD)
-            self.left_motor.run(Adafruit_MotorHAT.FORWARD if power_right >= 0 else Adafruit_MotorHAT.BACKWARD)
+
+            if self.power_left != power_left:
+                # Adjust left motor if we have to
+                self.power_left = power_left
+                self.left_motor.setSpeed(int(float(abs(power_left)) / 100.0 * self.speed))
+                self.right_motor.run(
+                    Adafruit_MotorHAT.FORWARD if power_left >= 0 else Adafruit_MotorHAT.BACKWARD)
+
+            if self.power_right != power_right:
+                # Same for right motor
+                self.power_right = power_right
+                self.right_motor.setSpeed(int(float(abs(power_right)) / 100.0 * self.speed))
+                self.right_motor.run(
+                    Adafruit_MotorHAT.FORWARD if power_right >= 0 else Adafruit_MotorHAT.BACKWARD)
 
     def stop(self):
         if self.running_on_pi:
+            # Kill power
+            self.power_left = self.power_right = 0
+
             self.left_motor.run(Adafruit_MotorHAT.RELEASE)
             self.right_motor.run(Adafruit_MotorHAT.RELEASE)

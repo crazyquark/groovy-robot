@@ -20,7 +20,6 @@ class RobotServer(Thread):
         self.leftPressed = False
         self.rightPressed = False
 
-
         self.turnFactor = 2 # controls how sharp the turns will be
 
         # How much to increase speed at one time
