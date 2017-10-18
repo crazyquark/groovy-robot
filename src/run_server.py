@@ -12,7 +12,7 @@ import sys, traceback
 import signal
 import sys
 
-enableKeyboard = True
+enableKeyboard = False
 try:
 	from keyboard_controller import KeyboardController
 except:
