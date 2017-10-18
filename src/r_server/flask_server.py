@@ -90,7 +90,7 @@ app = Flask(__name__)
 sockets = Sockets(app)
 
 app.register_blueprint(html, url_prefix='/')
-app.register_blueprint(ws, url_prefix='/')
+sockets.register_blueprint(ws, url_prefix='/')
 
 robot = None
 def run(robotServer, cameraServer):
