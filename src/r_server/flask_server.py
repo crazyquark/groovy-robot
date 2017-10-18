@@ -3,15 +3,14 @@
     See http://bottlepy.org/docs/dev/async.html
 '''
 
-from flask import Flask, render_template as template, request, make_response, jsonify, Response
+from flask import Flask, Blueprint, render_template as template, request, make_response, jsonify, Response
 from flask_sockets import Sockets
 from robot_server import Directions, Throttle
 
-app = Flask(__name__, template_folder = '.', static_folder = '../../res/')
-app.debug = True
-sockets = Sockets(app)
+html = Blueprint('html', __name__, template_folder = '.', static_folder = '../../res/')
+ws = Blueprint('ws', __name__)
 
-@sockets.route('/ws')
+@ws.route('/ws')
 def websocket(wsock):
     '''
         Server websocket
@@ -58,7 +57,7 @@ def websocket(wsock):
             print repr(err)
             break
 
-@app.route('/')
+@html.route('/')
 def index():
     from urlparse import urlparse
     parsedUrl = urlparse(request.url)
@@ -66,7 +65,7 @@ def index():
     
     return template('main.html', host = host, resolution = (800, 600))
 
-@app.route('/images/<filename>')
+@html.route('/images/<filename>')
 def images(filename):
     return app.send_static_file(filename)
 
@@ -82,10 +81,16 @@ def genStream(camera):
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
-@app.route('/stream')
+@html.route('/stream')
 def stream():
     global camera
     return Response(genStream(camera), mimetype='multipart/x-mixed-replace; boundary=frame') 
+
+app = Flask(__name__)
+sockets = Sockets(app)
+
+app.register_blueprint(html, url_prefix='/')
+app.register_blueprint(ws, url_prefix='/')
 
 robot = None
 def run(robotServer, cameraServer):
