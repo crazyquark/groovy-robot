@@ -31,8 +31,7 @@ class RobotServer(Thread):
 
         print('We are running on: ', arch)
 
-        if self.runningOnPi:
-            self.motors = AdafruitMotors()
+        self.motors = AdafruitMotors()
         
         Thread.__init__(self)
         self.running = True
@@ -40,39 +39,38 @@ class RobotServer(Thread):
         
     def run(self):
         while(self.running):
-            if (self.runningOnPi):
-                try:	
-                    if ((not self.fwdPressed and not self.backPressed and not self.leftPressed and not self.rightPressed) or
-                        (self.fwdPressed and self.backPressed) or (self.leftPressed and self.rightPressed)):
-                        # Full stop
-                        self.motors.control_motors(0, 0)
-                    elif (not self.leftPressed and not self.rightPressed and self.fwdPressed):
-                        # Full steam ahead!
-                        self.motors.control_motors(100, 100)
-                    elif (not self.leftPressed and not self.rightPressed and self.backPressed):
-                        # All engines reverse!
-                        self.motors.control_motors(-100, -100)
-                    elif (not self.backPressed and not self.fwdPressed and self.rightPressed):
-                        # In place right turn
-                        self.motors.control_motors(-100, 100)
-                    elif (not self.backPressed and not self.fwdPressed and self.leftPressed):
-                        # In place left turn
-                        self.motors.control_motors(100, -100)
-                    elif ((self.fwdPressed or self.backPressed) and self.rightPressed):
-                        # Attempt to turn right
-                        self.motors.control_motors(100 / self.turnFactor, 100)
-                    elif ((self.fwdPressed or self.backPressed) and self.leftPressed):
-                        # Attempt to turn left
-                        self.motors.control_motors(100, 100 / self.turnFactor)
-                    else:
-                        # I donno
-                        self.motors.control_motors(0, 0)
-                except:
-                    print 'Critical failure, shutting down'
-                    print 'Possible cause: '
-                    traceback.print_exc()
-                    self.runnig = False
-                    raise Exception('Motors failure')
+            try:	
+                if ((not self.fwdPressed and not self.backPressed and not self.leftPressed and not self.rightPressed) or
+                    (self.fwdPressed and self.backPressed) or (self.leftPressed and self.rightPressed)):
+                    # Full stop
+                    self.motors.control_motors(0, 0)
+                elif (not self.leftPressed and not self.rightPressed and self.fwdPressed):
+                    # Full steam ahead!
+                    self.motors.control_motors(100, 100)
+                elif (not self.leftPressed and not self.rightPressed and self.backPressed):
+                    # All engines reverse!
+                    self.motors.control_motors(-100, -100)
+                elif (not self.backPressed and not self.fwdPressed and self.rightPressed):
+                    # In place right turn
+                    self.motors.control_motors(-100, 100)
+                elif (not self.backPressed and not self.fwdPressed and self.leftPressed):
+                    # In place left turn
+                    self.motors.control_motors(100, -100)
+                elif ((self.fwdPressed or self.backPressed) and self.rightPressed):
+                    # Attempt to turn right
+                    self.motors.control_motors(100 / self.turnFactor, 100)
+                elif ((self.fwdPressed or self.backPressed) and self.leftPressed):
+                    # Attempt to turn left
+                    self.motors.control_motors(100, 100 / self.turnFactor)
+                else:
+                    # I donno
+                    self.motors.control_motors(0, 0)
+            except:
+                print 'Critical failure, shutting down'
+                print 'Possible cause: '
+                traceback.print_exc()
+                self.runnig = False
+                raise Exception('Motors failure')
 
     def speedAdjust(self, direction):
         if self.runningOnPi:

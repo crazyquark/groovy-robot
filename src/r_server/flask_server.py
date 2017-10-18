@@ -17,7 +17,7 @@ def websocket(wsock):
 		try:
 			message = wsock.receive()
 			if (message == 'hello'):
-				wsock.send('connected');
+				wsock.send('connected')
 			elif (message == 'w'):
 				robot.move(Directions.Forward)
 			elif (message == 'W'):
@@ -31,7 +31,7 @@ def websocket(wsock):
 			elif (message == 'A'):
 				robot.stop(Directions.Left)
 			elif (message == 'd'):
-				robot.move(Directions.Right);
+				robot.move(Directions.Right)
 			elif (message == 'D'):
 				robot.stop(Directions.Right)
 			elif (message == 'x'):
