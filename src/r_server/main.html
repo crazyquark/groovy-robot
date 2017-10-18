@@ -55,6 +55,11 @@
 		};
 
 		var keydownHandler = (event) => {
+            // Ignore repeated events FFS
+            if (event.repeat) {
+                return
+            }
+
             const keyName = event.key.toLowerCase();
 
             console.log('down: ' + keyName)
@@ -63,6 +68,7 @@
         };
 
 		var keyupHandler = (event) => {
+            console.log(event)
             const keyName = event.key.toUpperCase();
 
             console.log('up: ' + keyName)
