@@ -2,6 +2,6 @@ pygame
 ptvsd
 smbus
 flask
-flask_sockets
+Flask-Sockets
 gevent
 picamera
