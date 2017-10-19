@@ -24,7 +24,7 @@ class CameraServer(Thread):
 	
 	def dummyFrame(self):
 		if (not hasattr(self, 'frame')):
-			with open('../res/wall-e-800.jpg', 'rb') as image:
+			with open('./r_server/static/wall-e-800.jpg', 'rb') as image:
 				self.frame = image.read()
 
 	def run(self):

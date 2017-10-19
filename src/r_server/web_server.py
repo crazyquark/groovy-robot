@@ -7,7 +7,7 @@ from flask import Flask, render_template as template, request, make_response, js
 from flask_sockets import Sockets
 from robot_server import Directions, Throttle
 
-app = Flask(__name__, template_folder='.', static_folder='../../res/') # pylint: disable=invalid-name
+app = Flask(__name__, template_folder='templates', static_folder='static') # pylint: disable=invalid-name
 app.debug = True
 sockets = Sockets(app) # pylint: disable=invalid-name
 

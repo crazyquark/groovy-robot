@@ -1,0 +1,22 @@
+img {
+    max-width: 100%;
+    height: auto;
+}
+body {
+  background: url(/images/wall-e.jpg) no-repeat;
+  background-size: 100%;
+}
+
+#main {
+    width: {{ resolution[0] }}px;
+    height: {{ resolution[1] }}px;
+    background-color: red;
+
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    margin: auto;
+}
