@@ -82,20 +82,26 @@ def websocket_camera(wsock):
 
 @app.route('/')
 def index():
+    '''
+        Main index handler
+    '''
     from urlparse import urlparse
-    parsedUrl = urlparse(request.url)
-    host = parsedUrl.hostname + (':' + str(parsedUrl.port) if parsedUrl.port else '')
-    
-    return template('main.html', host = host)
+    parsed_url = urlparse(request.url)
+    host = parsed_url.hostname + (':' + str(parsed_url.port) if parsed_url.port else '')
+
+    return template('main.html', host=host)
 
 @app.route('/images/<filename>')
 def images(filename):
+    '''
+        Server images
+    '''
     return app.send_static_file(filename)
 
 # setup aux objects
 app.robot = RobotServer()
 app.camera = CameraServer()
-app.keyboardController = KeyboardController(app.robot)
+app.keyboard_controller = KeyboardController(app.robot)
 
-server = WSGIServer(('', 8080), app, handler_class=WebSocketHandler)
+server = WSGIServer(('', 8080), app, handler_class=WebSocketHandler)  # pylint: disable=invalid-name
 server.serve_forever()
