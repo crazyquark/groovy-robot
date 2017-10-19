@@ -24,7 +24,7 @@ except:
 
 def haltHandler(*_):
 	camera.halt()
-	flask_server.halt()
+	web_server.halt()
 	if enableKeyboard:
 		keyboardController.halt()
 		sys.exit(0)
