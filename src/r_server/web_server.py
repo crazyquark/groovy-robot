@@ -7,10 +7,6 @@ from flask import Flask, render_template as template, request, make_response, js
 from flask_sockets import Sockets
 from robot_server import Directions, Throttle
 
-from gevent import monkey
-# need to patch sockets to make requests async
-monkey.patch_all()
-
 app = Flask(__name__, template_folder='.', static_folder='../../res/') # pylint: disable=invalid-name
 app.debug = True
 sockets = Sockets(app) # pylint: disable=invalid-name
@@ -102,7 +98,7 @@ def run(robotServer, cameraServer):
     from gevent import pywsgi
     from geventwebsocket.handler import WebSocketHandler
 
-    server = pywsgi.WSGIServer(('', 8080), app.wsgi_app, handler_class=WebSocketHandler)
+    server = pywsgi.WSGIServer(('', 8080), app, handler_class=WebSocketHandler)
     server.serve_forever()
 
 def halt():

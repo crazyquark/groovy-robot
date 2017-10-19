@@ -7,7 +7,6 @@ from threading import Thread
 
 from motors.adafruit_motors import AdafruitMotors
 
-
 class Directions(object):
     '''
         Simple enumeration of the available directions
@@ -26,6 +25,8 @@ class RobotServer(Thread):
         Uses an autostart thread to run its update loop
     '''
     def __init__(self):
+        Thread.__init__(self)
+
         self.fwd_pressed = False
         self.back_pressed = False
         self.left_pressed = False
