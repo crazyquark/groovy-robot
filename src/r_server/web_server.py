@@ -2,7 +2,7 @@
     Server implementation using flask
     See http://bottlepy.org/docs/dev/async.html
 '''
-from time import sleep
+from threading import Thread
 
 from flask import Flask, render_template as template, request, make_response, jsonify, Response
 from flask_sockets import Sockets
@@ -63,24 +63,30 @@ def websocket_camera(wsock):
     '''
         Camera websocket
     '''
-    def encode_frame():
-        '''
-            Base64 image
-        '''
-        if app.camera:
-            frame = app.camera.get_frame()
-            data = b64encode(frame)
 
-            return data
-    while not wsock.closed:
-        try:
-            data = encode_frame()
-            if data:
-                wsock.send(data)
-            sleep(1)
-        except WebSocketError as err:
-            print repr(err)
-            break
+    def run_camera():
+        '''
+            Thread based websocket camera sender
+        '''
+        def encode_frame():
+            '''
+                Base64 image
+            '''
+            if app.camera:
+                frame = app.camera.get_frame()
+                data = b64encode(frame)
+
+                return data
+        while not wsock.closed:
+            try:
+                data = encode_frame()
+                if data:
+                    wsock.send(data)
+            except WebSocketError as err:
+                print repr(err)
+                break
+    camera_thread = Thread(target=run_camera)
+    camera_thread.start()
 
 @app.route('/')
 def index():
