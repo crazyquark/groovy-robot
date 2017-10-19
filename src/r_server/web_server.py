@@ -101,9 +101,10 @@ def images(filename):
     return app.send_static_file(filename)
 
 # setup aux objects
-app.robot = RobotServer()
-app.camera = CameraServer()
-app.keyboard_controller = KeyboardController(app.robot)
+if __name__ == '__main__':
+    app.robot = RobotServer()
+    app.camera = CameraServer()
+    app.keyboard_controller = KeyboardController(app.robot)
 
-server = WSGIServer(('', 8080), app, handler_class=WebSocketHandler)  # pylint: disable=invalid-name
-server.serve_forever()
+    server = WSGIServer(('', 8080), app, handler_class=WebSocketHandler)  # pylint: disable=invalid-name
+    server.serve_forever()
