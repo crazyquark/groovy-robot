@@ -96,11 +96,8 @@ def run(robotServer, cameraServer):
     camera = cameraServer
 
     from gevent import pywsgi
-    from gevent import monkey
     from geventwebsocket.handler import WebSocketHandler
 
-    monkey.patch_all()
-    
     server = pywsgi.WSGIServer(('', 8080), app.wsgi_app, handler_class=WebSocketHandler)
     server.serve_forever()
 
