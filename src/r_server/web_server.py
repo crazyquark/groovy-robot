@@ -15,6 +15,7 @@ from base64 import b64encode
 from robot_server import Directions, Throttle
 from robot_server import RobotServer
 from camera_server import CameraServer
+from keyboard_controller import KeyboardController
 
 app = Flask(__name__, template_folder='templates', static_folder='static') # pylint: disable=invalid-name
 app.debug = True
