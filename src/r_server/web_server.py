@@ -2,6 +2,7 @@
     Server implementation using flask
     See http://bottlepy.org/docs/dev/async.html
 '''
+from time import sleep
 
 from flask import Flask, render_template as template, request, make_response, jsonify, Response
 from flask_sockets import Sockets
@@ -76,6 +77,7 @@ def websocket_camera(wsock):
             data = encode_frame()
             if data:
                 wsock.send(data)
+            sleep(1)
         except WebSocketError as err:
             print repr(err)
             break
