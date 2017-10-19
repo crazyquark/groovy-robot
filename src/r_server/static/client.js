@@ -5,15 +5,8 @@ function connect(host) {
     ws.onopen = function () {
         ws.send('hello');
     };
-    ws.onmessage = function (evt) {
-        let msg = evt.data
-        if (msg === 'ack') {
-            ws.send('ack');
-        } else {
-            document.getElementById('cam')
-                .setAttribute('src', 'data:image/jpg;base64,' + msg); 
-            ws.send('ack');
-        }
+    ws.onmessage = function (event) {
+        console.log(event.data)
     };
 
     var sendKey = (keyName) => {
@@ -57,4 +50,16 @@ function connect(host) {
 
     document.addEventListener('keydown', keydownHandler, false);
     document.addEventListener('keyup', keyupHandler, false);
+
+    connect_camera(host);
+}
+
+function connect_camera(host) {
+    var camera_ws = new WebSocket('ws://' + host + '/camera');
+
+    camera_ws.onmessage = (event) => {
+        let msg = event.data
+        document.getElementById('cam')
+            .setAttribute('src', 'data:image/jpg;base64,' + msg); 
+    }
 }

@@ -22,23 +22,11 @@ def websocket(wsock):
     '''
         Server websocket
     '''
-    def encode_frame():
-        if app.camera:
-            frame = app.camera.get_frame()
-            data = b64encode(frame)
-
-            return data
-
     while not wsock.closed:
         try:
             message = wsock.receive()
             if message == 'hello':
                 print 'client connected'
-                wsock.send('ack')
-            elif message == 'ack':
-                data = encode_frame()
-                if data:
-                    wsock.send(data)
             elif message == 'w':
                 app.robot.move(Directions.Forward)
             elif message == 'W':
@@ -65,13 +53,36 @@ def websocket(wsock):
             print repr(err)
             break
 
+@sockets.route('/camera')
+def websocket_camera(wsock):
+    '''
+        Camera websocket
+    '''
+    def encode_frame():
+        '''
+            Base64 image
+        '''
+        if app.camera:
+            frame = app.camera.get_frame()
+            data = b64encode(frame)
+
+            return data
+    while not wsock.closed:
+        try:
+            data = encode_frame()
+            if data:
+                wsock.send(data)
+        except WebSocketError as err:
+            print repr(err)
+            break
+
 @app.route('/')
 def index():
     from urlparse import urlparse
     parsedUrl = urlparse(request.url)
     host = parsedUrl.hostname + (':' + str(parsedUrl.port) if parsedUrl.port else '')
     
-    return template('main.html', host = host, resolution = (800, 600))
+    return template('main.html', host = host)
 
 @app.route('/images/<filename>')
 def images(filename):
