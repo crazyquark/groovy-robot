@@ -6,7 +6,10 @@ function connect(host) {
         ws.send('hello');
     };
     ws.onmessage = function (evt) {
-        console.log(evt.data);
+        let msg = evt.data
+        if (msg === 'ack') {
+            ws.send('ack')
+        }
     };
 
     var sendKey = (keyName) => {

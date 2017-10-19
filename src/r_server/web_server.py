@@ -7,6 +7,12 @@ from flask import Flask, render_template as template, request, make_response, js
 from flask_sockets import Sockets
 from robot_server import Directions, Throttle
 
+from gevent.pywsgi import WSGIServer
+from geventwebsocket import WebSocketError
+from geventwebsocket.handler import WebSocketHandler
+
+from base64 import b64encode
+
 app = Flask(__name__, template_folder='templates', static_folder='static') # pylint: disable=invalid-name
 app.debug = True
 sockets = Sockets(app) # pylint: disable=invalid-name
@@ -16,11 +22,23 @@ def websocket(wsock):
     '''
         Server websocket
     '''
+    def encode_frame():
+        if app.camera:
+            frame = app.camera.get_frame()
+            data = b64encode(frame)
+
+            return data
+
     while not wsock.closed:
         try:
             message = wsock.receive()
             if message == 'hello':
-                print 'connected'
+                print 'client connected'
+                wsock.send('ack')
+            elif message == 'ack':
+                data = encode_frame()
+                if data:
+                    wsock.send(data)
             elif message == 'w':
                 app.robot.move(Directions.Forward)
             elif message == 'W':
@@ -59,20 +77,13 @@ def index():
 def images(filename):
     return app.send_static_file(filename)
 
-from gevent.pywsgi import WSGIServer
-from geventwebsocket import WebSocketError
-from geventwebsocket.handler import WebSocketHandler
-
 app.robot = None
 app.camera = None
 def run(robotServer, cameraServer):
     app.robot = robotServer
     app.camera = cameraServer
 
-    from gevent import pywsgi
-    from geventwebsocket.handler import WebSocketHandler
-
-    server = pywsgi.WSGIServer(('', 8080), app, handler_class=WebSocketHandler)
+    server = WSGIServer(('', 8080), app, handler_class=WebSocketHandler)
     server.serve_forever()
 
 def halt():
