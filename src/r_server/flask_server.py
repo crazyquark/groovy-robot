@@ -10,7 +10,7 @@ from robot_server import Directions, Throttle
 html = Blueprint('html', __name__, template_folder = '.', static_folder = '../../res/')
 ws = Blueprint('ws', __name__)
 
-@ws.route('/ws')
+@ws.route('ws')
 def websocket(wsock):
     '''
         Server websocket
@@ -65,7 +65,7 @@ def index():
     
     return template('main.html', host = host, resolution = (800, 600))
 
-@html.route('/images/<filename>')
+@html.route('images/<filename>')
 def images(filename):
     return app.send_static_file(filename)
 
@@ -81,7 +81,7 @@ def genStream(camera):
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
-@html.route('/stream')
+@html.route('stream')
 def stream():
     global camera
     return Response(genStream(camera), mimetype='multipart/x-mixed-replace; boundary=frame') 
