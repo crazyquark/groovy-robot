@@ -106,5 +106,11 @@ if __name__ == '__main__':
     app.camera = CameraServer()
     app.keyboard_controller = KeyboardController(app.robot)
 
-    server = WSGIServer(('', 8080), app, handler_class=WebSocketHandler)  # pylint: disable=invalid-name
-    server.serve_forever()
+    try:
+        server = WSGIServer(('', 8080), app, handler_class=WebSocketHandler)  # pylint: disable=invalid-name
+        server.serve_forever()
+    except KeyboardInterrupt:
+        server.stop()
+        app.robot.halt()
+        app.camera.halt()
+        app.keyboard_controller.halt()
