@@ -7,6 +7,10 @@ from flask import Flask, render_template as template, request, make_response, js
 from flask_sockets import Sockets
 from robot_server import Directions, Throttle
 
+from gevent import monkey
+# need to patch sockets to make requests async
+monkey.patch_all()
+
 app = Flask(__name__, template_folder='.', static_folder='../../res/') # pylint: disable=invalid-name
 app.debug = True
 sockets = Sockets(app) # pylint: disable=invalid-name
