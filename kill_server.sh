@@ -2,6 +2,6 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 pushd $DIR/src
 PID=`cat server.pid`
-sudo pkill -TERM -P $PID
+kill -9 $PID
 popd
 
