@@ -23,37 +23,26 @@ def websocket(wsock):
                 print 'connected'
             elif message == 'w':
                 app.robot.move(Directions.Forward)
-                wsock.send('ack')
             elif message == 'W':
                 app.robot.stop(Directions.Forward)
-                wsock.send('ack')
             elif message == 's':
                 app.robot.move(Directions.Back)
-                wsock.send('ack')
             elif message == 'S':
                 app.robot.stop(Directions.Back)
-                wsock.send('ack')
             elif message == 'a':
                 app.robot.move(Directions.Left)
-                wsock.send('ack')
             elif message == 'A':
                 app.robot.stop(Directions.Left)
-                wsock.send('ack')
             elif message == 'd':
                 app.robot.move(Directions.Right)
-                wsock.send('ack')
             elif message == 'D':
                 app.robot.stop(Directions.Right)
-                wsock.send('ack')
             elif message == 'x':
                 app.robot.speed_adjust(Throttle.Up)
-                wsock.send('ack')
             elif message == 'z':
                 app.robot.speed_adjust(Throttle.Down)
-                wsock.send('ack')
             elif message == '':
                 app.robot.stop()
-                wsock.send('ack')
         except WebSocketError as err:
             print repr(err)
             break
@@ -73,17 +62,6 @@ def images(filename):
 from gevent.pywsgi import WSGIServer
 from geventwebsocket import WebSocketError
 from geventwebsocket.handler import WebSocketHandler
-
-def genStream(camera):
-    '''Video streaming generator function.'''
-    while True:
-        frame = app.camera.getFrame()
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-
-@app.route('/stream')
-def stream():
-    return Response(genStream(app.camera), mimetype='multipart/x-mixed-replace; boundary=frame') 
 
 app.robot = None
 app.camera = None
