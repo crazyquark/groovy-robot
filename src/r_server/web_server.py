@@ -2,14 +2,8 @@
     Server implementation using flask
     See http://bottlepy.org/docs/dev/async.html
 '''
-from threading import Thread
-
-from flask import Flask, render_template as template, request, make_response, jsonify, Response
-from flask_sockets import Sockets
-
-from gevent.pywsgi import WSGIServer
-from geventwebsocket import WebSocketError
-from geventwebsocket.handler import WebSocketHandler
+import tornado.ioloop
+import tornado.web
 
 from base64 import b64encode
 
@@ -17,10 +11,6 @@ from robot_server import Directions, Throttle
 from robot_server import RobotServer
 from camera_server import CameraServer
 from keyboard_controller import KeyboardController
-
-app = Flask(__name__, template_folder='templates', static_folder='static') # pylint: disable=invalid-name
-app.debug = True
-sockets = Sockets(app) # pylint: disable=invalid-name
 
 @sockets.route('/ws')
 def websocket(wsock):
@@ -63,30 +53,24 @@ def websocket_camera(wsock):
     '''
         Camera websocket
     '''
-    def run_camera(wsock):
+    def encode_frame():
         '''
-            Thread based websocket camera sender
+            Base64 image
         '''
-        def encode_frame():
-            '''
-                Base64 image
-            '''
-            if app.camera:
-                frame = app.camera.get_frame()
-                data = b64encode(frame)
+        if app.camera:
+            frame = app.camera.get_frame()
+            data = b64encode(frame)
 
-                return data
-        while not wsock.closed:
-            try:
-                data = encode_frame()
-                if data:
-                    wsock.send(data)
-            except WebSocketError as err:
-                print repr(err)
-                break
+            return data
+    while not wsock.closed:
+        try:
+            data = encode_frame()
+            if data:
+                wsock.send(data)
+        except WebSocketError as err:
+            print repr(err)
+            break
     
-    camera_thread = Thread(target=run_camera, args=([wsock]))
-    camera_thread.start()
 
 @app.route('/')
 def index():

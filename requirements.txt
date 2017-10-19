@@ -1,7 +1,5 @@
 pygame
 ptvsd
 smbus
-flask
-Flask-Sockets
-gevent
+tornado
 picamera
