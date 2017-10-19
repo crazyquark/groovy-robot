@@ -7,9 +7,9 @@ from flask import Flask, render_template as template, request, make_response, js
 from flask_sockets import Sockets
 from robot_server import Directions, Throttle
 
-app = Flask(__name__, template_folder = '.', static_folder = '../../res/')
+app = Flask(__name__, template_folder='.', static_folder='../../res/') # pylint: disable=invalid-name
 app.debug = True
-sockets = Sockets(app)
+sockets = Sockets(app) # pylint: disable=invalid-name
 
 @sockets.route('/ws')
 def websocket(wsock):
@@ -76,6 +76,8 @@ from geventwebsocket.handler import WebSocketHandler
 
 def genStream(camera):
     '''Video streaming generator function.'''
+    yield '' # to make greenlet switch
+
     frame = None
     while True:
         frame = camera.getFrame()
@@ -94,8 +96,12 @@ def run(robotServer, cameraServer):
     camera = cameraServer
 
     from gevent import pywsgi
+    from gevent import monkey
     from geventwebsocket.handler import WebSocketHandler
-    server = pywsgi.WSGIServer(('', 8080), app, handler_class=WebSocketHandler)
+
+    monkey.patch_all()
+    
+    server = pywsgi.WSGIServer(('', 8080), app.wsgi_app, handler_class=WebSocketHandler)
     server.serve_forever()
 
 def halt():
