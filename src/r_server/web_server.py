@@ -83,8 +83,7 @@ def genStream(camera):
 
 @app.route('/stream')
 def stream():
-    global camera
-    return Response(genStream(camera), mimetype='multipart/x-mixed-replace; boundary=frame') 
+    return Response(genStream(app.camera), mimetype='multipart/x-mixed-replace; boundary=frame') 
 
 app.robot = None
 app.camera = None
