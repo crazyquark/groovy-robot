@@ -8,7 +8,11 @@ function connect(host) {
     ws.onmessage = function (evt) {
         let msg = evt.data
         if (msg === 'ack') {
-            ws.send('ack')
+            ws.send('ack');
+        } else {
+            document.getElementById('cam')
+                .setAttribute('src', 'data:image/jpg;base64,' + msg); 
+            ws.send('ack');
         }
     };
 
