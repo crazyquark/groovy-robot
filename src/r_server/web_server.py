@@ -95,7 +95,7 @@ def images(filename):
 # setup aux objects
 app.robot = RobotServer()
 app.camera = CameraServer()
-app.keyboardController = KeyboardController(robot)
+app.keyboardController = KeyboardController(app.robot)
 
 server = WSGIServer(('', 8080), app, handler_class=WebSocketHandler)
 server.serve_forever()
