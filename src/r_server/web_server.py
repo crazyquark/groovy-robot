@@ -5,13 +5,16 @@
 
 from flask import Flask, render_template as template, request, make_response, jsonify, Response
 from flask_sockets import Sockets
-from robot_server import Directions, Throttle
 
 from gevent.pywsgi import WSGIServer
 from geventwebsocket import WebSocketError
 from geventwebsocket.handler import WebSocketHandler
 
 from base64 import b64encode
+
+from robot_server import Directions, Throttle
+from robot_server import RobotServer
+from camera_server import CameraServer
 
 app = Flask(__name__, template_folder='templates', static_folder='static') # pylint: disable=invalid-name
 app.debug = True
@@ -88,14 +91,10 @@ def index():
 def images(filename):
     return app.send_static_file(filename)
 
-app.robot = None
-app.camera = None
-def run(robotServer, cameraServer):
-    app.robot = robotServer
-    app.camera = cameraServer
+# setup aux objects
+app.robot = RobotServer()
+app.camera = CameraServer()
+app.keyboardController = KeyboardController(robot)
 
-    server = WSGIServer(('', 8080), app, handler_class=WebSocketHandler)
-    server.serve_forever()
-
-def halt():
-    app.robot.halt()
+server = WSGIServer(('', 8080), app, handler_class=WebSocketHandler)
+server.serve_forever()
