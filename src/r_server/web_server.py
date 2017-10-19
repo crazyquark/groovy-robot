@@ -99,4 +99,4 @@ def run(robotServer, cameraServer):
     server.serve_forever()
 
 def halt():
-    robot.halt()
+    app.robot.halt()
