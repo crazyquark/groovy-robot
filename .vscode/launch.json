@@ -5,12 +5,12 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python",
+            "name": "Run Web Server",
             "type": "python",
             "request": "launch",
             "stopOnEntry": true,
             "pythonPath": "${config:python.pythonPath}",
-            "program": "${workspaceRoot}/src/run_server.py",
+            "module": "r_server.web_server",
             "cwd": "${workspaceRoot}/src",
             "env": {},
             "envFile": "${workspaceRoot}/.env",

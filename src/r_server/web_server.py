@@ -63,8 +63,7 @@ def websocket_camera(wsock):
     '''
         Camera websocket
     '''
-
-    def run_camera():
+    def run_camera(wsock):
         '''
             Thread based websocket camera sender
         '''
@@ -85,7 +84,8 @@ def websocket_camera(wsock):
             except WebSocketError as err:
                 print repr(err)
                 break
-    camera_thread = Thread(target=run_camera)
+    
+    camera_thread = Thread(target=run_camera, args=([wsock]))
     camera_thread.start()
 
 @app.route('/')
