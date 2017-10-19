@@ -8,8 +8,8 @@ body {
 }
 
 #main {
-    width: {{ resolution[0] }}px;
-    height: {{ resolution[1] }}px;
+    width: 1024px;
+    height: 768px;
     background-color: red;
 
     position: absolute;
