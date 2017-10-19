@@ -1,7 +1,7 @@
 #!/bin/bash
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 pushd $DIR/src
-python run_server.py & 
+python -m r_server.web_server & 
 echo $! > server.pid
 popd
 
