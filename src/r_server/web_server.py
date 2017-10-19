@@ -22,37 +22,37 @@ def websocket(wsock):
             if message == 'hello':
                 print 'connected'
             elif message == 'w':
-                robot.move(Directions.Forward)
+                app.robot.move(Directions.Forward)
                 wsock.send('ack')
             elif message == 'W':
-                robot.stop(Directions.Forward)
+                app.robot.stop(Directions.Forward)
                 wsock.send('ack')
             elif message == 's':
-                robot.move(Directions.Back)
+                app.robot.move(Directions.Back)
                 wsock.send('ack')
             elif message == 'S':
-                robot.stop(Directions.Back)
+                app.robot.stop(Directions.Back)
                 wsock.send('ack')
             elif message == 'a':
-                robot.move(Directions.Left)
+                app.robot.move(Directions.Left)
                 wsock.send('ack')
             elif message == 'A':
-                robot.stop(Directions.Left)
+                app.robot.stop(Directions.Left)
                 wsock.send('ack')
             elif message == 'd':
-                robot.move(Directions.Right)
+                app.robot.move(Directions.Right)
                 wsock.send('ack')
             elif message == 'D':
-                robot.stop(Directions.Right)
+                app.robot.stop(Directions.Right)
                 wsock.send('ack')
             elif message == 'x':
-                robot.speed_adjust(Throttle.Up)
+                app.robot.speed_adjust(Throttle.Up)
                 wsock.send('ack')
             elif message == 'z':
-                robot.speed_adjust(Throttle.Down)
+                app.robot.speed_adjust(Throttle.Down)
                 wsock.send('ack')
             elif message == '':
-                robot.stop()
+                app.robot.stop()
                 wsock.send('ack')
         except WebSocketError as err:
             print repr(err)
@@ -76,11 +76,8 @@ from geventwebsocket.handler import WebSocketHandler
 
 def genStream(camera):
     '''Video streaming generator function.'''
-    yield '' # to make greenlet switch
-
-    frame = None
     while True:
-        frame = camera.getFrame()
+        frame = app.camera.getFrame()
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
@@ -89,11 +86,11 @@ def stream():
     global camera
     return Response(genStream(camera), mimetype='multipart/x-mixed-replace; boundary=frame') 
 
-robot = None
+app.robot = None
+app.camera = None
 def run(robotServer, cameraServer):
-    global robot, camera
-    robot = robotServer
-    camera = cameraServer
+    app.robot = robotServer
+    app.camera = cameraServer
 
     from gevent import pywsgi
     from geventwebsocket.handler import WebSocketHandler
