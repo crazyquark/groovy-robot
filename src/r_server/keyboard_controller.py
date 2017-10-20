@@ -37,7 +37,7 @@ class KeyboardController:
             try:
                 keyboard.listener.remove_handler(hook)
             except:
-                print 'Failed to remove hook: ' + str(hook)
+                print('Failed to remove hook: ' + str(hook))
 
 
         

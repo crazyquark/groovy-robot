@@ -1,5 +1,5 @@
 pygame
 ptvsd
 smbus
-tornado
+sanic
 picamera

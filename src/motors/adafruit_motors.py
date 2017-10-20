@@ -4,9 +4,9 @@
 try:
     from Adafruit_MotorHAT import Adafruit_MotorHAT
 except:
-    print 'Adafruit Motor HAT lib is not available'
+    print('Adafruit Motor HAT lib is not available')
 
-from motors import Motors
+from .motors import Motors
 
 class AdafruitMotors(Motors):
     '''

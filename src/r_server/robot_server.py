@@ -91,8 +91,8 @@ class RobotServer(Thread):
                     # I donno
                     self.motors.control_motors(0, 0)
             except:
-                print 'Critical failure, shutting down'
-                print 'Possible cause: '
+                print('Critical failure, shutting down')
+                print('Possible cause: ')
                 traceback.print_exc()
                 self.running = False
                 raise Exception('Motors failure')

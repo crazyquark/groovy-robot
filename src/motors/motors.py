@@ -28,7 +28,7 @@ class Motors(object):
         self.speed = min(self.speed, self.max_speed)
         
 
-        print 'SPEED: ' + str(self.speed)
+        print('SPEED: ' + str(self.speed))
 
     def control_motors(self, left_power, right_power):
         '''

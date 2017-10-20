@@ -4,7 +4,7 @@
 try:
     from grovepi_driver.grove_i2c_motor_driver import motor_driver
 except:
-    print 'GrovePi motors lib is not available'
+    print('GrovePi motors lib is not available')
 
 from motors import Motors
 
