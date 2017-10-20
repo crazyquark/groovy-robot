@@ -1,8 +1,7 @@
 'use strict'
 
 function connect(host) {
-    // connect_keyboard(host)
-
+    connect_keyboard(host)
     connect_camera(host);
 }
 
@@ -17,7 +16,7 @@ function connect_camera(host) {
 }
 
 function connect_keyboard(host) {
-    var ws = new WebSocket('ws://' + host + '/ws');
+    var ws = new WebSocket('ws://' + host + '/keyboard');
     ws.onopen = function () {
         ws.send('hello');
     };

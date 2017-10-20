@@ -8,8 +8,7 @@ from sanic.response import html
 
 from jinja2 import Environment, PackageLoader
 
-# from robot_server import Directions, Throttle
-from .robot_server import RobotServer
+from .robot_server import RobotServer, Directions, Throttle
 from .camera_server import CameraServer
 from .keyboard_controller import KeyboardController
 
@@ -21,41 +20,39 @@ app.static('/static', './r_server/static')
 # Jinja2 templates
 env = Environment(loader=PackageLoader('r_server', 'templates')) # pylint: disable=invalid-name
 
-# @sockets.route('/socket')
-# def websocket(socket):
-#     '''
-#         Server websocket
-#     '''
-#     while not socket.closed:
-#         try:
-#             message = socket.receive()
-#             if message == 'hello':
-#                 print('client connected')
-#             elif message == 'w':
-#                 app.robot.move(Directions.Forward)
-#             elif message == 'W':
-#                 app.robot.stop(Directions.Forward)
-#             elif message == 's':
-#                 app.robot.move(Directions.Back)
-#             elif message == 'S':
-#                 app.robot.stop(Directions.Back)
-#             elif message == 'a':
-#                 app.robot.move(Directions.Left)
-#             elif message == 'A':
-#                 app.robot.stop(Directions.Left)
-#             elif message == 'd':
-#                 app.robot.move(Directions.Right)
-#             elif message == 'D':
-#                 app.robot.stop(Directions.Right)
-#             elif message == 'x':
-#                 app.robot.speed_adjust(Throttle.Up)
-#             elif message == 'z':
-#                 app.robot.speed_adjust(Throttle.Down)
-#             elif message == '':
-#                 app.robot.stop()
-#         except WebSocketError as err:
-#             print(repr(err))
-#             break
+@app.websocket('/keyboard')
+async def websocket(_, socket):
+    '''
+        Keyboard websocket
+    '''
+    while True:
+        message = await socket.recv()
+        print(message)
+        if message == 'hello':
+            print('client connected')
+        elif message == 'w':
+            app.robot.move(Directions.Forward)
+        elif message == 'W':
+            app.robot.stop(Directions.Forward)
+        elif message == 's':
+            app.robot.move(Directions.Back)
+        elif message == 'S':
+            app.robot.stop(Directions.Back)
+        elif message == 'a':
+            app.robot.move(Directions.Left)
+        elif message == 'A':
+            app.robot.stop(Directions.Left)
+        elif message == 'd':
+            app.robot.move(Directions.Right)
+        elif message == 'D':
+            app.robot.stop(Directions.Right)
+        elif message == 'x':
+            app.robot.speed_adjust(Throttle.Up)
+        elif message == 'z':
+            app.robot.speed_adjust(Throttle.Down)
+        elif message == '':
+            app.robot.halt()
+
 @app.websocket('/camera')
 async def camera(_, socket):
     '''
