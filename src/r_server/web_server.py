@@ -2,7 +2,6 @@
     Server implementation using sanic in python3 for speed
 '''
 from base64 import b64encode
-import asyncio
 
 from sanic import Sanic
 from sanic.response import html
@@ -22,8 +21,7 @@ app.static('/static', './r_server/static')
 env = Environment(loader=PackageLoader('r_server', 'templates')) # pylint: disable=invalid-name
 
 @app.websocket('/ws')
-@asyncio.coroutine
-def websocket(_, socket):
+async def websocket(_, socket):
     '''
         Keyboard websocket
     '''
@@ -41,9 +39,9 @@ def websocket(_, socket):
         # send frame
         data = encode_frame()
         if data:
-            yield from socket.send(data)
+            await socket.send(data)
 
-        message = yield from socket.recv()
+        message = await socket.recv()
         print(message)
         if message == 'hello':
             print('client connected')
@@ -69,8 +67,7 @@ def websocket(_, socket):
             app.robot.speed_adjust(Throttle.Down)
 
 @app.route('/')
-@asyncio.coroutine
-def index(request):
+async def index(request):
     '''
         Main index handler
     '''
