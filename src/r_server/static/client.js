@@ -1,27 +1,15 @@
 'use strict'
 
 function connect(host) {
-    connect_keyboard(host)
-    connect_camera(host);
-}
-
-function connect_camera(host) {
-    var camera_ws = new WebSocket('ws://' + host + '/camera');
-
-    camera_ws.onmessage = (event) => {
-        let msg = event.data
-        document.getElementById('cam')
-            .setAttribute('src', 'data:image/jpg;base64,' + msg); 
-    }
-}
-
-function connect_keyboard(host) {
-    var ws = new WebSocket('ws://' + host + '/keyboard');
+    var ws = new WebSocket('ws://' + host + '/ws');
     ws.onopen = function () {
         ws.send('hello');
     };
+    
     ws.onmessage = function (event) {
-        console.log(event.data)
+        let msg = event.data
+        document.getElementById('cam')
+            .setAttribute('src', 'data:image/jpg;base64,' + msg);
     };
 
     var sendKey = (keyName) => {

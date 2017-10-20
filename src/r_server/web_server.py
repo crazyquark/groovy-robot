@@ -21,13 +21,28 @@ app.static('/static', './r_server/static')
 # Jinja2 templates
 env = Environment(loader=PackageLoader('r_server', 'templates')) # pylint: disable=invalid-name
 
-@app.websocket('/keyboard')
+@app.websocket('/ws')
 @asyncio.coroutine
 def websocket(_, socket):
     '''
         Keyboard websocket
     '''
+    def encode_frame():
+        '''
+            Base64 image
+        '''
+        if app.camera:
+            frame = app.camera.get_frame()
+            data = b64encode(frame)
+
+        return data.decode('utf-8')
+
     while True:
+        # send frame
+        data = encode_frame()
+        if data:
+            yield from socket.send(data)
+
         message = yield from socket.recv()
         print(message)
         if message == 'hello':
@@ -52,29 +67,6 @@ def websocket(_, socket):
             app.robot.speed_adjust(Throttle.Up)
         elif message == 'z':
             app.robot.speed_adjust(Throttle.Down)
-        elif message == '':
-            app.robot.halt()
-
-@app.websocket('/camera')
-@asyncio.coroutine
-def camera(_, socket):
-    '''
-        Camera websocket
-    '''
-    def encode_frame():
-        '''
-            Base64 image
-        '''
-        if app.camera:
-            frame = app.camera.get_frame()
-            data = b64encode(frame)
-
-            return data.decode('utf-8')
-
-    while True:
-        data = encode_frame()
-        if data:
-            yield from socket.send(data)
 
 @app.route('/')
 @asyncio.coroutine
