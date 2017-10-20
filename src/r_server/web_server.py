@@ -21,14 +21,14 @@ app.static('/static', './r_server/static')
 # Jinja2 templates
 env = Environment(loader=PackageLoader('r_server', 'templates')) # pylint: disable=invalid-name
 
-# @sockets.route('/ws')
-# def websocket(wsock):
+# @sockets.route('/socket')
+# def websocket(socket):
 #     '''
 #         Server websocket
 #     '''
-#     while not wsock.closed:
+#     while not socket.closed:
 #         try:
-#             message = wsock.receive()
+#             message = socket.receive()
 #             if message == 'hello':
 #                 print('client connected')
 #             elif message == 'w':
@@ -56,32 +56,28 @@ env = Environment(loader=PackageLoader('r_server', 'templates')) # pylint: disab
 #         except WebSocketError as err:
 #             print(repr(err))
 #             break
+@app.websocket('/camera')
+async def feed(_, socket):
+    '''
+        Camera websocket
+    '''
+    def encode_frame():
+        '''
+            Base64 image
+        '''
+        if app.camera:
+            frame = app.camera.get_frame()
+            data = b64encode(frame)
 
-# @sockets.route('/camera')
-# def websocket_camera(wsock):
-#     '''
-#         Camera websocket
-#     '''
-#     def encode_frame():
-#         '''
-#             Base64 image
-#         '''
-#         if app.camera:
-#             frame = app.camera.get_frame()
-#             data = b64encode(frame)
+            return data
 
-#             return data
-#     while not wsock.closed:
-#         try:
-#             data = encode_frame()
-#             if data:
-#                 wsock.send(data)
-#         except WebSocketError as err:
-#             print(repr(err))
-#             break
+    while True:
+        data = encode_frame()
+        if data:
+            await socket.send(data)
 
 @app.route('/')
-def index(request):
+async def index(request):
     '''
         Main index handler
     '''
@@ -92,23 +88,6 @@ def index(request):
     template = env.get_template('main.html')
     html_content = template.render(host=host)
     return html(html_content)
-
-# @app.route('/images/<filename>')
-# def images(filename):
-#     '''
-#         Server images
-#     '''
-#     return app.send_static_file(filename)
-
-    # try:
-    #     server = WSGIServer(('', 8080), app, handler_class=WebSocketHandler)  # pylint: disable=invalid-name
-    #     server.serve_forever()
-    # except KeyboardInterrupt:
-    #     server.stop()
-    #     app.robot.halt()
-    #     app.camera.halt()
-    #     app.keyboard_controller.halt()
-
 
 if __name__ == "__main__":
     # Setup aux objects and store them on our app for namespace cleanness

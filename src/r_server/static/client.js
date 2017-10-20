@@ -1,6 +1,22 @@
 'use strict'
 
 function connect(host) {
+    // connect_keyboard(host)
+
+    connect_camera(host);
+}
+
+function connect_camera(host) {
+    var camera_ws = new WebSocket('ws://' + host + '/camera');
+
+    camera_ws.onmessage = (event) => {
+        let msg = event.data
+        document.getElementById('cam')
+            .setAttribute('src', 'data:image/jpg;base64,' + msg); 
+    }
+}
+
+function connect_keyboard(host) {
     var ws = new WebSocket('ws://' + host + '/ws');
     ws.onopen = function () {
         ws.send('hello');
@@ -50,16 +66,4 @@ function connect(host) {
 
     document.addEventListener('keydown', keydownHandler, false);
     document.addEventListener('keyup', keyupHandler, false);
-
-    connect_camera(host);
-}
-
-function connect_camera(host) {
-    var camera_ws = new WebSocket('ws://' + host + '/camera');
-
-    camera_ws.onmessage = (event) => {
-        let msg = event.data
-        document.getElementById('cam')
-            .setAttribute('src', 'data:image/jpg;base64,' + msg); 
-    }
 }

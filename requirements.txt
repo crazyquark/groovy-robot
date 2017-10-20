@@ -3,4 +3,5 @@ ptvsd
 smbus
 sanic
 jinja2
+websockets
 picamera
