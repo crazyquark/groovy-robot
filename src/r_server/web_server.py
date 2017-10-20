@@ -42,7 +42,6 @@ async def websocket(_, socket):
             await socket.send(data)
 
         message = await socket.recv()
-        print(message)
         if message == 'hello':
             print('client connected')
         elif message == 'w':
