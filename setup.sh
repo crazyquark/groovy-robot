@@ -3,14 +3,14 @@
 # Also: enable camera and i2c
 
 # Might not be needed on all distros
-apt install python-dev
-easy_install pip
-apt install python-pygame
-apt install python-opencv
+apt install python3-dev
+apt install python3-pip
+apt install python3-pygame
+apt install python3-opencv
 
 pushd lib/adafruit_motor_hat
-python setup.py install
+python3 setup.py install
 popd
 
 # Install deps
-sudo pip install -r requirements.txt
+sudo pip3 install -r requirements.txt
