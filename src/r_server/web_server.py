@@ -57,7 +57,7 @@ env = Environment(loader=PackageLoader('r_server', 'templates')) # pylint: disab
 #             print(repr(err))
 #             break
 @app.websocket('/camera')
-async def feed(_, socket):
+async def camera(_, socket):
     '''
         Camera websocket
     '''
@@ -69,7 +69,7 @@ async def feed(_, socket):
             frame = app.camera.get_frame()
             data = b64encode(frame)
 
-            return data
+            return data.decode('utf-8')
 
     while True:
         data = encode_frame()
