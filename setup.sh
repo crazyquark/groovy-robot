@@ -3,6 +3,7 @@
 # Also: enable camera and i2c
 
 # Might not be needed on all distros
+apt install build-essential
 apt install python3-dev
 apt install python3-pip
 apt install python3-pygame
