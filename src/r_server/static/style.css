@@ -3,7 +3,7 @@ img {
     height: auto;
 }
 body {
-  background: url(/images/wall-e.jpg) no-repeat;
+  background: url(/static/wall-e.jpg) no-repeat;
   background-size: 100%;
 }
 

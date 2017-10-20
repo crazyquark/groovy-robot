@@ -1,13 +1,25 @@
 '''
-    Server implementation using flask
-    See http://bottlepy.org/docs/dev/async.html
+    Server implementation using sanic in python3 for speed
 '''
 from base64 import b64encode
+
+from sanic import Sanic
+from sanic.response import html
+
+from jinja2 import Environment, PackageLoader
 
 # from robot_server import Directions, Throttle
 from .robot_server import RobotServer
 from .camera_server import CameraServer
 from .keyboard_controller import KeyboardController
+
+app = Sanic()  # pylint: disable=invalid-name
+
+# Serves files from the static folder to the URL /static
+app.static('/static', './r_server/static')
+
+# Jinja2 templates
+env = Environment(loader=PackageLoader('r_server', 'templates')) # pylint: disable=invalid-name
 
 # @sockets.route('/ws')
 # def websocket(wsock):
@@ -68,16 +80,18 @@ from .keyboard_controller import KeyboardController
 #             print(repr(err))
 #             break
 
-# @app.route('/')
-# def index():
-#     '''
-#         Main index handler
-#     '''
-#     from urlparse import urlparse
-#     parsed_url = urlparse(request.url)
-#     host = parsed_url.hostname + (':' + str(parsed_url.port) if parsed_url.port else '')
+@app.route('/')
+def index(request):
+    '''
+        Main index handler
+    '''
+    from urllib.parse import urlparse
+    parsed_url = urlparse(request.url)
+    host = parsed_url.hostname + (':' + str(parsed_url.port) if parsed_url.port else '')
 
-#     return template('main.html', host=host)
+    template = env.get_template('main.html')
+    html_content = template.render(host=host)
+    return html(html_content)
 
 # @app.route('/images/<filename>')
 # def images(filename):
@@ -85,14 +99,6 @@ from .keyboard_controller import KeyboardController
 #         Server images
 #     '''
 #     return app.send_static_file(filename)
-
-app = {}
-
-# setup aux objects
-if __name__ == '__main__':
-    app.robot = RobotServer()
-    app.camera = CameraServer()
-    app.keyboard_controller = KeyboardController(app.robot)
 
     # try:
     #     server = WSGIServer(('', 8080), app, handler_class=WebSocketHandler)  # pylint: disable=invalid-name
@@ -102,3 +108,12 @@ if __name__ == '__main__':
     #     app.robot.halt()
     #     app.camera.halt()
     #     app.keyboard_controller.halt()
+
+
+if __name__ == "__main__":
+    # Setup aux objects and store them on our app for namespace cleanness
+    app.robot = RobotServer()
+    app.camera = CameraServer()
+    #app.keyboard_controller = KeyboardController(app.robot)
+
+    app.run(host="0.0.0.0", port=8080)
