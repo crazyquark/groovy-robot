@@ -15,4 +15,4 @@ python3 setup.py install
 popd
 
 # Install deps
-sudo pip3 install -r requirements.txt
+pip3 install -r requirements.txt
