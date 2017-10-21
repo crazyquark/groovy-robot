@@ -1,6 +1,5 @@
 pygame
 ptvsd
-smbus
 sanic
 jinja2
 websockets
