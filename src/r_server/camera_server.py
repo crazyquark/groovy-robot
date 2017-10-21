@@ -6,7 +6,7 @@ except:
 
 from threading import Thread
 import time, io
-import cv2
+# import cv2
 import numpy as np
 
 class CameraServer(Thread):
@@ -65,11 +65,11 @@ class CameraServer(Thread):
             IMG to grayscale as numpy array
         '''
         data = np.fromstring(frame, dtype=np.uint8)
-        image = cv2.imdecode(data, cv2.IMREAD_COLOR)
-        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        # image = cv2.imdecode(data, cv2.IMREAD_COLOR)
+        # gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-        result = cv2.imencode('.jpg', gray)
-        data = np.array(result[1], dtype=np.uint8).tostring()
+        # result = cv2.imencode('.jpg', gray)
+        # data = np.array(result[1], dtype=np.uint8).tostring()
 
         return data
 
