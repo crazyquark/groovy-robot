@@ -25,7 +25,7 @@
             "type": "python",
             "request": "attach",
             "localRoot": "${workspaceRoot}/src",
-            "remoteRoot": "/home/pi/groovy-robot/src",
+            "remoteRoot": "/root/groovy-robot/src",
             "port": 5678,
             "secret": "kriekpi",
             "host": "192.168.1.144"
