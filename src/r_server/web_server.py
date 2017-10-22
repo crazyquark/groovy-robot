@@ -66,7 +66,7 @@ async def websocket(_, socket):
             app.robot.speed_adjust(Throttle.Up)
         elif message == 'z':
             app.robot.speed_adjust(Throttle.Down)
-        if message == 'ack':
+
 @app.route('/')
 async def index(request):
     '''
