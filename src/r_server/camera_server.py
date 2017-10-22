@@ -37,6 +37,7 @@ class CameraServer(Thread):
         with picamera.PiCamera() as camera:
             # Camera setup
             camera.resolution = (800, 600)
+            camera.framerate = 25
             camera.hflip = True
             camera.vflip = True
 
@@ -50,6 +51,7 @@ class CameraServer(Thread):
             for _ in camera.capture_continuous(stream, 'jpeg', use_video_port=True):
                 # Stop thread
                 if not self.running:
+                    stream.close()
                     return
 
                 # Store frame
