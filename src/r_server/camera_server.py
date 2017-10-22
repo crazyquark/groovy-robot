@@ -19,7 +19,26 @@ class CameraServer(Thread):
 
         self.resolution = (800, 600)
         self.running = True
+
+        if RUNNING_ON_PI:
+            # Create stream
+            self.stream = io.BytesIO()
+
+            # Camera setup
+            self.camera = picamera.Camera()
+
+            # Let camera warm up (??)
+            self.camera.start_preview()
+            time.sleep(2)
+
+            self.camera.resolution = (800, 600)
+            self.camera.framerate = 25
+            self.camera.hflip = True
+            self.camera.vflip = True
+
+        self.frame = None
         self.dummy_frame()
+
         self.start()
 
     def dummy_frame(self):
@@ -34,33 +53,18 @@ class CameraServer(Thread):
         if not RUNNING_ON_PI:
             return
 
-        with picamera.PiCamera() as camera:
-            # Camera setup
-            camera.resolution = (800, 600)
-            camera.framerate = 25
-            camera.hflip = True
-            camera.vflip = True
+        for _ in self.camera.capture_continuous(self.stream, 'jpeg', use_video_port=True):
+            # Stop thread
+            if not self.running:
+                return
 
-            # Let camera warm up (??)
-            camera.start_preview()
-            time.sleep(2)
+            # Store frame
+            self.stream.seek(0)
+            self.frame = self.stream.read()
 
-            # Create stream
-            stream = io.BytesIO()
-
-            for _ in camera.capture_continuous(stream, 'jpeg', use_video_port=True):
-                # Stop thread
-                if not self.running:
-                    stream.close()
-                    return
-
-                # Store frame
-                stream.seek(0)
-                self.frame = stream.read()
-
-                # reset stream for next frame
-                stream.seek(0)
-                stream.truncate()
+            # reset stream for next frame
+            self.stream.seek(0)
+            self.stream.truncate()
 
     def to_grayscale(self, frame):
         '''
@@ -86,3 +90,5 @@ class CameraServer(Thread):
             Stop server thread
         '''
         self.running = False
+        self.camera.close()
+        self.stream.close()
