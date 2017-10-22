@@ -39,14 +39,13 @@ async def websocket(_, socket):
         return data.decode('utf-8')
 
     while True:
-        # send frame
-        data = encode_frame()
-        if data:
-            await socket.send(data)
-
         message = await socket.recv()
         if message == 'hello':
             print('client connected')
+            # send frame
+            data = encode_frame()
+            if data:
+                await socket.send(data)
         elif message == 'w':
             app.robot.move(Directions.Forward)
         elif message == 'W':
@@ -67,7 +66,7 @@ async def websocket(_, socket):
             app.robot.speed_adjust(Throttle.Up)
         elif message == 'z':
             app.robot.speed_adjust(Throttle.Down)
-
+        if message == 'ack':
 @app.route('/')
 async def index(request):
     '''
