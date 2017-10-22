@@ -3,6 +3,7 @@
 function connect(host) {
     var ws = new WebSocket('ws://' + host + '/ws');
     ws.onopen = () => {
+        console.log('connected to server');
         ws.send('1');
     };
     
@@ -14,7 +15,12 @@ function connect(host) {
     };
     
     ws.onclose = () => {
-        connect(host);
+        console.log('server connection lost')
+
+        document.removeEventListener('keydown', keydownHandler, false);
+        document.removeEventListener('keyup', keyupHandler, false);
+
+        connect('host');
     }
 
     var sendKey = (keyName) => {
@@ -56,6 +62,6 @@ function connect(host) {
 
     };
 
-    document.addEventListener('keydown', keydownHandler, false);
-    document.addEventListener('keyup', keyupHandler, false);
+    document.addEventListener('keydown', keydownHandler, true);
+    document.addEventListener('keyup', keyupHandler, true);
 }
