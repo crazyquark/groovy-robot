@@ -86,4 +86,4 @@ if __name__ == "__main__":
     app.camera = CameraServer()
     #app.keyboard_controller = KeyboardController(app.robot)
 
-    app.run(host="0.0.0.0", port=8080, workers=2)
+    app.run(host="0.0.0.0", port=8080)
