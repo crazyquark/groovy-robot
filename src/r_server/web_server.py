@@ -40,8 +40,7 @@ async def websocket(_, socket):
 
     while True:
         message = await socket.recv()
-        if message == 'hello':
-            print('client connected')
+        if message == '1':
             # send frame
             data = encode_frame()
             if data:
