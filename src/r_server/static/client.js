@@ -3,7 +3,7 @@
 function connect(host) {
     var ws = new WebSocket('ws://' + host + '/ws');
     ws.onopen = function () {
-        ws.send('hello');
+        ws.send('1');
     };
     
     ws.onmessage = function (event) {
