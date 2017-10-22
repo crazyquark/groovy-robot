@@ -20,6 +20,9 @@ app.static('/static', './r_server/static')
 # Jinja2 templates
 env = Environment(loader=PackageLoader('r_server', 'templates')) # pylint: disable=invalid-name
 
+from ptvsd import enable_attach
+enable_attach("kriekpi")
+
 @app.websocket('/ws')
 async def websocket(_, socket):
     '''

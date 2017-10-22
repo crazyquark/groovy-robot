@@ -10,6 +10,7 @@ function connect(host) {
         let msg = event.data
         document.getElementById('cam')
             .setAttribute('src', 'data:image/jpg;base64,' + msg);
+        ws.send('ack');
     };
 
     var sendKey = (keyName) => {

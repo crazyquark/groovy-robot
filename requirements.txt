@@ -1,5 +1,6 @@
 pygame
-ptvsd
+# anything above 3.0.0 does not work with VSCode
+ptvsd==3.0.0
 sanic
 jinja2
 websockets
