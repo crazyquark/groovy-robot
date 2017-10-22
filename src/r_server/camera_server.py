@@ -25,7 +25,7 @@ class CameraServer(Thread):
             self.stream = io.BytesIO()
 
             # Camera setup
-            self.camera = picamera.Camera()
+            self.camera = picamera.PiCamera()
 
             # Let camera warm up (??)
             self.camera.start_preview()
