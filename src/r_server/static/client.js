@@ -2,16 +2,20 @@
 
 function connect(host) {
     var ws = new WebSocket('ws://' + host + '/ws');
-    ws.onopen = function () {
+    ws.onopen = () => {
         ws.send('1');
     };
     
-    ws.onmessage = function (event) {
+    ws.onmessage = (event) => {
         let msg = event.data
         document.getElementById('cam')
             .setAttribute('src', 'data:image/jpg;base64,' + msg);
         ws.send('1');
     };
+    
+    ws.onclose = () => {
+        connect(host);
+    }
 
     var sendKey = (keyName) => {
         if (keyName === 'w' || keyName === 'ArrowUp') {
