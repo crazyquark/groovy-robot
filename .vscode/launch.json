@@ -21,11 +21,11 @@
             ]
         },
         {
-            "name": "Attach (Remote Debug)",
+            "name": "Attach to Pi(Remote Debug)",
             "type": "python",
             "request": "attach",
-            "localRoot": "${workspaceRoot}",
-            "remoteRoot": "${workspaceRoot}",
+            "localRoot": "${workspaceRoot}/src",
+            "remoteRoot": "/home/pi/groovy-robot/src",
             "port": 5678,
             "secret": "kriekpi",
             "host": "192.168.1.144"
