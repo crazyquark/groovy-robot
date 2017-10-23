@@ -10,7 +10,7 @@ from jinja2 import Environment, PackageLoader
 
 from .robot_server import RobotServer, Directions, Throttle
 from .camera_server import CameraServer
-from .keyboard_controller import KeyboardController
+# from .keyboard_controller import KeyboardController
 
 app = Sanic()  # pylint: disable=invalid-name
 
@@ -83,6 +83,6 @@ if __name__ == "__main__":
     # Setup aux objects and store them on our app for namespace cleanness
     app.robot = RobotServer()
     app.camera = CameraServer()
-    app.keyboard_controller = KeyboardController(app.robot)
+    #app.keyboard_controller = KeyboardController(app.robot)
 
     app.run(host="0.0.0.0", port=8080)
