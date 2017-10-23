@@ -2,7 +2,7 @@ img {
     max-width: 100%;
     height: auto;
 
-    opacity: 0.5;
+    opacity: 0.8;
 }
 body {
   background: url(/static/wall-e.jpg) no-repeat;
