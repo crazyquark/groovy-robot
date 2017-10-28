@@ -9,6 +9,7 @@ sudo apt install -y python3-pip
 #apt install -y python3-pygame
 #apt install -y python3-opencv
 sudo apt install -y python3-smbus
+sudo apt install -y python3-evdev
 
 pushd lib/adafruit_motor_hat
 python3 setup.py install
