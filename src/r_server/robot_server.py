@@ -83,10 +83,12 @@ class RobotServer(Thread):
                     self.motors.control_motors(-100, 100)
                 elif (self.fwd_pressed or self.back_pressed) and self.right_pressed:
                     # Attempt to turn right
-                    self.motors.control_motors(100, 100 / self.turn_factor)
+                    sign = 1 if self.fwd_pressed else -1
+                    self.motors.control_motors(sign * 100, sign * 100 / self.turn_factor)
                 elif (self.fwd_pressed or self.back_pressed) and self.left_pressed:
                     # Attempt to turn left
-                    self.motors.control_motors(100 / self.turn_factor, 100)
+                    sign = 1 if self.fwd_pressed else -1
+                    self.motors.control_motors(sign * 100 / self.turn_factor, sign * 100)
                 else:
                     # I donno
                     self.motors.control_motors(0, 0)
