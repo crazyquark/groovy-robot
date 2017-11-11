@@ -42,5 +42,5 @@ module camMount()
 	}
 }
 
-//camHolder();
+camHolder();
 
