@@ -16,7 +16,7 @@ for dev in devices:
         break
 
 if device:
-    for event in device.event_loop():
+    for event in device.read_loop():
         # Start pressed, yo!
         if event.type == 1 and event.code == 291 and event.value == 1:
             # Bootstrap our server
