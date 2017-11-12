@@ -36,6 +36,7 @@ class CameraServer(Thread):
             self.camera.hflip = True
             self.camera.vflip = True
 
+        self.camera = None
         self.frame = None
         self.dummy_frame()
 
