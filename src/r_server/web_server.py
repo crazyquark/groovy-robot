@@ -11,6 +11,7 @@ from jinja2 import Environment, PackageLoader
 from .robot_server import RobotServer, Directions, Throttle
 from .camera_server import CameraServer
 # from .keyboard_controller import KeyboardController
+from .ps3_controller import PS3Controller
 
 app = Sanic()  # pylint: disable=invalid-name
 
@@ -79,10 +80,22 @@ async def index(request):
     html_content = template.render(host=host)
     return html(html_content)
 
+@app.route('/halt')
+async def halt(_):
+    '''
+        Stop web server
+    '''
+    app.robot.halt()
+    app.camera.halt()
+    app.ps3controller.halt()
+    
+    app.stop()
+
 if __name__ == "__main__":
     # Setup aux objects and store them on our app for namespace cleanness
     app.robot = RobotServer()
     app.camera = CameraServer()
     #app.keyboard_controller = KeyboardController(app.robot)
+    app.ps3controller = PS3Controller()
 
     app.run(host="0.0.0.0", port=8080)

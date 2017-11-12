@@ -1,7 +1,7 @@
 try:
     import picamera
     RUNNING_ON_PI = True
-except:
+except ImportError:
     RUNNING_ON_PI = False
 
 from threading import Thread

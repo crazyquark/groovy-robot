@@ -25,8 +25,6 @@ class RobotServer(Thread):
         Uses an autostart thread to run its update loop
     '''
     def __init__(self):
-        Thread.__init__(self)
-
         self.fwd_pressed = False
         self.back_pressed = False
         self.left_pressed = False
