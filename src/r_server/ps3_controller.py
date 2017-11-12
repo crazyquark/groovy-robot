@@ -52,6 +52,21 @@ class PS3Controller(Thread):
                     self.robot.move(Directions.Forward)
                 else:
                     self.robot.stop(Directions.Forward)
+            elif event.code == 296:
+                if event.value == 1:
+                    self.robot.move(Directions.Back)
+                else:
+                    self.robot.stop(Directions.Back)
+            elif event.code == 298:
+                if event.value == 1:
+                    self.robot.move(Directions.Left)
+                else:
+                    self.robot.stop(Directions.Left)
+            elif event.code == 299:
+                if event.value == 1:
+                    self.robot.move(Directions.Right)
+                else:
+                    self.robot.stop(Directions.Right)
 
     def halt(self):
         '''
