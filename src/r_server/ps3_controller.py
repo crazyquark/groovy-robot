@@ -48,9 +48,10 @@ class PS3Controller(Thread):
         '''
         if event.type == 1: # key press
             if event.code == 297:
-                print(event)
-                self.robot.move(Directions.Forward)
-                self.robot.stop(Directions.Forward)
+                if event.value == 1:
+                    self.robot.move(Directions.Forward)
+                else:
+                    self.robot.stop(Directions.Forward)
 
     def halt(self):
         '''
