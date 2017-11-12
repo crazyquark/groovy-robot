@@ -90,5 +90,6 @@ class CameraServer(Thread):
             Stop server thread
         '''
         self.running = False
-        self.camera.close()
-        self.stream.close()
+        if self.camera:
+            self.camera.close()
+            self.stream.close()
