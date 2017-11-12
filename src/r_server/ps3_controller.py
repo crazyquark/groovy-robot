@@ -12,7 +12,7 @@ class ControlScheme(object):
     '''
         Simple enumeration of the available control schemes
     '''
-    ShoulderButtons, ThumbSticks, AnalogTriggers = range(3)
+    ShoulderButtons, ThumbSticks, AnalogTriggers, NumSchemes = range(4)
 
 class PS3Controller(Thread):
     '''
@@ -50,14 +50,27 @@ class PS3Controller(Thread):
 
             self.process_event(event)
 
+    def switch_scheme(self):
+        self.control_scheme += 1
+        if self.control_scheme == ControlScheme.NumSchemes:
+            self.control_scheme = 0
+
     def process_event(self, event):
         '''
             Executs action based on button presses
         '''
-        if self.control_scheme == ControlScheme.ShoulderButtons:
-            self.shoulder_buttons_process(event)
+        if event.type == 1 and event.code == 288 and event.value == 1:
+            # Select changes control scheme
+            self.switch_scheme()
+        else:
+            if self.control_scheme == ControlScheme.ShoulderButtons:
+                self.shoulder_buttons_process(event)
 
     def shoulder_buttons_process(self, event):
+        '''
+            A simplistic control scheme which uses only the shoulder buttons
+            as digital inputs
+        '''
         if event.type == 1: # key press
             if event.code == 297:
                 if event.value == 1:
