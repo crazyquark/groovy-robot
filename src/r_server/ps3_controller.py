@@ -50,7 +50,7 @@ class PS3Controller(Thread):
             if event.code == 297:
                 self.robot.move(Directions.Forward)
         else:
-            self.robot.halt()
+            self.robot.stop(Directions.Forward)
 
 
     def halt(self):
