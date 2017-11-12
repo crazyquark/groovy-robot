@@ -6,3 +6,5 @@ sanic
 jinja2
 websockets
 picamera
+evdev
+
