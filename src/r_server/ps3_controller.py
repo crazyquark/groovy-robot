@@ -51,10 +51,14 @@ class PS3Controller(Thread):
             self.process_event(event)
 
     def switch_scheme(self):
+        '''
+            Changes control scheme
+        '''
         self.control_scheme += 1
         if self.control_scheme == ControlScheme.NumSchemes:
             self.control_scheme = 0
-
+        print('Control scheme switched to: ', str(self.control_scheme))
+    
     def process_event(self, event):
         '''
             Executs action based on button presses
