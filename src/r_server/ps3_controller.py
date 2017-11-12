@@ -40,7 +40,7 @@ class PS3Controller(Thread):
             if not self.running:
                 return
 
-            #self.process_event(event)
+            self.process_event(event)
 
     def process_event(self, event):
         '''
@@ -49,10 +49,7 @@ class PS3Controller(Thread):
         if event.type == 1: # key press
             if event.code == 297:
                 self.robot.move(Directions.Forward)
-        else:
-            #self.robot.stop(Directions.Forward)
-            pass
-
+                self.robot.stop(Directions.Forward)
 
     def halt(self):
         '''
