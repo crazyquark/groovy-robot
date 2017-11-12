@@ -7,14 +7,15 @@ import evdev
 import sys
 import subprocess
 
-devices = [evdev.InputDevice(fn) for fn in evdev.list_devices()]
-
 device = None
-for dev in devices:
-    if dev.name == 'Sony Computer Entertainment Wireless Controller':
-        device = dev
-        print('Found controller')
-        break
+while not device:
+    devices = [evdev.InputDevice(fn) for fn in evdev.list_devices()]
+
+    for dev in devices:
+        if dev.name == 'Sony Computer Entertainment Wireless Controller':
+            device = dev
+            print('Found controller')
+            break
 
 if device:
     print('Waiting for input')
