@@ -20,6 +20,8 @@ class CameraServer(Thread):
         self.resolution = (800, 600)
         self.running = True
 
+        self.camera = None
+
         if RUNNING_ON_PI:
             # Create stream
             self.stream = io.BytesIO()
@@ -36,7 +38,6 @@ class CameraServer(Thread):
             self.camera.hflip = True
             self.camera.vflip = True
 
-        self.camera = None
         self.frame = None
         self.dummy_frame()
 
