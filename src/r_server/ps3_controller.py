@@ -40,7 +40,7 @@ class PS3Controller(Thread):
             if not self.running:
                 return
 
-            self.process_event(event)
+            #self.process_event(event)
 
     def process_event(self, event):
         '''
