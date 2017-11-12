@@ -22,8 +22,9 @@ if device:
         # Start pressed, yo!
         if event.type == 1 and event.code == 291 and event.value == 1:
             # Bootstrap our server
-            device.close()
-            print('Start pressed, good job!')
-            err = subprocess.check_call(['./run_server.sh'])
-            print('Process result: ', err)
-            sys.exit(0)
+            break
+
+    print('Start pressed, good job!')
+    err = subprocess.check_call(['./run_server.sh'])
+    print('Process result: ', err)
+    sys.exit(0)
