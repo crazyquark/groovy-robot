@@ -36,7 +36,7 @@ class PS3Controller(Thread):
             if not self.running:
                 return
 
-            print(event)
+            # print(event)
 
     def halt(self):
         '''

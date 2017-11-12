@@ -88,7 +88,7 @@ async def halt(_):
     app.robot.halt()
     app.camera.halt()
     app.ps3controller.halt()
-    
+
     app.stop()
 
 if __name__ == "__main__":
