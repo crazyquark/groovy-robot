@@ -8,6 +8,12 @@ except ImportError:
     print('evdev is not available')
     EVDEV_AVAILABLE = False
 
+class ControlScheme(object):
+    '''
+        Simple enumeration of the available control schemes
+    '''
+    ShoulderButtons, ThumbSticks, AnalogTriggers = range(3)
+
 class PS3Controller(Thread):
     '''
         Connects to any available PS3 controller and reads events
@@ -26,6 +32,8 @@ class PS3Controller(Thread):
             print('Failed to detect sixaxis controller!')
 
         Thread.__init__(self)
+
+        self.control_scheme = ControlScheme.ShoulderButtons
 
         self.robot = robot
         self.running = True
@@ -46,6 +54,10 @@ class PS3Controller(Thread):
         '''
             Executs action based on button presses
         '''
+        if self.control_scheme == ControlScheme.ShoulderButtons:
+            self.shoulder_buttons_process(event)
+
+    def shoulder_buttons_process(self, event):
         if event.type == 1: # key press
             if event.code == 297:
                 if event.value == 1:
