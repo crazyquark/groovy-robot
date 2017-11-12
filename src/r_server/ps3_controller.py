@@ -1,4 +1,6 @@
 from threading import Thread
+from .robot_server import Directions, Throttle
+
 try:
     import evdev
     EVDEV_AVAILABLE = True
@@ -10,7 +12,7 @@ class PS3Controller(Thread):
     '''
         Connects to any available PS3 controller and reads events
     '''
-    def __init__(self):
+    def __init__(self, robot):
         if not EVDEV_AVAILABLE:
             print('No evdev, no joy, exiting...')
             return
@@ -24,6 +26,8 @@ class PS3Controller(Thread):
             print('Failed to detect sixaxis controller!')
 
         Thread.__init__(self)
+
+        self.robot = robot
         self.running = True
         self.start()
 
@@ -36,7 +40,18 @@ class PS3Controller(Thread):
             if not self.running:
                 return
 
-            # print(event)
+            self.process_event(event)
+
+    def process_event(self, event):
+        '''
+            Executs action based on button presses
+        '''
+        if event.type == 1: # key press
+            if event.code == 297:
+                self.robot.move(Directions.Forward)
+        else:
+            self.robot.halt()
+
 
     def halt(self):
         '''

@@ -96,6 +96,6 @@ if __name__ == "__main__":
     app.robot = RobotServer()
     app.camera = CameraServer()
     #app.keyboard_controller = KeyboardController(app.robot)
-    app.ps3controller = PS3Controller()
+    app.ps3controller = PS3Controller(app.robot)
 
     app.run(host="0.0.0.0", port=8080)

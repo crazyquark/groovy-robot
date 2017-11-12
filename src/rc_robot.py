@@ -22,7 +22,7 @@ class Robot:
         wallEpic = pygame.image.load('res/wall-e-800.jpg')
         self.screen = pygame.display.set_mode(wallEpic.get_rect().size)
 
-        self.screen.blit(wallEpic, (0,0))
+        self.screen.blit(wallEpic, (0, 0))
         pygame.display.flip()
 
         signal.signal(signal.SIGINT, self.signalHandler)
