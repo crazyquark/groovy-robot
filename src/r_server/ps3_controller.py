@@ -75,12 +75,10 @@ class PS3Controller(Thread):
 
     def tank_mode_process(self, event):
         if event.type == 3: # analog event
-            if event.code == 48:
-                # left trigger
-                self.robot.adjust_motor(int(float(event.value) / 255.0), True)
-            elif event.code == 49:
+            if event.code == 49:
                 # right trigger
-                self.robot.adjust_motor(int(float(event.value) / 255.0), False)
+                self.robot.set_speed(event.value) # [0, 255]
+                self.robot.move(Directions.Forward)
 
     def shoulder_buttons_process(self, event):
         '''

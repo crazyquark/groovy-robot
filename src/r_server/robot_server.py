@@ -105,6 +105,13 @@ class RobotServer(Thread):
             amount = direction * self.speed_increment
             self.motors.change_speed(amount)
 
+    def set_speed(self, speed):
+        '''
+            Sets speed to a specific value
+        '''
+        if self.running_on_pi:
+            self.motors.change_speed(speed)
+
     def process_press(self, direction, is_on):
         '''
             Interpret a key press from UI
