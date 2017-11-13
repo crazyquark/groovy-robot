@@ -78,7 +78,10 @@ class PS3Controller(Thread):
             if event.code == 49:
                 # right trigger
                 self.robot.set_speed(event.value) # [0, 255]
-                self.robot.move(Directions.Forward)
+                if event.value > 0:
+                    self.robot.move(Directions.Forward)
+                else:
+                    self.robot.stop(Directions.Forward)
 
     def shoulder_buttons_process(self, event):
         '''
