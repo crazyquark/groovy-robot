@@ -43,8 +43,8 @@ class PS3Controller(Thread):
         self.running = True
         self.start()
 
-        self.tank_mode_process.left_power = 0
-        self.tank_mode_process.right_power = 0
+        self.tank_mode_left_power = 0
+        self.tank_mode_right_power = 0
 
     def run(self):
         if not self.device:
@@ -86,16 +86,16 @@ class PS3Controller(Thread):
                 self.game_mode_process(event)
             elif self.control_scheme == ControlScheme.TankMode:
                 self.tank_mode_process(event)
-    
+
     def tank_mode_process(self, event):
         if event.type == 3:
             if event.code == 48:
-                self.tank_mode_process.left_power = event.value
+                self.tank_mode_left_power = event.value
             elif event.code == 49:
-                self.tank_mode_process.right_power = event.value
-            
+                self.tank_mode_right_power = event.value
+
             # Adjust motors manually
-            self.robot.set_motors(self.tank_mode_process.left_power, self.tank_mode_process.right_power)
+            self.robot.set_motors(self.tank_mode_left_power, self.tank_mode_right_power)
 
     def game_mode_process(self, event):
         '''
