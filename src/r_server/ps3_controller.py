@@ -85,7 +85,7 @@ class PS3Controller(Thread):
             if event.code == 49:
                 self.robot.set_speed(event.value) # [0, 255]
                 self.robot.process_press(Directions.Forward, event.value > 0)
-    
+
     def shoulder_buttons_process(self, event):
         '''
             A simplistic control scheme which uses only the shoulder buttons

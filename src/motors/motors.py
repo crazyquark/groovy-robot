@@ -11,6 +11,7 @@ class Motors(object):
 
         # Default speed values: 0 - 100
         self.max_speed = 100
+        self.speed_changed = False
 
         from platform import uname
         self.running_on_pi = uname()[4].startswith('arm')
@@ -24,12 +25,13 @@ class Motors(object):
         if self.speed <= 0:
             self.speed = 0
             return
-        
+
+        old_speed = self.speed
         self.speed = min(self.speed, self.max_speed)
-        
+        self.speed_changed = old_speed != self.speed
 
         print('SPEED: ' + str(self.speed))
-    
+
     def set_speed(self, speed):
         '''
             Set speed to a given amount

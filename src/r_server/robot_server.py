@@ -114,7 +114,7 @@ class RobotServer(Thread):
 
     def process_press(self, direction, is_on):
         '''
-            Interpret a key press from UI
+            Interpret a key press from UI or a controller that requires continous movements
         '''
         if direction == Directions.Forward:
             self.fwd_pressed = is_on
@@ -135,7 +135,7 @@ class RobotServer(Thread):
             return
 
         self.process_press(direction, True)
-    
+
     def stop(self, direction):
         '''
             Full stop

@@ -28,7 +28,7 @@
             "remoteRoot": "/root/groovy-robot/src",
             "port": 5678,
             "secret": "kriekpi",
-            "host": "192.168.1.144"
+            "host": "192.168.1.67"
         }
     ]
 }
