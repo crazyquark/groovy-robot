@@ -68,7 +68,9 @@ class RobotServer(Thread):
         while self.running:
             # Processing is suspended
             if self.manual:
+                self.condition.acquire()
                 self.condition.wait()
+                self.condition.release()
 
             try:
                 if self.no_key_pressed() or self.bad_key_combo():
