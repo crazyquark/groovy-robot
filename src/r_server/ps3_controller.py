@@ -77,6 +77,7 @@ class PS3Controller(Thread):
         if event.type == 3: # analog event
             if event.code == 49:
                 # right trigger
+                print(event.value)
                 self.robot.set_speed(event.value) # [0, 255]
                 if event.value > 0:
                     self.robot.move(Directions.Forward)
