@@ -4,6 +4,7 @@
 import platform
 import traceback
 from threading import Thread
+from time import sleep
 
 from motors.adafruit_motors import AdafruitMotors
 
@@ -66,6 +67,7 @@ class RobotServer(Thread):
         while self.running:
             # Processing is suspended
             if self.manual:
+                sleep(1)
                 continue
 
             try:
