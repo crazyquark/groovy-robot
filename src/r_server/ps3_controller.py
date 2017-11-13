@@ -12,7 +12,7 @@ class ControlScheme(object):
     '''
         Simple enumeration of the available control schemes
     '''
-    ShoulderButtons, GameMode, AnalogTriggers, NumSchemes = range(4)
+    SimpleMode, GameMode, TankMode, NumSchemes = range(4)
 
 class PS3Controller(Thread):
     '''
@@ -34,7 +34,7 @@ class PS3Controller(Thread):
 
         Thread.__init__(self)
 
-        self.control_scheme = ControlScheme.ShoulderButtons
+        self.control_scheme = ControlScheme.SimpleMode
 
         # Used for tank mode
         self.current_direction = Directions.Forward
@@ -61,10 +61,12 @@ class PS3Controller(Thread):
         self.control_scheme += 1
         if self.control_scheme == ControlScheme.NumSchemes:
             self.control_scheme = 0
-        
-        if self.control_scheme == ControlScheme.ShoulderButtons:
+
+        if self.control_scheme == ControlScheme.SimpleMode:
             self.robot.set_speed(85) # reset speed
-        
+
+        self.robot.manual_mode(self.control_scheme == ControlScheme.TankMode)
+
         print('Control scheme switched to: ', str(self.control_scheme))
 
     def process_event(self, event):
@@ -75,25 +77,37 @@ class PS3Controller(Thread):
             # Select changes control scheme
             self.switch_scheme()
         else:
-            if self.control_scheme == ControlScheme.ShoulderButtons:
-                self.shoulder_buttons_process(event)
+            if self.control_scheme == ControlScheme.SimpleMode:
+                self.simple_mode_process(event)
             elif self.control_scheme == ControlScheme.GameMode:
                 self.game_mode_process(event)
+            elif self.control_scheme == ControlScheme.TankMode:
+                self.tank_mode_process(event)
+    
+    def tank_mode_process(self, event):
+        if event.type == 3:
+            if event.code == 48:
+                self.tank_mode_process.left_power = event.value
+            elif event.code == 49:
+                self.tank_mode_process.right_power = event.value
+            
+            # Adjust motors manually
+            self.robot.set_motors(self.tank_mode_process.left_power, self.tank_mode_process.right_power)
 
     def game_mode_process(self, event):
         '''
             More advanced control mode that use the analog input from the triggers to control speed
         '''
         if event.type == 3: # analog event
-            if event.code == 49:
-                # right trigger
-                self.robot.set_speed(event.value) # [0, 255]
-                self.robot.process_press(Directions.Forward, event.value > 0)
             if event.code == 48:
                 # left trigger
                 self.robot.set_speed(event.value)
                 self.robot.process_press(Directions.Back, event.value > 0)
-            if event.code == 0: # left thumbstick
+            elif event.code == 49:
+                # right trigger
+                self.robot.set_speed(event.value) # [0, 255]
+                self.robot.process_press(Directions.Forward, event.value > 0)
+            elif event.code == 0: # left thumbstick
                 if event.value < 50:
                     self.robot.process_press(Directions.Left, True)
                 elif event.value > 50 and event.value <= 128:
@@ -109,7 +123,7 @@ class PS3Controller(Thread):
             elif event.code == 293:
                 self.robot.process_press(Directions.Right, event.value == 1)
         
-    def shoulder_buttons_process(self, event):
+    def simple_mode_process(self, event):
         '''
             A simplistic control scheme which uses only the shoulder buttons
             as digital inputs

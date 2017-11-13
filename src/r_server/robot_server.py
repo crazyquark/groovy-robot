@@ -44,6 +44,7 @@ class RobotServer(Thread):
         self.motors = AdafruitMotors()
 
         Thread.__init__(self)
+        self.manual = False
         self.running = True
         self.start()
 
@@ -63,6 +64,10 @@ class RobotServer(Thread):
 
     def run(self):
         while self.running:
+            # Processing is suspended
+            if self.manual:
+                continue
+
             try:
                 if self.no_key_pressed() or self.bad_key_combo():
                     # Full stop
@@ -146,6 +151,22 @@ class RobotServer(Thread):
             return
 
         self.process_press(direction, False)
+
+    def manual_mode(self, enable):
+        '''
+            Enable or disable manual mode
+        '''
+        self.manual = enable
+
+    def set_motors(self, left_power, right_power):
+        '''
+            In manual mode set the motors power directly
+        '''
+        if not self.manual:
+            return # only available in manual mode
+
+        self.motors.control_motors(min(100, max(-100, left_power)),
+                                   min(100, max(-100, right_power)))
 
     def halt(self):
         '''
