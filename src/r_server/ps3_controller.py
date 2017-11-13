@@ -43,6 +43,9 @@ class PS3Controller(Thread):
         self.running = True
         self.start()
 
+        self.tank_mode_process.left_power = 0
+        self.tank_mode_process.right_power = 0
+
     def run(self):
         if not self.device:
             print('No controller connected, existing')
