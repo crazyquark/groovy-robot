@@ -37,6 +37,13 @@ class Motors(object):
         if not self.running_on_pi:
             return
 
+    def adjust_motor(self, power, is_left):
+        '''
+            Adjust only the speed of one of the motors
+        '''
+        if not self.running_on_pi:
+            return
+
     def stop(self):
         '''
             Emergency stop

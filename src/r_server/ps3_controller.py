@@ -12,11 +12,12 @@ class ControlScheme(object):
     '''
         Simple enumeration of the available control schemes
     '''
-    ShoulderButtons, ThumbSticks, AnalogTriggers, NumSchemes = range(4)
+    ShoulderButtons, TankMode, AnalogTriggers, NumSchemes = range(4)
 
 class PS3Controller(Thread):
     '''
         Connects to any available PS3 controller and reads events
+        Inspired by http://www.ev3dev.org/docs/tutorials/using-ps3-sixaxis/
     '''
     def __init__(self, robot):
         if not EVDEV_AVAILABLE:
@@ -58,7 +59,7 @@ class PS3Controller(Thread):
         if self.control_scheme == ControlScheme.NumSchemes:
             self.control_scheme = 0
         print('Control scheme switched to: ', str(self.control_scheme))
-    
+
     def process_event(self, event):
         '''
             Executs action based on button presses
@@ -69,6 +70,17 @@ class PS3Controller(Thread):
         else:
             if self.control_scheme == ControlScheme.ShoulderButtons:
                 self.shoulder_buttons_process(event)
+            elif self.control_scheme == ControlScheme.TankMode:
+                self.tank_mode_process(event)
+
+    def tank_mode_process(self, event):
+        if event.type == 3: # analog event
+            if event.code == 48:
+                # left trigger
+                self.robot.adjust_motor(int(float(event.value) / 255.0), True)
+            elif event.code == 49:
+                # right trigger
+                self.robot.adjust_motor(int(float(event.value) / 255.0), False)
 
     def shoulder_buttons_process(self, event):
         '''

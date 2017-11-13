@@ -63,6 +63,15 @@ class AdafruitMotors(Motors):
                 self.right_motor.run(
                     Adafruit_MotorHAT.FORWARD if power_right >= 0 else Adafruit_MotorHAT.BACKWARD)
 
+    def adjust_motor(self, power, is_left):
+        if self.running_on_pi:
+            motor = self.left_motor if is_left else self.right_motor
+            current_power = self.power_left if is_left else self.power_right
+
+            motor.setSpeed(int(float(abs(power)) / 100.0 * self.speed))
+            if power != current_power:
+                motor.run(Adafruit_MotorHAT.FORWARD if power >= 0 else Adafruit_MotorHAT.BACKWARD)
+
     def stop(self):
         if self.running_on_pi:
             # Kill power
