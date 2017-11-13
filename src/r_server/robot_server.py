@@ -3,7 +3,7 @@
 '''
 import platform
 import traceback
-from threading import Thread
+from threading import Thread, Condition
 from time import sleep
 
 from motors.adafruit_motors import AdafruitMotors
@@ -46,6 +46,7 @@ class RobotServer(Thread):
 
         Thread.__init__(self)
         self.manual = False
+        self.condition = Condition()
         self.running = True
         self.start()
 
@@ -67,8 +68,7 @@ class RobotServer(Thread):
         while self.running:
             # Processing is suspended
             if self.manual:
-                sleep(1)
-                continue
+                self.condition.wait()
 
             try:
                 if self.no_key_pressed() or self.bad_key_combo():
@@ -159,6 +159,8 @@ class RobotServer(Thread):
             Enable or disable manual mode
         '''
         self.manual = enable
+        if not self.manual:
+            self.condition.notify()
 
     def set_motors(self, left_power, right_power):
         '''
