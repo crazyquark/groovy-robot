@@ -11,7 +11,6 @@ class Motors(object):
 
         # Default speed values: 0 - 100
         self.max_speed = 100
-        self.speed_changed = False
 
         from platform import uname
         self.running_on_pi = uname()[4].startswith('arm')

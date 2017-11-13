@@ -26,6 +26,8 @@ class AdafruitMotors(Motors):
         self.power_left = 0
         self.power_right = 0
 
+        self.speed_changed = False
+
         if self.running_on_pi:
             import atexit
 
@@ -65,6 +67,13 @@ class AdafruitMotors(Motors):
             
             # Reset flag
             self.speed_changed = False
+
+    def set_speed(self, speed):
+        '''
+            Set speed to a given amount
+        '''
+        Motors.set_speed(self, speed)
+        self.speed_changed = True
 
     def stop(self):
         if self.running_on_pi:
