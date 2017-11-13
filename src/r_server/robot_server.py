@@ -128,13 +128,7 @@ class RobotServer(Thread):
             return
 
         self.process_press(direction, True)
-
-    def adjust_motor(self, power, is_left):
-        if not self.running_on_pi:
-            return
-
-        self.motors.adjust_motor(power, is_left)
-
+    
     def stop(self, direction):
         '''
             Full stop
