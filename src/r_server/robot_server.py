@@ -160,7 +160,9 @@ class RobotServer(Thread):
         '''
         self.manual = enable
         if not self.manual:
+            self.condition.acquire()
             self.condition.notify()
+            self.condition.release()
 
     def set_motors(self, left_power, right_power):
         '''
