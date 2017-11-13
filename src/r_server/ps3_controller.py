@@ -12,7 +12,7 @@ class ControlScheme(object):
     '''
         Simple enumeration of the available control schemes
     '''
-    ShoulderButtons, TankMode, AnalogTriggers, NumSchemes = range(4)
+    ShoulderButtons, GameMode, AnalogTriggers, NumSchemes = range(4)
 
 class PS3Controller(Thread):
     '''
@@ -77,10 +77,10 @@ class PS3Controller(Thread):
         else:
             if self.control_scheme == ControlScheme.ShoulderButtons:
                 self.shoulder_buttons_process(event)
-            elif self.control_scheme == ControlScheme.TankMode:
-                self.tank_mode_process(event)
+            elif self.control_scheme == ControlScheme.GameMode:
+                self.game_mode_process(event)
 
-    def tank_mode_process(self, event):
+    def game_mode_process(self, event):
         '''
             More advanced control mode that use the analog input from the triggers to control speed
         '''
@@ -93,6 +93,8 @@ class PS3Controller(Thread):
                 # left trigger
                 self.robot.set_speed(event.value)
                 self.robot.process_press(Directions.Back, event.value > 0)
+            if event.code == 0: # left thumbstick
+                print(event.value)
         elif event.type == 1:
             # D-Pad
             if event.code == 295:

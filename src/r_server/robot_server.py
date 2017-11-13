@@ -99,7 +99,7 @@ class RobotServer(Thread):
 
     def speed_adjust(self, direction):
         '''
-            Increase or decrese speed depending on the sign of direction
+            Increase or decrease speed depending on the sign of direction
         '''
         if self.running_on_pi:
             amount = direction * self.speed_increment
