@@ -110,7 +110,7 @@ class RobotServer(Thread):
             Sets speed to a specific value
         '''
         if self.running_on_pi:
-            self.motors.change_speed(speed)
+            self.motors.set_speed(speed)
 
     def process_press(self, direction, is_on):
         '''

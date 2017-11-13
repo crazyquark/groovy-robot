@@ -29,6 +29,12 @@ class Motors(object):
         
 
         print('SPEED: ' + str(self.speed))
+    
+    def set_speed(self, speed):
+        '''
+            Set speed to a given amount
+        '''
+        self.speed = min(speed, self.max_speed)
 
     def control_motors(self, left_power, right_power):
         '''
