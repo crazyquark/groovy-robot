@@ -81,6 +81,9 @@ class PS3Controller(Thread):
                 self.tank_mode_process(event)
 
     def tank_mode_process(self, event):
+        '''
+            More advanced control mode that use the analog input from the triggers to control speed
+        '''
         if event.type == 3: # analog event
             if event.code == 49:
                 # right trigger
@@ -90,7 +93,13 @@ class PS3Controller(Thread):
                 # left trigger
                 self.robot.set_speed(event.value)
                 self.robot.process_press(Directions.Back, event.value > 0)
-
+        elif event.type == 1:
+            # D-Pad
+            if event.code == 295:
+                self.robot.process_press(Directions.Left, event.value == 1)
+            elif event.code == 293:
+                self.robot.process_press(Directions.Right, event.value == 1)
+        
     def shoulder_buttons_process(self, event):
         '''
             A simplistic control scheme which uses only the shoulder buttons
