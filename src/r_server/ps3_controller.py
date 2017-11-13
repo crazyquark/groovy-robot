@@ -94,7 +94,14 @@ class PS3Controller(Thread):
                 self.robot.set_speed(event.value)
                 self.robot.process_press(Directions.Back, event.value > 0)
             if event.code == 0: # left thumbstick
-                print(event.value)
+                if event.value < 50:
+                    self.robot.process_press(Directions.Left, True)
+                elif event.value > 50 and event.value <= 128:
+                    self.robot.process_press(Directions.Left, False)
+                elif event.value > 178:
+                    self.robot.process_press(Directions.Right, True)
+                elif event.value > 128 and event.value < 178:
+                    self.robot.process_press(Directions.Right, False)
         elif event.type == 1:
             # D-Pad
             if event.code == 295:
