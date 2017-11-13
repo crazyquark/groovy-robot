@@ -58,6 +58,10 @@ class PS3Controller(Thread):
         self.control_scheme += 1
         if self.control_scheme == ControlScheme.NumSchemes:
             self.control_scheme = 0
+        
+        if self.control_scheme == ControlScheme.ShoulderButtons:
+            self.robot.set_speed(85) # reset speed
+        
         print('Control scheme switched to: ', str(self.control_scheme))
 
     def process_event(self, event):
