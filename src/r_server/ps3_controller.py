@@ -83,7 +83,7 @@ class PS3Controller(Thread):
     def tank_mode_process(self, event):
         if event.type == 3: # analog event
             if event.code == 49:
-                self.robot.stop(Directions.Forward) # hack!
+                self.robot.process_press(Directions.Forward, False) # hack!
                 self.robot.set_speed(event.value) # [0, 255]
                 self.robot.process_press(Directions.Forward, event.value > 0)
     
