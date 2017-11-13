@@ -36,6 +36,9 @@ class PS3Controller(Thread):
 
         self.control_scheme = ControlScheme.ShoulderButtons
 
+        # Used for tank mode
+        self.current_direction = Directions.Forward
+
         self.robot = robot
         self.running = True
         self.start()
@@ -80,18 +83,9 @@ class PS3Controller(Thread):
     def tank_mode_process(self, event):
         if event.type == 3: # analog event
             if event.code == 49:
-                # right trigger
-                self.robot.stop(Directions.Forward)
                 self.robot.set_speed(event.value) # [0, 255]
-                if event.value > 0:
-                    self.robot.move(Directions.Forward)
-            elif event.code == 48:
-                # left trigger
-                self.robot.stop(Directions.Back)
-                self.robot.set_speed(event.value)
-                if event.value > 0:
-                    self.robot.move(Directions.Back)
-
+                self.robot.process_press(Directions.Forward, event.value > 0)
+    
     def shoulder_buttons_process(self, event):
         '''
             A simplistic control scheme which uses only the shoulder buttons
