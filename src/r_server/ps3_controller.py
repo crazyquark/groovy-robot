@@ -23,7 +23,8 @@ class PS3Controller(Thread):
         if not EVDEV_AVAILABLE:
             print('No evdev, no joy, exiting...')
             return
-
+        
+        self.device = None
         devices = [evdev.InputDevice(fn) for fn in evdev.list_devices()]
         for dev in devices:
             if dev.name == 'Sony Computer Entertainment Wireless Controller':
