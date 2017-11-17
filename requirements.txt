@@ -7,4 +7,5 @@ jinja2
 websockets
 picamera
 evdev
+RPi.GPIO
 
