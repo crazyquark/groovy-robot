@@ -101,3 +101,7 @@ class PiDisplay(Thread):
             self.disp.image(self.image)
             self.disp.display()
             time.sleep(.1)
+
+    def halt(self):
+        self.running = False
+        self.join()

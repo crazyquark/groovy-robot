@@ -7,6 +7,10 @@ import evdev
 import sys
 import subprocess
 
+from r_server.display import PiDisplay
+
+display = PiDisplay()
+
 device = None
 while not device:
     devices = [evdev.InputDevice(fn) for fn in evdev.list_devices()]
