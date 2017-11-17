@@ -12,6 +12,7 @@ from .robot_server import RobotServer, Directions, Throttle
 from .camera_server import CameraServer
 # from .keyboard_controller import KeyboardController
 from .ps3_controller import PS3Controller
+from .display import PiDisplay
 
 app = Sanic()  # pylint: disable=invalid-name
 
@@ -97,5 +98,6 @@ if __name__ == "__main__":
     app.camera = CameraServer()
     #app.keyboard_controller = KeyboardController(app.robot)
     app.ps3controller = PS3Controller(app.robot)
+    app.display = PiDisplay()
 
     app.run(host="0.0.0.0", port=8080)
