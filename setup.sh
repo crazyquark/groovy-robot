@@ -10,8 +10,13 @@ sudo apt install -y python3-pip
 #apt install -y python3-opencv
 sudo apt install -y python3-smbus
 sudo apt install -y python3-evdev
+sudo apt install -y python3-pil
 
 pushd lib/adafruit_motor_hat
+python3 setup.py install
+popd
+
+pushd lib/Adafruit_Python_SSD1306
 python3 setup.py install
 popd
 
