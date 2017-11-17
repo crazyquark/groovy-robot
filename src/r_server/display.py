@@ -92,10 +92,10 @@ class PiDisplay(Thread):
 
             # Write two lines of text.
 
-            self.draw.text((self.x, self.top),       "IP: " + str(IP),  font=self.font, fill=255)
-            self.draw.text((self.x, self.top+8),     str(CPU), font = self.font, fill = 255)
-            self.draw.text((self.x, self.top+16),    str(MemUsage),  font=self.font, fill=255)
-            self.draw.text((self.x, self.top+25),    str(Disk),  font=self.font, fill=255)
+            self.draw.text((self.x, self.top),       "IP: " + str(IP, 'utf-8'),  font=self.font, fill=255)
+            self.draw.text((self.x, self.top+8),     str(CPU, 'utf-8'), font = self.font, fill = 255)
+            self.draw.text((self.x, self.top+16),    str(MemUsage, 'utf-8'),  font=self.font, fill=255)
+            self.draw.text((self.x, self.top+25),    str(Disk, 'utf-8'),  font=self.font, fill=255)
 
             # Display image.
             self.disp.image(self.image)
