@@ -47,7 +47,7 @@ class PiDisplay(Thread):
         self.image = Image.new('1', (self.width, self.height))
 
         # Get drawing object to draw on image.
-        self.draw = ImageDraw.Draw(image)
+        self.draw = ImageDraw.Draw(self.image)
 
         # Draw a black filled box to clear the image.
         self.draw.rectangle((0, 0, self.width, self.height), outline = 0, fill = 0)
