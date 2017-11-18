@@ -15,7 +15,8 @@ try:
     from PIL import ImageFont
 
     RUNNING_ON_PI = True
-except ImportError:
+except ImportError as err:
+    print(err)
     RUNNING_ON_PI = False
 
 # Raspberry Pi pin configuration:
