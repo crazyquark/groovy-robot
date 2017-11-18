@@ -29,6 +29,7 @@ SPI_DEVICE = 0
 class PiDisplay(Thread):
     def __init__(self):
         if not RUNNING_ON_PI:
+            print('Display disabled')
             self.disp = None
             return
 
