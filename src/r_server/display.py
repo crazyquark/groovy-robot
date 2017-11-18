@@ -114,3 +114,6 @@ class PiDisplay(Thread):
     def halt(self):
         self.running = False
         self.join()
+
+if __name__ == '__main__':
+    display = PiDisplay()
