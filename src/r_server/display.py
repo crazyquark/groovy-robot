@@ -82,6 +82,7 @@ class PiDisplay(Thread):
         while self.running:
             # Text has not changed
             if not self.refresh:
+                time.sleep(.1)
                 continue
 
             # Draw a black filled box to clear the image.
