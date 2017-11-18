@@ -6,7 +6,7 @@ import evdev
 import sys
 import subprocess
 
-from .r_server import display
+from r_server import display
 
 display = display.PiDisplay()
 display.set_text(['Booting'])
