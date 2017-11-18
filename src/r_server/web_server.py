@@ -89,6 +89,7 @@ async def halt(_):
     app.robot.halt()
     app.camera.halt()
     app.ps3controller.halt()
+    app.display.halt()
 
     app.stop()
 
