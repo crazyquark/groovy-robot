@@ -85,9 +85,9 @@ class PiDisplay(Thread):
 
         while self.running:
             # Text has not changed
-            if not self.refresh:
-                time.sleep(.1)
-                continue
+            # if not self.refresh:
+            #     time.sleep(.1)
+            #     continue
 
             self.draw_text()
             time.sleep(.1)
