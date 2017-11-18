@@ -25,13 +25,15 @@ DC = 23
 SPI_PORT = 0
 SPI_DEVICE = 0
 
+
 class PiDisplay(Thread):
     def __init__(self):
         if not RUNNING_ON_PI:
             self.disp = None
             return
 
-        self.disp = Adafruit_SSD1306.SSD1306_128_64(rst = RST, dc = DC, spi = SPI.SpiDev(SPI_PORT, SPI_DEVICE, max_speed_hz=8000000))
+        self.disp = Adafruit_SSD1306.SSD1306_128_64(
+            rst=RST, dc=DC, spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE, max_speed_hz=8000000))
 
         # Initialize library.
         self.disp.begin()
@@ -50,7 +52,7 @@ class PiDisplay(Thread):
         self.draw = ImageDraw.Draw(self.image)
 
         # Draw a black filled box to clear the image.
-        self.draw.rectangle((0, 0, self.width, self.height), outline = 0, fill = 0)
+        self.draw.rectangle((0, 0, self.width, self.height), outline=0, fill=0)
 
         # Draw some shapes.
         # First define some constants to allow easy resizing of shapes.
@@ -58,8 +60,6 @@ class PiDisplay(Thread):
         self.top = padding
         self.bottom = self.height - padding
         # Move left to right keeping track of the current x position for drawing shapes.
-        self.x = 0
-
 
         # Load default font.
         self.font = ImageFont.load_default()
@@ -67,6 +67,9 @@ class PiDisplay(Thread):
         # Alternatively load a TTF font.  Make sure the .ttf font file is in the same directory as the python script!
         # Some other nice fonts to try: http://www.dafont.com/bitmap.php
         # font = ImageFont.truetype('Minecraftia.ttf', 8)
+
+        self.text = ['Hi there']
+        self.refresh = True
 
         Thread.__init__(self)
         self.running = True
@@ -77,30 +80,34 @@ class PiDisplay(Thread):
             return
 
         while self.running:
+            # Text has not changed
+            if not self.refresh:
+                continue
+
             # Draw a black filled box to clear the image.
-            self.draw.rectangle((0, 0, self.width, self.height), outline = 0, fill = 0)
+            self.draw.rectangle(
+                (0, 0, self.width, self.height), outline=0, fill=0)
 
-            # Shell scripts for system monitoring from here : https://unix.stackexchange.com/questions/119126/command-to-display-memory-usage-disk-usage-and-cpu-load
-            # cmd = "hostname -I | cut -d\' \' -f1"
-            # IP = subprocess.check_output(cmd, shell = True )
-            # cmd = "top -bn1 | grep load | awk '{printf \"CPU Load: %.2f\", $(NF-2)}'"
-            # CPU = subprocess.check_output(cmd, shell = True )
-            # cmd = "free -m | awk 'NR==2{printf \"Mem: %s/%sMB %.2f%%\", $3,$2,$3*100/$2 }'"
-            # MemUsage = subprocess.check_output(cmd, shell = True )
-            # cmd = "df -h | awk '$NF==\"/\"{printf \"Disk: %d/%dGB %s\", $3,$2,$5}'"
-            # Disk = subprocess.check_output(cmd, shell = True )
-
-            # Write two lines of text.
-
-            self.draw.text((self.x, self.top), 'Hi there',  font=self.font, fill=255)
-            # self.draw.text((self.x, self.top+8),     str(CPU, 'utf-8'), font = self.font, fill = 255)
-            # self.draw.text((self.x, self.top+16),    str(MemUsage, 'utf-8'),  font=self.font, fill=255)
-            # self.draw.text((self.x, self.top+25),    str(Disk, 'utf-8'),  font=self.font, fill=255)
+            # Write the lines of text
+            offset = 0
+            x = 0
+            for line in self.text:
+                self.draw.text((x, self.top + offset),
+                               line, font=self.font, fill=255)
+                offset = offset + 8
 
             # Display image.
             self.disp.image(self.image)
             self.disp.display()
             time.sleep(.1)
+
+    def set_text(self, text):
+        self.text = text
+        self.refresh = True
+
+    def append_text(self, text):
+        self.text.append(text)
+        self.refresh = True
 
     def halt(self):
         self.running = False
