@@ -84,7 +84,7 @@ class PiDisplay(Thread):
             return
 
         while self.running:
-            Text has not changed
+            # Text has not changed
             if not self.refresh:
                 time.sleep(.1)
                 continue
