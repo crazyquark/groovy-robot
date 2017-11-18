@@ -2,17 +2,14 @@
 '''
     Script to run the server on a button press
 '''
-# Hack import path
-from sys import path
-path.insert(0, './src')
-
 import evdev
 import sys
 import subprocess
 
-from r_server.display import PiDisplay
+from .src.r_server.display import PiDisplay
 
 display = PiDisplay()
+display.set_text(['Booting'])
 
 device = None
 while not device:
@@ -22,6 +19,7 @@ while not device:
         if dev.name == 'Sony Computer Entertainment Wireless Controller':
             device = dev
             print('Found controller')
+            display.append_text('Controller connected')
             break
 
 if device:
@@ -29,9 +27,10 @@ if device:
     for event in device.read_loop():
         # Start pressed, yo!
         if event.type == 1 and event.code == 291 and event.value == 1:
+            display.append_text('Starting server')
             # Bootstrap our server
             break
-    
+
     del device
 
     print('Start pressed, good job!')
