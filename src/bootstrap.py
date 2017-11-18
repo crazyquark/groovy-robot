@@ -6,9 +6,9 @@ import evdev
 import sys
 import subprocess
 
-from .r_server.display import PiDisplay
+from .r_server import display
 
-display = PiDisplay()
+display = display.PiDisplay()
 display.set_text(['Booting'])
 
 device = None
