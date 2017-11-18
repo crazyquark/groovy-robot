@@ -101,6 +101,8 @@ class PiDisplay(Thread):
             self.disp.display()
             time.sleep(.1)
 
+            self.refresh = False
+
     def set_text(self, text):
         self.text = text
         self.refresh = True
