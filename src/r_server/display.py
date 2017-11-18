@@ -84,32 +84,30 @@ class PiDisplay(Thread):
             return
 
         while self.running:
-            # Text has not changed
-            # if not self.refresh:
-            #     time.sleep(.1)
-            #     continue
-
             self.draw_text()
             time.sleep(.1)
 
             self.refresh = False
 
     def draw_text(self):
-        # Draw a black filled box to clear the image.
-        self.draw.rectangle(
-            (0, 0, self.width, self.height), outline=0, fill=0)
+        if self.refresh:
+            # Draw a black filled box to clear the image.
+            self.draw.rectangle(
+                (0, 0, self.width, self.height), outline=0, fill=0)
 
-        # Write the lines of text
-        offset = 0
-        x = 0
-        for line in self.text:
-            self.draw.text((x, self.top + offset),
-                            line, font=self.font, fill=255)
-            offset = offset + 8
+            # Write the lines of text
+            offset = 0
+            x = 0
+            for line in self.text:
+                self.draw.text((x, self.top + offset),
+                                line, font=self.font, fill=255)
+                offset = offset + 8
 
-        # Display image.
-        self.disp.image(self.image)
-        self.disp.display()
+            # Display image.
+            self.disp.image(self.image)
+            self.disp.display()
+
+            self.refresh = False
 
     def set_text(self, text):
         self.text = text

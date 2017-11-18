@@ -32,6 +32,7 @@ if device:
             break
 
     del device
+    display.halt()
 
     print('Start pressed, good job!')
     err = subprocess.check_call(['/home/pi/groovy-robot/run_server.sh'])
