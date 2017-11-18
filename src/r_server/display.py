@@ -70,8 +70,8 @@ class PiDisplay(Thread):
         # Some other nice fonts to try: http://www.dafont.com/bitmap.php
         # font = ImageFont.truetype('Minecraftia.ttf', 8)
 
+        self.refresh = True
         self.text = ['Hi there']
-
         self.draw_text()
 
         Thread.__init__(self)
@@ -83,7 +83,10 @@ class PiDisplay(Thread):
             return
 
         while self.running:
-            self.draw_text()
+            if self.refresh:
+                self.draw_text()
+                self.refresh = False
+            
             time.sleep(.1)
 
     def draw_text(self):
@@ -105,9 +108,11 @@ class PiDisplay(Thread):
 
     def set_text(self, text):
         self.text = text
+        self.refresh = True
 
     def append_text(self, text):
         self.text.append(text)
+        self.refresh = True
 
     def halt(self):
         self.running = False
