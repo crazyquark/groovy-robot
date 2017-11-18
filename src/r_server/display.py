@@ -20,7 +20,7 @@ except ImportError as err:
     RUNNING_ON_PI = False
 
 # Raspberry Pi pin configuration:
-RST = None     # on the PiOLED this pin isnt used
+RST = 24
 # Note the following are only used with SPI:
 DC = 23
 SPI_PORT = 0
