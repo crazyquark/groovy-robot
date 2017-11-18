@@ -2,6 +2,9 @@
 '''
     Script to run the server on a button press
 '''
+# Hack import path
+from sys import path
+path.insert(0, './src')
 
 import evdev
 import sys
