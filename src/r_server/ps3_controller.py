@@ -66,7 +66,7 @@ class PS3Controller(Thread):
         if self.control_scheme == ControlScheme.NumSchemes:
             self.control_scheme = 0
 
-        if self.control_scheme == ControlScheme.SimpleMode:
+        if self.control_scheme != ControlScheme.TankMode:
             self.robot.set_speed(85) # reset speed
 
         self.robot.manual_mode(self.control_scheme == ControlScheme.TankMode)
