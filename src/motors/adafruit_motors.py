@@ -12,7 +12,7 @@ class AdafruitMotors(Motors):
     '''
         Motors implementation for the Adafruit DC & Stepper HAT
     '''
-    def __init__(self, addr=0x60, left_id=1, right_id=2):
+    def __init__(self, addr=0x60, left_id=2, right_id=1):
         Motors.__init__(self)
 
         # Start at ~30% speed
