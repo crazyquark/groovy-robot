@@ -167,7 +167,7 @@ class RobotServer(Thread):
         if not self.manual:
             return # only available in manual mode
 
-        self.manual_mode_left_power  = min(100, max(-100, left_power))
+        self.manual_mode_left_power = min(100, max(-100, left_power))
         self.manual_mode_right_power = min(100, max(-100, right_power))
 
     def halt(self):

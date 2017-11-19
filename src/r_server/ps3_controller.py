@@ -66,8 +66,7 @@ class PS3Controller(Thread):
         if self.control_scheme == ControlScheme.NumSchemes:
             self.control_scheme = 0
 
-        if self.control_scheme != ControlScheme.TankMode:
-            self.robot.set_speed(85) # reset speed
+        self.robot.set_speed(85) # reset speed
 
         self.robot.manual_mode(self.control_scheme == ControlScheme.TankMode)
 
@@ -126,7 +125,7 @@ class PS3Controller(Thread):
                 self.robot.process_press(Directions.Left, event.value == 1)
             elif event.code == 293:
                 self.robot.process_press(Directions.Right, event.value == 1)
-        
+
     def simple_mode_process(self, event):
         '''
             A simplistic control scheme which uses only the shoulder buttons
