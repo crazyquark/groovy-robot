@@ -23,6 +23,7 @@ RST = 24
 # Note the following are only used with SPI:
 DC = 23
 
+
 class PiDisplay(Thread):
     def __init__(self):
         if not RUNNING_ON_PI:
@@ -36,32 +37,6 @@ class PiDisplay(Thread):
 
         # substitute ssd1331(...) or sh1106(...) below if using that device
         self.device = ssd1331(serial)
-
-        # Create blank image for drawing.
-        # Make sure to create image with mode '1' for 1-bit color.
-        # self.width = self.disp.width
-        # self.height = self.disp.height
-        # self.image = Image.new('1', (self.width, self.height))
-
-        # # Get drawing object to draw on image.
-        # self.draw = ImageDraw.Draw(self.image)
-
-        # # Draw a black filled box to clear the image.
-        # self.draw.rectangle((0, 0, self.width, self.height), outline=0, fill=0)
-
-        # # Draw some shapes.
-        # # First define some constants to allow easy resizing of shapes.
-        # padding = -2
-        # self.top = padding
-        # self.bottom = self.height - padding
-        # # Move left to right keeping track of the current x position for drawing shapes.
-
-        # # Load default font.
-        # self.font = ImageFont.load_default()
-
-        # # Alternatively load a TTF font.  Make sure the .ttf font file is in the same directory as the python script!
-        # # Some other nice fonts to try: http://www.dafont.com/bitmap.php
-        # # font = ImageFont.truetype('Minecraftia.ttf', 8)
 
         self.refresh = True
         self.text = ['Hi there']
@@ -85,24 +60,10 @@ class PiDisplay(Thread):
     def draw_text(self):
         # Box and text rendered in portrait mode
         with canvas(self.device) as draw:
-            draw.rectangle(self.device.bounding_box, outline="white", fill="black")
-            draw.text((10, 40), "Hello World", fill="white")
-
-        # # Draw a black filled box to clear the image.
-        # self.draw.rectangle(
-        #     (0, 0, self.width, self.height), outline=0, fill=0)
-
-        # # Write the lines of text
-        # offset = 0
-        # x = 0
-        # for line in self.text:
-        #     self.draw.text((x, self.top + offset),
-        #                    line, font=self.font, fill=255)
-        #     offset = offset + 8
-
-        # # Display image.
-        # self.disp.image(self.image)
-        # self.disp.display()
+            draw.rectangle(self.device.bounding_box,
+                           outline='orange', fill='black')
+            for line in self.text:
+                draw.text((10, 40), line, fill='green')
 
     def set_text(self, text):
         self.text = text
