@@ -18,6 +18,10 @@ except ImportError as err:
     print(err)
     RUNNING_ON_PI = False
 
+# Raspberry Pi pin configuration:
+RST = 24
+# Note the following are only used with SPI:
+DC = 23
 
 class PiDisplay(Thread):
     def __init__(self):
@@ -28,7 +32,7 @@ class PiDisplay(Thread):
 
         # rev.1 users set port=0
         # substitute spi(device=0, port=0) below if using that interface
-        serial = i2c(port=1, address=0x03)
+        serial = spi(gpio_DC=DC, gpio_RST=RST)
 
         # substitute ssd1331(...) or sh1106(...) below if using that device
         self.device = ssd1306(serial)
