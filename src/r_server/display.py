@@ -62,8 +62,10 @@ class PiDisplay(Thread):
         with canvas(self.device) as draw:
             draw.rectangle(self.device.bounding_box,
                            outline='orange', fill='black')
+            height = 10
             for line in self.text:
-                draw.text((10, 40), line, fill='green')
+                draw.text((10, height), line, fill='green')
+                height += 10
 
     def set_text(self, text):
         self.text = text
