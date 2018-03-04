@@ -19,7 +19,7 @@ while not device:
         if dev.name == 'Sony Computer Entertainment Wireless Controller':
             device = dev
             print('Found controller')
-            display.append_text('Controller connected')
+            display.append_text('Controller: ON')
             break
 
 if device:
