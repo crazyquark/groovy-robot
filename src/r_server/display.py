@@ -35,7 +35,7 @@ class PiDisplay(Thread):
         serial = spi(gpio_DC=DC, gpio_RST=RST)
 
         # substitute ssd1331(...) or sh1106(...) below if using that device
-        self.device = ssd1306(serial)
+        self.device = ssd1331(serial)
 
         # Create blank image for drawing.
         # Make sure to create image with mode '1' for 1-bit color.
