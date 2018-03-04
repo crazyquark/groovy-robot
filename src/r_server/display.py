@@ -28,7 +28,7 @@ class PiDisplay(Thread):
 
         # rev.1 users set port=0
         # substitute spi(device=0, port=0) below if using that interface
-        serial = i2c(port=1, address=0x70)
+        serial = i2c(port=1, address=0x03)
 
         # substitute ssd1331(...) or sh1106(...) below if using that device
         self.device = ssd1306(serial)
