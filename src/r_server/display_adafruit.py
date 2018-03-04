@@ -7,16 +7,24 @@ import subprocess
 import time
 
 try:
-    from luma.core.interface.serial import i2c, spi
-    from luma.core.render import canvas
-    from luma.oled.device import ssd1306, ssd1325, ssd1331, sh1106
+    import Adafruit_GPIO.SPI as SPI
+    import Adafruit_SSD1306
 
-    from PIL import Image, ImageDraw, ImageFont
+    from PIL import Image
+    from PIL import ImageDraw
+    from PIL import ImageFont
 
     RUNNING_ON_PI = True
 except ImportError as err:
     print(err)
     RUNNING_ON_PI = False
+
+# Raspberry Pi pin configuration:
+RST = 24
+# Note the following are only used with SPI:
+DC = 23
+SPI_PORT = 0
+SPI_DEVICE = 0
 
 
 class PiDisplay(Thread):
@@ -26,12 +34,15 @@ class PiDisplay(Thread):
             self.disp = None
             return
 
-        # rev.1 users set port=0
-        # substitute spi(device=0, port=0) below if using that interface
-        serial = i2c(port=1, address=0x3C)
+        self.disp = Adafruit_SSD1306.SSD1306_128_64(
+            rst=RST, dc=DC, spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE, max_speed_hz=8000000))
 
-        # substitute ssd1331(...) or sh1106(...) below if using that device
-        self.device = ssd1306(serial)
+        # Initialize library.
+        self.disp.begin()
+
+        # Clear display.
+        self.disp.clear()
+        self.disp.display()
 
         # Create blank image for drawing.
         # Make sure to create image with mode '1' for 1-bit color.
@@ -75,30 +86,25 @@ class PiDisplay(Thread):
             if self.refresh:
                 self.draw_text()
                 self.refresh = False
-
+            
             time.sleep(.1)
 
     def draw_text(self):
-        # Box and text rendered in portrait mode
-        with canvas(self.device) as draw:
-            draw.rectangle(self.device.bounding_box, outline="white", fill="black")
-            draw.text((10, 40), "Hello World", fill="white")
+        # Draw a black filled box to clear the image.
+        self.draw.rectangle(
+            (0, 0, self.width, self.height), outline=0, fill=0)
 
-        # # Draw a black filled box to clear the image.
-        # self.draw.rectangle(
-        #     (0, 0, self.width, self.height), outline=0, fill=0)
+        # Write the lines of text
+        offset = 0
+        x = 0
+        for line in self.text:
+            self.draw.text((x, self.top + offset),
+                            line, font=self.font, fill=255)
+            offset = offset + 8
 
-        # # Write the lines of text
-        # offset = 0
-        # x = 0
-        # for line in self.text:
-        #     self.draw.text((x, self.top + offset),
-        #                    line, font=self.font, fill=255)
-        #     offset = offset + 8
-
-        # # Display image.
-        # self.disp.image(self.image)
-        # self.disp.display()
+        # Display image.
+        self.disp.image(self.image)
+        self.disp.display()
 
     def set_text(self, text):
         self.text = text
