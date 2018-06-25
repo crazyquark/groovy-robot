@@ -2,6 +2,7 @@
 #pygame
 # anything above 3.0.0 does not work with VSCode
 ptvsd==3.0.0
+wheel
 sanic
 jinja2
 websockets
