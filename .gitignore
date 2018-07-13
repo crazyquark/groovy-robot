@@ -2,3 +2,5 @@
 *.pid
 
 server.log
+.vscode/settings.json
+
