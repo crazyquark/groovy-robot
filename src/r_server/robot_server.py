@@ -3,7 +3,7 @@
 '''
 import platform
 import traceback
-from threading import Thread
+from threading import Thread, Lock
 from time import sleep
 
 from motors.adafruit_motors import AdafruitMotors
@@ -48,6 +48,8 @@ class RobotServer(Thread):
         self.camera_tilt = 120
         self.motors_pause = False
 
+        self.motors_lock = Lock()
+
         Thread.__init__(self)
         self.manual = False
         self.manual_mode_left_power  = 0
@@ -72,37 +74,38 @@ class RobotServer(Thread):
     def run(self):
         while self.running:
             try:
-                if self.motors_pause:
-                    continue
-                elif self.manual:
-                    self.motors.control_motors(self.manual_mode_left_power, self.manual_mode_right_power)
-                else:
-                    if self.no_key_pressed() or self.bad_key_combo():
-                        # Full stop
-                        self.motors.stop()
-                    elif not self.left_pressed and not self.right_pressed and self.fwd_pressed:
-                        # Full steam ahead!
-                        self.motors.control_motors(100, 100)
-                    elif not self.left_pressed and not self.right_pressed and self.back_pressed:
-                        # All engines reverse!
-                        self.motors.control_motors(-100, -100)
-                    elif not self.back_pressed and not self.fwd_pressed and self.right_pressed:
-                        # In place right turn
-                        self.motors.control_motors(100, -100)
-                    elif not self.back_pressed and not self.fwd_pressed and self.left_pressed:
-                        # In place left turn
-                        self.motors.control_motors(-100, 100)
-                    elif (self.fwd_pressed or self.back_pressed) and self.right_pressed:
-                        # Attempt to turn right
-                        sign = 1 if self.fwd_pressed else -1
-                        self.motors.control_motors(sign * 100, sign * 100 / self.turn_factor)
-                    elif (self.fwd_pressed or self.back_pressed) and self.left_pressed:
-                        # Attempt to turn left
-                        sign = 1 if self.fwd_pressed else -1
-                        self.motors.control_motors(sign * 100 / self.turn_factor, sign * 100)
+                with self.motors_lock:
+                    if self.motors_pause:
+                        continue
+                    elif self.manual:
+                        self.motors.control_motors(self.manual_mode_left_power, self.manual_mode_right_power)
                     else:
-                        # I donno
-                        self.motors.control_motors(0, 0)
+                        if self.no_key_pressed() or self.bad_key_combo():
+                            # Full stop
+                            self.motors.stop()
+                        elif not self.left_pressed and not self.right_pressed and self.fwd_pressed:
+                            # Full steam ahead!
+                            self.motors.control_motors(100, 100)
+                        elif not self.left_pressed and not self.right_pressed and self.back_pressed:
+                            # All engines reverse!
+                            self.motors.control_motors(-100, -100)
+                        elif not self.back_pressed and not self.fwd_pressed and self.right_pressed:
+                            # In place right turn
+                            self.motors.control_motors(100, -100)
+                        elif not self.back_pressed and not self.fwd_pressed and self.left_pressed:
+                            # In place left turn
+                            self.motors.control_motors(-100, 100)
+                        elif (self.fwd_pressed or self.back_pressed) and self.right_pressed:
+                            # Attempt to turn right
+                            sign = 1 if self.fwd_pressed else -1
+                            self.motors.control_motors(sign * 100, sign * 100 / self.turn_factor)
+                        elif (self.fwd_pressed or self.back_pressed) and self.left_pressed:
+                            # Attempt to turn left
+                            sign = 1 if self.fwd_pressed else -1
+                            self.motors.control_motors(sign * 100 / self.turn_factor, sign * 100)
+                        else:
+                            # I donno
+                            self.motors.control_motors(0, 0)
             except:
                 print('Critical failure, shutting down')
                 print('Possible cause: ')
@@ -150,25 +153,29 @@ class RobotServer(Thread):
         self.process_press(direction, True)
 
     def tilt_camera(self, up):
-        if up:
-            self.camera_tilt += 20
-        else:
-            self.camera_tilt -= 20
-        
-        if self.camera_tilt <= 0:
-            self.camera_tilt = 0
-        elif self.camera_tilt >= 180:
-            self.camera_tilt = 180
+        with self.motors_lock:
+            if self.motors_pause:
+                return
+            
+            if up:
+                self.camera_tilt += 20
+            else:
+                self.camera_tilt -= 20
+            
+            if self.camera_tilt <= 0:
+                self.camera_tilt = 0
+            elif self.camera_tilt >= 180:
+                self.camera_tilt = 180
 
-        # self.motors.stop()
-        self.motors_pause = True
-        self.camera_servo.activate()
-        self.camera_servo.rotate(self.camera_tilt)
-        sleep(1000)
-        self.camera_servo.deactivate()
-        self.motors_pause = False
+            # self.motors.stop()
+            self.motors_pause = True
+            self.camera_servo.activate()
+            self.camera_servo.rotate(self.camera_tilt)
+            sleep(1)
+            self.camera_servo.deactivate()
+            self.motors_pause = False
 
-        print('camera angle: ', self.camera_tilt)
+            print('camera angle: ', self.camera_tilt)
 
     def stop(self, direction):
         '''
