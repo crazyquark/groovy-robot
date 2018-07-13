@@ -1,4 +1,4 @@
-2017-11-17 17:46:53 - (sanic)[DEBUG]: 
+2018-06-28 21:55:57 - (sanic)[DEBUG]: 
                  ▄▄▄▄▄
         ▀▀▀██████▄▄▄       _______________
       ▄▄▄▄▄  █████████▄  /                 \
@@ -19,5 +19,51 @@
 ▌     ▐                ▀▀▄▄▄▀
  ▀▀▄▄▀
 
-2017-11-17 17:46:53 - (sanic)[INFO]: Goin' Fast @ http://0.0.0.0:8080
-2017-11-17 17:46:54 - (sanic)[INFO]: Starting worker [468]
+2018-06-28 21:55:57 - (sanic)[INFO]: Goin' Fast @ http://0.0.0.0:8080
+2018-06-28 21:55:58 - (sanic)[INFO]: Starting worker [733]
+2018-07-12 22:08:05 - (network)[INFO][192.168.1.189:51225]: GET http://192.168.1.67:8080/  200 645
+2018-07-12 22:08:05 - (network)[INFO][192.168.1.189:51225]: GET http://192.168.1.67:8080/static/bootstrap/css/bootstrap.min.css  200 127343
+2018-07-12 22:08:06 - (network)[INFO][192.168.1.189:51226]: GET http://192.168.1.67:8080/static/bootstrap/js/bootstrap.min.js  200 50564
+2018-07-12 22:08:06 - (network)[INFO][192.168.1.189:51227]: GET http://192.168.1.67:8080/static/style.css  200 294
+2018-07-12 22:08:06 - (network)[INFO][192.168.1.189:51228]: GET http://192.168.1.67:8080/static/client.js  200 1658
+2018-07-12 22:08:06 - (network)[INFO][192.168.1.189:51225]: GET http://192.168.1.67:8080/static/wall-e.jpg  200 370406
+2018-07-12 22:08:06 - (sanic)[ERROR]: Traceback (most recent call last):
+  File "/home/pi/.local/lib/python3.5/site-packages/sanic/app.py", line 493, in handle_request
+    handler, args, kwargs, uri = self.router.get(request)
+  File "/home/pi/.local/lib/python3.5/site-packages/sanic/router.py", line 307, in get
+    return self._get(request.path, request.method, '')
+  File "/home/pi/.local/lib/python3.5/site-packages/sanic/router.py", line 356, in _get
+    raise NotFound('Requested URL {} not found'.format(url))
+sanic.exceptions.NotFound: Requested URL /favicon.ico not found
+
+2018-07-12 22:08:06 - (network)[INFO][192.168.1.189:51225]: GET http://192.168.1.67:8080/favicon.ico  404 43
+2018-07-12 22:08:06 - (sanic)[ERROR]: Traceback (most recent call last):
+  File "/home/pi/.local/lib/python3.5/site-packages/sanic/app.py", line 493, in handle_request
+    handler, args, kwargs, uri = self.router.get(request)
+  File "/home/pi/.local/lib/python3.5/site-packages/sanic/router.py", line 307, in get
+    return self._get(request.path, request.method, '')
+  File "/home/pi/.local/lib/python3.5/site-packages/sanic/router.py", line 356, in _get
+    raise NotFound('Requested URL {} not found'.format(url))
+sanic.exceptions.NotFound: Requested URL /favicon.ico not found
+
+2018-07-12 22:08:06 - (network)[INFO][192.168.1.189:51226]: GET http://192.168.1.67:8080/favicon.ico  404 43
+2018-07-12 22:09:06 - (sanic)[ERROR]: Traceback (most recent call last):
+  File "/home/pi/.local/lib/python3.5/site-packages/sanic/server.py", line 143, in connection_timeout
+    raise RequestTimeout('Request Timeout')
+sanic.exceptions.RequestTimeout: Request Timeout
+
+2018-07-12 22:09:06 - (sanic)[ERROR]: Traceback (most recent call last):
+  File "/home/pi/.local/lib/python3.5/site-packages/sanic/server.py", line 143, in connection_timeout
+    raise RequestTimeout('Request Timeout')
+sanic.exceptions.RequestTimeout: Request Timeout
+
+2018-07-12 22:09:07 - (sanic)[ERROR]: Traceback (most recent call last):
+  File "/home/pi/.local/lib/python3.5/site-packages/sanic/server.py", line 143, in connection_timeout
+    raise RequestTimeout('Request Timeout')
+sanic.exceptions.RequestTimeout: Request Timeout
+
+2018-07-12 22:09:07 - (sanic)[ERROR]: Traceback (most recent call last):
+  File "/home/pi/.local/lib/python3.5/site-packages/sanic/server.py", line 143, in connection_timeout
+    raise RequestTimeout('Request Timeout')
+sanic.exceptions.RequestTimeout: Request Timeout
+
