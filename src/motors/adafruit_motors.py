@@ -12,11 +12,13 @@ class AdafruitMotors(Motors):
     '''
         Motors implementation for the Adafruit DC & Stepper HAT
     '''
+    default_speed = 170
+
     def __init__(self, addr=0x60, left_id=2, right_id=1):
         Motors.__init__(self)
 
         # Start at ~60% speed
-        self.speed = 170
+        self.speed = AdafruitMotors.default_speed
 
         # Speed values are 0 - 255
         self.max_speed = 255
@@ -72,6 +74,9 @@ class AdafruitMotors(Motors):
         '''
             Set speed to a given amount
         '''
+        if speed == None:
+            speed = AdafruitMotors.default_speed
+        
         Motors.set_speed(self, speed)
         self.speed_changed = True
 
