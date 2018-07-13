@@ -32,8 +32,6 @@ class RobotServer(Thread):
         self.left_pressed = False
         self.right_pressed = False
 
-        self.tilt_update = False
-
         self.turn_factor = 2 # controls how sharp the turns will be
 
         # How much to increase speed at one time
@@ -47,7 +45,8 @@ class RobotServer(Thread):
 
         self.motors = AdafruitMotors()
         self.camera_servo = ServoMotor()
-        self.camera_tilt = 60
+        self.camera_tilt = 120
+        self.motors_pause = False
 
         Thread.__init__(self)
         self.manual = False
@@ -61,7 +60,7 @@ class RobotServer(Thread):
             Check the no keys pressed condition
         '''
         return not self.fwd_pressed and not self.back_pressed and \
-            not self.left_pressed and not self.right_pressed and not self.tilt_update
+            not self.left_pressed and not self.right_pressed
 
     def bad_key_combo(self):
         '''
@@ -73,22 +72,14 @@ class RobotServer(Thread):
     def run(self):
         while self.running:
             try:
-                if self.manual:
+                if self.motors_pause:
+                    continue
+                elif self.manual:
                     self.motors.control_motors(self.manual_mode_left_power, self.manual_mode_right_power)
                 else:
                     if self.no_key_pressed() or self.bad_key_combo():
                         # Full stop
                         self.motors.stop()
-                    elif self.tilt_update:
-                        # We need to temporarily stop motors
-                        self.motors.stop()
-                        
-                        # Activate servo PWM for a bit
-                        self.camera_servo.activate()
-                        self.camera_servo.rotate(self.camera_tilt)
-                        self.camera_servo.deactivate()
-                        self.tilt_update = False
-
                     elif not self.left_pressed and not self.right_pressed and self.fwd_pressed:
                         # Full steam ahead!
                         self.motors.control_motors(100, 100)
@@ -160,16 +151,24 @@ class RobotServer(Thread):
 
     def tilt_camera(self, up):
         if up:
-            self.camera_tilt += 10
+            self.camera_tilt += 20
         else:
-            self.camera_tilt -= 10
+            self.camera_tilt -= 20
         
         if self.camera_tilt <= 0:
             self.camera_tilt = 0
         elif self.camera_tilt >= 180:
             self.camera_tilt = 180
 
-        self.tilt_update = True
+        # self.motors.stop()
+        self.motors_pause = True
+        self.camera_servo.activate()
+        self.camera_servo.rotate(self.camera_tilt)
+        sleep(1000)
+        self.camera_servo.deactivate()
+        self.motors_pause = False
+
+        print('camera angle: ', self.camera_tilt)
 
     def stop(self, direction):
         '''

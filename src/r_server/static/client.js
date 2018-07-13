@@ -43,22 +43,22 @@ function connect(host) {
     var keydownHandler = (event) => {
         // Ignore repeated events FFS
         if (event.repeat) {
-            return
+            return;
         }
 
         const keyName = event.key.toLowerCase();
 
-        console.log('down: ' + keyName)
+        console.log('down: ' + keyName);
 
-        sendKey(keyName)
+        sendKey(keyName);
     };
 
     var keyupHandler = (event) => {
         const keyName = event.key.toUpperCase();
 
-        console.log('up: ' + keyName)
+        console.log('up: ' + keyName);
 
-        sendKey(keyName)
+        sendKey(keyName);
 
     };
 
