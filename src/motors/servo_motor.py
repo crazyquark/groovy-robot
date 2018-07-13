@@ -29,10 +29,9 @@ class ServoMotor:
     def pulse_width(self, angle):
         angle_to_pulse = ((angle * (ServoMotor.max_pulse_width -
                                     ServoMotor.min_pulse_width)) / 180) + ServoMotor.min_pulse_width
-        print(angle_to_pulse)
         analog_value = int(float(angle_to_pulse) / 1000000 * self.frequency * 4096)
 
-        print(analog_value)
+        print('servo:', analog_value)
 
         return analog_value
 

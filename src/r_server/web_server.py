@@ -67,6 +67,10 @@ async def websocket(_, socket):
             app.robot.speed_adjust(Throttle.Up)
         elif message == 'z':
             app.robot.speed_adjust(Throttle.Down)
+        elif message == 'q':
+            app.robot.tilt_camera(True)
+        elif message == 'e':
+            app.robot.tilt_camera(False)
 
 @app.route('/')
 async def index(request):

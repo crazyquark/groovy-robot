@@ -7,6 +7,7 @@ from threading import Thread
 from time import sleep
 
 from motors.adafruit_motors import AdafruitMotors
+from motors.servo_motor import ServoMotor
 
 class Directions(object):
     '''
@@ -31,6 +32,8 @@ class RobotServer(Thread):
         self.left_pressed = False
         self.right_pressed = False
 
+        self.tilt_update = False
+
         self.turn_factor = 2 # controls how sharp the turns will be
 
         # How much to increase speed at one time
@@ -43,6 +46,8 @@ class RobotServer(Thread):
         print('We are running on: ', arch)
 
         self.motors = AdafruitMotors()
+        self.camera_servo = ServoMotor()
+        self.camera_tilt = 60
 
         Thread.__init__(self)
         self.manual = False
@@ -56,7 +61,7 @@ class RobotServer(Thread):
             Check the no keys pressed condition
         '''
         return not self.fwd_pressed and not self.back_pressed and \
-            not self.left_pressed and not self.right_pressed
+            not self.left_pressed and not self.right_pressed and not self.tilt_update
 
     def bad_key_combo(self):
         '''
@@ -74,6 +79,16 @@ class RobotServer(Thread):
                     if self.no_key_pressed() or self.bad_key_combo():
                         # Full stop
                         self.motors.stop()
+                    elif self.tilt_update:
+                        # We need to temporarily stop motors
+                        self.motors.stop()
+                        
+                        # Activate servo PWM for a bit
+                        self.camera_servo.activate()
+                        self.camera_servo.rotate(self.camera_tilt)
+                        self.camera_servo.deactivate()
+                        self.tilt_update = False
+
                     elif not self.left_pressed and not self.right_pressed and self.fwd_pressed:
                         # Full steam ahead!
                         self.motors.control_motors(100, 100)
@@ -142,6 +157,19 @@ class RobotServer(Thread):
             return
 
         self.process_press(direction, True)
+
+    def tilt_camera(self, up):
+        if up:
+            self.camera_tilt += 10
+        else:
+            self.camera_tilt -= 10
+        
+        if self.camera_tilt <= 0:
+            self.camera_tilt = 0
+        elif self.camera_tilt >= 180:
+            self.camera_tilt = 180
+
+        self.tilt_update = True
 
     def stop(self, direction):
         '''

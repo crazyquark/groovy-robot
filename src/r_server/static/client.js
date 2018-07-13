@@ -36,7 +36,7 @@ function connect(host) {
         else if (keyName === 'd' || keyName === 'ArrowRight') {
             ws.send('d');
         } else {
-            ws.send(keyName)
+            ws.send(keyName);
         }
     };
 
