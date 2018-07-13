@@ -31,7 +31,7 @@ class ServoMotor:
 
     def activate(self):
         '''
-        Activates this servo
+        Activates this servo; always do this first
         '''
         if not self.pwm:
             self.pwm = PWM(self.addr)
@@ -39,9 +39,11 @@ class ServoMotor:
 
     def deactivate(self, old_freq = 1600):
         '''
-        Deactivates this servo
+        Deactivates this servo; always deativate after use!
         '''
         if self.pwm:
+            # set to off
+            self.pwm.setPWM(self.channel, 0, 4096)
             self.pwm.setPWMFreq(old_freq)
             del self.pwm
             self.pwm = None
@@ -54,5 +56,5 @@ if __name__ == '__main__':
     print('Running servo test')
     servo = ServoMotor()
     servo.activate()
-    servo.rotate(20)
+    servo.rotate(60)
     servo.deactivate()
