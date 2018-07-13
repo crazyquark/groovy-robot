@@ -19,6 +19,13 @@ class ServoMotor:
 
         self.pwm = None
 
+    def __enter__(self):
+        self.activate()
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.deactivate()
+
     def pulse_width(self, angle):
         angle_to_pulse = ((angle * (ServoMotor.max_pulse_width -
                                     ServoMotor.min_pulse_width)) / 180) + ServoMotor.min_pulse_width
@@ -36,6 +43,7 @@ class ServoMotor:
         if not self.pwm:
             self.pwm = PWM(self.addr)
             self.pwm.setPWMFreq(self.frequency)
+            self.pwm.setPWM(self.channel, 4096, 0)
 
     def deactivate(self, old_freq = 1600):
         '''
@@ -54,7 +62,5 @@ class ServoMotor:
 
 if __name__ == '__main__':
     print('Running servo test')
-    servo = ServoMotor()
-    servo.activate()
-    servo.rotate(60)
-    servo.deactivate()
+    with ServoMotor() as servo:
+        servo.rotate(100)
