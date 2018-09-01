@@ -7,7 +7,7 @@ from threading import Thread, Lock
 from time import sleep
 
 from motors.adafruit_motors import AdafruitMotors
-from motors.servo_motor import ServoMotor
+from motors.stepper_motor import StepperMotor
 
 
 class Directions(object):
@@ -47,14 +47,14 @@ class RobotServer(Thread):
 
         print('We are running on: ', arch)
 
-        self.camera_servo = ServoMotor()
-        self.camera_tilt = 120
+        self.camera_steps = 0
         self.tilt_update = False
 
         # Initial camera position
         self.rotate_camera()
 
         self.motors = AdafruitMotors()
+        self.camera_stepper = StepperMotor(self.motors)
 
         Thread.__init__(self)
 
@@ -65,10 +65,11 @@ class RobotServer(Thread):
         self.start()
 
     def rotate_camera(self):
-        self.camera_servo.activate()
-        self.camera_servo.rotate(self.camera_tilt)
-        sleep(2)
-        self.camera_servo.deactivate()
+        '''
+            Rotates camera using a stepper connected to ports
+            M3 and M4 on the HAT
+        '''
+        self.camera_stepper.rotate(self.camera_steps)
 
     def no_key_pressed(self):
         '''
@@ -174,18 +175,11 @@ class RobotServer(Thread):
             return
 
         if up:
-            self.camera_tilt += 20
+            self.camera_steps = 200
         else:
-            self.camera_tilt -= 20
-
-        if self.camera_tilt <= 0:
-            self.camera_tilt = 0
-        elif self.camera_tilt >= 180:
-            self.camera_tilt = 180
+            self.camera_steps = -200
 
         self.tilt_update = True
-
-        print('camera angle: ', self.camera_tilt)
 
     def stop(self, direction):
         '''
@@ -219,3 +213,5 @@ class RobotServer(Thread):
             Stop main loop
         '''
         self.running = False
+        self.motors.stop()
+        self.camera_stepper.stop()
