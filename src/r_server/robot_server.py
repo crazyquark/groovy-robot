@@ -50,9 +50,6 @@ class RobotServer(Thread):
         self.camera_steps = 0
         self.tilt_update = False
 
-        # Initial camera position
-        self.rotate_camera()
-
         self.motors = AdafruitMotors()
         self.camera_stepper = StepperMotor(self.motors)
 
@@ -175,9 +172,9 @@ class RobotServer(Thread):
             return
 
         if up:
-            self.camera_steps = 200
+            self.camera_steps = 100
         else:
-            self.camera_steps = -200
+            self.camera_steps = -100
 
         self.tilt_update = True
 
