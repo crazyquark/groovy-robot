@@ -6,6 +6,9 @@ except:
 from platform import uname
 
 class StepperMotor:
+    '''
+        See https://learn.adafruit.com/adafruit-dc-and-stepper-motor-hat-for-raspberry-pi/using-stepper-motors
+    '''
     def __init__(self, adafruit_motors):
         self.running_on_pi = uname()[4].startswith('arm')
         if self.running_on_pi:
