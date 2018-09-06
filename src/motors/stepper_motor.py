@@ -14,8 +14,8 @@ class StepperMotor:
         if self.running_on_pi:
             self.motors = adafruit_motors.motors
 
-            self.stepper = self.motors.getStepper(200, 2) # 200 steps/rev, motor port #2
-            self.stepper.setSpeed(30)                     # 30 RPM
+            self.stepper = self.motors.getStepper(35, 2) # 200 steps/rev, motor port #2
+            # self.stepper.setSpeed(30)                  # 30 RPM
     
     def step(self, dir):
         if not self.running_on_pi:
