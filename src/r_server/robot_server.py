@@ -16,6 +16,11 @@ class Directions(object):
     '''
     Forward, Back, Left, Right = range(4)
 
+class CameraMovement(object):
+    '''
+        Enumeration of camera directions
+    '''
+    Up, Down, Idle = [1, -1, 0]
 
 class Throttle(object):
     '''
@@ -63,6 +68,7 @@ class RobotServer(Thread):
 
     def tilt_camera(self, dir):
         self.camera_state = dir
+        print(self.camera_state)
 
     def no_key_pressed(self):
         '''
@@ -81,11 +87,15 @@ class RobotServer(Thread):
     def run(self):
         while self.running:
             try:
-                if self.camera_state != 0:
+                # Camera stepper control
+                if self.camera_state != CameraMovement.Idle:
+                    # Tilt camera up or down
                     self.camera_stepper.step(self.camera_state)
-                    self.camera_state = 0 # reset
-                    continue
-                elif self.manual:
+                else:
+                    self.camera_stepper.stop()
+                
+                # DC motors control
+                if self.manual:
                     self.motors.control_motors(
                         self.manual_mode_left_power, self.manual_mode_right_power)
                 else:

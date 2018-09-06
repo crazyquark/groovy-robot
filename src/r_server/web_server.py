@@ -8,7 +8,7 @@ from sanic.response import html
 
 from jinja2 import Environment, PackageLoader
 
-from .robot_server import RobotServer, Directions, Throttle
+from .robot_server import RobotServer, Directions, CameraMovement, Throttle
 from .camera_server import CameraServer
 # from .keyboard_controller import KeyboardController
 from .ps3_controller import PS3Controller
@@ -68,9 +68,11 @@ async def websocket(_, socket):
         elif message == 'z':
             app.robot.speed_adjust(Throttle.Down)
         elif message == 'q':
-            app.robot.tilt_camera(1)
+            app.robot.tilt_camera(CameraMovement.Up)
         elif message == 'e':
-            app.robot.tilt_camera(-1)
+            app.robot.tilt_camera(CameraMovement.Down)
+        elif message == 'Q' or message == 'E':
+            app.robot.tilt_camera(CameraMovement.Idle)
 
 @app.route('/')
 async def index(request):
