@@ -13,6 +13,7 @@ from .camera_server import CameraServer
 # from .keyboard_controller import KeyboardController
 from .ps3_controller import PS3Controller
 from .display import PiDisplay
+from .audio import MicCapture
 
 app = Sanic()  # pylint: disable=invalid-name
 
@@ -73,6 +74,16 @@ async def websocket(_, socket):
             app.robot.tilt_camera(CameraMovement.Down)
         elif message == 'Q' or message == 'E':
             app.robot.tilt_camera(CameraMovement.Idle)
+
+@app.websocket('/mic')
+async def mic_websocket(_, socket):
+    if not hasattr(app, 'mic_capture'):
+        app.mic_capture = MicCapture()
+
+    while not socket.closed:
+        audio_chunk = app.mic_capture.get_audio_chunk()
+
+        socket.send(audio_chunk, binary=True)
 
 @app.route('/')
 async def index(request):

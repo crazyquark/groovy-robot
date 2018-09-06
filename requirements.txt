@@ -10,3 +10,4 @@ picamera
 evdev
 RPi.GPIO
 luma.oled
+pyaudio

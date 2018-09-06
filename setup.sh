@@ -11,6 +11,7 @@ sudo apt install -y python3-pip
 sudo apt install -y python3-smbus
 sudo apt install -y python3-evdev
 sudo apt install -y python3-pil
+sudo apt install -y python3-pyaudio
 
 pushd lib/adafruit_motor_hat
 python3 setup.py install
