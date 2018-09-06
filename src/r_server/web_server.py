@@ -21,10 +21,12 @@ app = Sanic()  # pylint: disable=invalid-name
 app.static('/static', './r_server/static')
 
 # Jinja2 templates
-env = Environment(loader=PackageLoader('r_server', 'templates')) # pylint: disable=invalid-name
+env = Environment(loader=PackageLoader('r_server', 'templates')
+                  )  # pylint: disable=invalid-name
 
 from ptvsd import enable_attach
 enable_attach('kriekpi')
+
 
 @app.websocket('/ws')
 async def websocket(_, socket):
@@ -75,14 +77,13 @@ async def websocket(_, socket):
         elif message == 'Q' or message == 'E':
             app.robot.tilt_camera(CameraMovement.Idle)
 
+
 @app.websocket('/mic')
 async def mic_websocket(_, socket):
-    if not hasattr(app, 'mic_capture'):
-        app.mic_capture = MicCapture()
+    while True:
+        audio_chunk = app.mic.get_audio_chunk()
+        await socket.send(audio_chunk)
 
-        while True:
-            audio_chunk = app.mic_capture.get_audio_chunk()
-            await socket.send(audio_chunk)
 
 @app.route('/')
 async def index(request):
@@ -91,11 +92,13 @@ async def index(request):
     '''
     from urllib.parse import urlparse
     parsed_url = urlparse(request.url)
-    host = parsed_url.hostname + (':' + str(parsed_url.port) if parsed_url.port else '')
+    host = parsed_url.hostname + \
+        (':' + str(parsed_url.port) if parsed_url.port else '')
 
     template = env.get_template('main.html')
     html_content = template.render(host=host)
     return html(html_content)
+
 
 @app.route('/halt')
 async def halt(_):
@@ -116,5 +119,7 @@ if __name__ == "__main__":
     #app.keyboard_controller = KeyboardController(app.robot)
     app.ps3controller = PS3Controller(app.robot)
     app.display = PiDisplay()
+
+    app.mic = MicCapture()
 
     app.run(host="0.0.0.0", port=8080)
