@@ -81,6 +81,8 @@ async def websocket(_, socket):
 @app.websocket('/mic')
 async def mic_websocket(_, socket):
     while True:
+        await socket.recv()
+        
         audio_chunk = app.mic.get_audio_chunk()
         await socket.send(audio_chunk)
 

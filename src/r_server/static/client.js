@@ -65,16 +65,23 @@ function connect(host) {
             mic_ws.binaryType = 'arraybuffer';
 
             var audioContext = new(window.AudioContext || window.webkitAudioContext)();
-            mic_ws.onmessage = function (message) {
+
+            mic_ws.onopen = () => {
+                mic_ws.send('1');
+            };
+
+            mic_ws.onmessage = (event) => {
                 var source = audioContext.createBufferSource();
                 source.channelCount = 1;
-                audioContext.decodeAudioData(message.data, function (buffer) {
+                audioContext.decodeAudioData(event.data, function (buffer) {
                     source.buffer = buffer;
                     source.connect(audioContext.destination);
                     source.start(0);
                 }, function (err) {
                     console.log(err);
                 });
+
+                mic_ws.send('1');
             };
         }
     };
