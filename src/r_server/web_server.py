@@ -80,10 +80,9 @@ async def mic_websocket(_, socket):
     if not hasattr(app, 'mic_capture'):
         app.mic_capture = MicCapture()
 
-    while not socket.closed:
-        audio_chunk = app.mic_capture.get_audio_chunk()
-
-        socket.send(audio_chunk, binary=True)
+        while True:
+            audio_chunk = app.mic_capture.get_audio_chunk()
+            await socket.send(audio_chunk)
 
 @app.route('/')
 async def index(request):

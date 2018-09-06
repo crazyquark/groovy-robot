@@ -1,6 +1,6 @@
 import pyaudio
 import wave
-from io import StringIO
+from io import BytesIO
 # import numpy
 
 FORMAT = pyaudio.paInt16
@@ -23,13 +23,13 @@ class MicCapture:
                                  frames_per_buffer=CHUNK)
 
         raw_data = stream.read(CHUNK)
-        memory_file = StringIO()
+        memory_file = BytesIO()
 
         wave_file = wave.open(memory_file, 'wb')
         wave_file.setnchannels(CHANNELS)
         wave_file.setsampwidth(self.audio.get_sample_size(FORMAT))
         wave_file.setframerate(RATE)
-        wave_file.writeframes(b''.join([raw_data]))
+        wave_file.writeframes(raw_data)
         wave_file.close()
 
         memory_file.seek(0)

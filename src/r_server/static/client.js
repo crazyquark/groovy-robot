@@ -61,23 +61,21 @@ function connect(host) {
 
     var stream_mic = function (host) {
         if (host) {
-            if (!mic_ws || mic_ws.readyState > 1) {
-                mic_ws = new WebSocket('ws://' + host + '/mic');
-                mic_ws.binaryType = 'arraybuffer';
+            var mic_ws = new WebSocket('ws://' + host + '/mic');
+            mic_ws.binaryType = 'arraybuffer';
 
-                var audioContext = new(window.AudioContext || window.webkitAudioContext)();
-                mic_ws.onmessage = function (message) {
-                    var source = audioContext.createBufferSource();
-                    source.channelCount = 1;
-                    audioContext.decodeAudioData(message.data, function (buffer) {
-                        source.buffer = buffer;
-                        source.connect(audioContext.destination);
-                        source.start(0);
-                    }, function (err) {
-                        console.log(err);
-                    });
-                }
-            }
+            var audioContext = new(window.AudioContext || window.webkitAudioContext)();
+            mic_ws.onmessage = function (message) {
+                var source = audioContext.createBufferSource();
+                source.channelCount = 1;
+                audioContext.decodeAudioData(message.data, function (buffer) {
+                    source.buffer = buffer;
+                    source.connect(audioContext.destination);
+                    source.start(0);
+                }, function (err) {
+                    console.log(err);
+                });
+            };
         }
     };
 
