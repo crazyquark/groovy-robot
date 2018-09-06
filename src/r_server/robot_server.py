@@ -47,8 +47,8 @@ class RobotServer(Thread):
 
         print('We are running on: ', arch)
 
-        self.camera_steps = 0
-        self.tilt_update = False
+        # Camera control
+        self.camera_state = 0
 
         self.motors = AdafruitMotors()
         self.camera_stepper = StepperMotor(self.motors)
@@ -61,12 +61,8 @@ class RobotServer(Thread):
         self.running = True
         self.start()
 
-    def rotate_camera(self):
-        '''
-            Rotates camera using a stepper connected to ports
-            M3 and M4 on the HAT
-        '''
-        self.camera_stepper.rotate(self.camera_steps)
+    def tilt_camera(self, dir):
+        self.camera_state = dir
 
     def no_key_pressed(self):
         '''
@@ -85,9 +81,9 @@ class RobotServer(Thread):
     def run(self):
         while self.running:
             try:
-                if self.tilt_update:
-                    self.rotate_camera()
-                    self.tilt_update = False
+                if self.camera_state != 0:
+                    self.camera_stepper.step(self.camera_state)
+                    self.camera_state = 0 # reset
                     continue
                 elif self.manual:
                     self.motors.control_motors(
@@ -166,17 +162,6 @@ class RobotServer(Thread):
             return
 
         self.process_press(direction, True)
-
-    def tilt_camera(self, up):
-        if self.tilt_update:
-            return
-
-        if up:
-            self.camera_steps = 100
-        else:
-            self.camera_steps = -100
-
-        self.tilt_update = True
 
     def stop(self, direction):
         '''
