@@ -70,17 +70,16 @@ function connect(host) {
                 mic_ws.send('1');
             };
             
-            var duration = 0;
+            var nextTime = audioContext.currentTime + 0.1;
             mic_ws.onmessage = (event) => {
-                var source = audioContext.createBufferSource();
-                source.channelCount = 1;
-
                 audioContext.decodeAudioData(event.data, function (buffer) {
+                    var source = audioContext.createBufferSource();
+                    source.channelCount = 1;
                     source.buffer = buffer;
                     source.connect(audioContext.destination);
-                    source.start();
+                    source.start(nextTime);
 
-                    duration += buffer.duration;
+                    nextTime += buffer.duration;
                 }, function (err) {
                     console.log(err);
                 });
