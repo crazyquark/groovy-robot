@@ -5,6 +5,7 @@ from base64 import b64encode
 
 from sanic import Sanic
 from sanic.response import html
+from sanic.exceptions import RequestTimeout
 from websockets.exceptions import ConnectionClosed
 
 from jinja2 import Environment, PackageLoader
@@ -28,6 +29,7 @@ env = Environment(loader=PackageLoader('r_server', 'templates')
 from ptvsd import enable_attach
 enable_attach('kriekpi')
 
+
 @app.websocket('/ws')
 async def websocket(_, socket):
     '''
@@ -44,12 +46,20 @@ async def websocket(_, socket):
         return data.decode('utf-8')
 
     while True:
-        message = await socket.recv()
+        try:
+            message = await socket.recv()
+        except (ConnectionClosed, RequestTimeout):
+            break
+
         if message == '1':
             # send frame
             data = encode_frame()
             if data:
-                await socket.send(data)
+                try:
+                    await socket.send(data)
+                except (ConnectionClosed, RequestTimeout):
+                    break
+
         elif message == 'w':
             app.robot.move(Directions.Forward)
         elif message == 'W':
@@ -81,20 +91,28 @@ async def websocket(_, socket):
 @app.websocket('/mic')
 async def mic_websocket(_, socket):
     # Incoming mic connection
-    app.mic.clients += 1
+    app.mic.clients = app.mic.clients + 1
 
     while True:
         try:
             await socket.recv()
-        except (ConnectionClosed):
+        except (ConnectionClosed, RequestTimeout):
             # client dropped off
-            app.mic.clients -= 1
-            if app.mic.clients < 0:
+            app.mic.clients = app.mic.clients - 1
+            if app.mic.clients <= 0:
                 app.mic.clients = 0
+                print('All mic clients disconnected')
+            break
 
         audio_chunk = app.mic.get_data()
-        await socket.send(audio_chunk)
-
+        try:
+            await socket.send(audio_chunk)
+        except (ConnectionClosed, RequestTimeout):
+            # client dropped off
+            app.mic.clients = app.mic.clients - 1
+            if app.mic.clients <= 0:
+                app.mic.clients = 0
+            break
 
 @app.route('/')
 async def index(request):

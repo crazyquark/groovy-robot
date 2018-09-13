@@ -19,12 +19,11 @@ class MicCapture(Thread):
                                       rate=RATE, input=True,
                                       input_device_index=2,
                                       frames_per_buffer=CHUNK)
-        self.frames = []
 
         Thread.__init__(self)
 
+        self.frames = []
         self.is_running = True
-        
         self.clients = 0
 
         self.start()
@@ -34,9 +33,6 @@ class MicCapture(Thread):
             # Pause if no clients are listening
             if self.clients > 0:
                 self.get_audio_chunk()
-            else:
-                # cleanup
-                self.frames = []
 
     def get_data(self):
         memory_file = BytesIO()
