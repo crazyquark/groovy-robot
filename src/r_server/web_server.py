@@ -5,6 +5,7 @@ from base64 import b64encode
 
 from sanic import Sanic
 from sanic.response import html
+from websockets.exceptions import ConnectionClosed
 
 from jinja2 import Environment, PackageLoader
 
@@ -26,7 +27,6 @@ env = Environment(loader=PackageLoader('r_server', 'templates')
 
 from ptvsd import enable_attach
 enable_attach('kriekpi')
-
 
 @app.websocket('/ws')
 async def websocket(_, socket):
@@ -80,9 +80,18 @@ async def websocket(_, socket):
 
 @app.websocket('/mic')
 async def mic_websocket(_, socket):
+    # Incoming mic connection
+    app.mic.clients += 1
+
     while True:
-        await socket.recv()
-        
+        try:
+            await socket.recv()
+        except (ConnectionClosed):
+            # client dropped off
+            app.mic.clients -= 1
+            if app.mic.clients < 0:
+                app.mic.clients = 0
+
         audio_chunk = app.mic.get_data()
         await socket.send(audio_chunk)
 
