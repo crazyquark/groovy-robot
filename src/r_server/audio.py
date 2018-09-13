@@ -21,6 +21,9 @@ class MicCapture(Thread):
                                       input_device_index=2,
                                       frames_per_buffer=CHUNK)
         self.create_buffer()
+
+        Thread.__init__(self)
+        
         self.is_running = True
         self.start()
 
