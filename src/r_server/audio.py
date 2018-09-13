@@ -41,11 +41,6 @@ class MicCapture(Thread):
     def get_data(self):
         self.memory_file.seek(0)
         data = self.memory_file.read()
-        
-        self.memory_file.close()
-        self.buffer.close()
-
-        self.create_buffer()
 
         return data
 
