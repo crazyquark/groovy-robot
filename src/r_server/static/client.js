@@ -69,14 +69,18 @@ function connect(host) {
             mic_ws.onopen = () => {
                 mic_ws.send('1');
             };
-
+            
+            var duration = 0;
             mic_ws.onmessage = (event) => {
                 var source = audioContext.createBufferSource();
                 source.channelCount = 1;
+
                 audioContext.decodeAudioData(event.data, function (buffer) {
                     source.buffer = buffer;
                     source.connect(audioContext.destination);
-                    source.start(0);
+                    source.start();
+
+                    duration += buffer.duration;
                 }, function (err) {
                     console.log(err);
                 });
