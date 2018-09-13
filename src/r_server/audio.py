@@ -36,7 +36,6 @@ class MicCapture(Thread):
                 self.get_audio_chunk()
             else:
                 # cleanup
-                del self.frames
                 self.frames = []
 
     def get_data(self):
@@ -48,7 +47,6 @@ class MicCapture(Thread):
         wave_file.writeframes(b''.join(self.frames))
         wave_file.close()
 
-        del self.frames
         self.frames = []
 
         memory_file.seek(0)
