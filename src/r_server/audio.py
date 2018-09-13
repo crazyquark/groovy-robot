@@ -20,6 +20,7 @@ class MicCapture(Thread):
                                       rate=RATE, input=True,
                                       input_device_index=2,
                                       frames_per_buffer=CHUNK)
+        self.memory_file = BytesIO()
         self.create_buffer()
 
         Thread.__init__(self)
@@ -28,7 +29,6 @@ class MicCapture(Thread):
         self.start()
 
     def create_buffer(self):
-        self.memory_file = BytesIO()
         self.buffer = wave.open(self.memory_file, 'wb')
         self.buffer.setnchannels(CHANNELS)
         self.buffer.setsampwidth(self.audio.get_sample_size(FORMAT))
@@ -41,6 +41,10 @@ class MicCapture(Thread):
     def get_data(self):
         self.memory_file.seek(0)
         data = self.memory_file.read()
+        self.memory_file.truncate(0)
+        self.memory_file.seek(0)
+        
+        self.create_buffer()
 
         return data
 
