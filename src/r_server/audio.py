@@ -43,12 +43,12 @@ class MicCapture(Thread):
         wave_file.writeframes(b''.join(self.frames))
         wave_file.close()
 
-        self.frames = []
-
         memory_file.seek(0)
         data = memory_file.read()
         memory_file.close()
 
+        self.frames.clear()
+        
         return data
 
     def get_audio_chunk(self):

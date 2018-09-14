@@ -1,5 +1,28 @@
 'use strict';
 
+function webAudioTouchUnlock(context) {
+    return new Promise(function (resolve, reject) {
+        if (context.state === 'suspended' && 'ontouchstart' in window) {
+            var unlock = function () {
+                context.resume().then(function () {
+                        document.body.removeEventListener('touchstart', unlock);
+                        document.body.removeEventListener('touchend', unlock);
+
+                        resolve(true);
+                    },
+                    function (reason) {
+                        reject(reason);
+                    });
+            };
+
+            document.body.addEventListener('touchstart', unlock, false);
+            document.body.addEventListener('touchend', unlock, false);
+        } else {
+            resolve(false);
+        }
+    });
+}
+
 function connect(host) {
     var ws = new WebSocket('ws://' + host + '/ws');
     ws.onopen = () => {
@@ -65,11 +88,22 @@ function connect(host) {
             mic_ws.binaryType = 'arraybuffer';
 
             var audioContext = new(window.AudioContext || window.webkitAudioContext)();
+            webAudioTouchUnlock(audioContext).then(function (unlocked) {
+                    if (unlocked) {
+                        // AudioContext was unlocked from an explicit user action,
+                        // sound should start playing now
+                    } else {
+                        // There was no need for unlocking, devices other than iOS
+                    }
+                },
+                function (reason) {
+                    console.error(reason);
+                });
 
             mic_ws.onopen = () => {
                 mic_ws.send('1');
             };
-            
+
             var nextTime = audioContext.currentTime + 0.1;
             mic_ws.onmessage = (event) => {
                 audioContext.decodeAudioData(event.data, function (buffer) {
