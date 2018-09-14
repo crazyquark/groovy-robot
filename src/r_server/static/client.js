@@ -104,14 +104,14 @@ function connect(host) {
                 mic_ws.send('1');
             };
 
-            var nextTime = audioContext.currentTime + 0.1;
+            var nextTime = 0;
             mic_ws.onmessage = (event) => {
                 audioContext.decodeAudioData(event.data, function (buffer) {
                     var source = audioContext.createBufferSource();
                     source.channelCount = 1;
                     source.buffer = buffer;
                     source.connect(audioContext.destination);
-                    source.start(nextTime);
+                    source.start(0);
 
                     nextTime += buffer.duration;
                 }, function (err) {

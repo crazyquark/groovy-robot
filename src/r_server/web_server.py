@@ -89,28 +89,16 @@ async def websocket(_, socket):
 
 @app.websocket('/mic')
 async def mic_websocket(_, socket):
-    # Incoming mic connection
-    app.mic.clients = app.mic.clients + 1
-
     while True:
         try:
             await socket.recv()
         except (ConnectionClosed, RequestTimeout):
-            # client dropped off
-            app.mic.clients = app.mic.clients - 1
-            if app.mic.clients <= 0:
-                app.mic.clients = 0
-                print('All mic clients disconnected')
             break
 
         audio_chunk = app.mic.get_data()
         try:
             await socket.send(audio_chunk)
         except (ConnectionClosed, RequestTimeout):
-            # client dropped off
-            app.mic.clients = app.mic.clients - 1
-            if app.mic.clients <= 0:
-                app.mic.clients = 0
             break
 
 @app.route('/')

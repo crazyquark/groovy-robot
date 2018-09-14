@@ -7,10 +7,11 @@ from threading import Thread
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 48000
-CHUNK = 4*4096
-RECORD_SECONDS = 5
+CHUNK = 4096
+MAX_FRAMES = 5 * CHUNK
 
-class MicCapture(Thread):
+
+class MicCapture:
     ''' Captures mic input as audio chunks '''
 
     def __init__(self):
@@ -18,21 +19,16 @@ class MicCapture(Thread):
         self.stream = self.audio.open(format=FORMAT, channels=CHANNELS,
                                       rate=RATE, input=True,
                                       input_device_index=2,
-                                      frames_per_buffer=CHUNK)
-
-        Thread.__init__(self)
+                                      frames_per_buffer=CHUNK, stream_callback=self.stream_callback)
 
         self.frames = []
-        self.is_running = True
-        self.clients = 0
+        self.stream.start_stream()
 
-        self.start()
-    
-    def run(self):
-        while self.is_running:
-            # Pause if no clients are listening
-            if self.clients > 0:
-                self.get_audio_chunk()
+    def stream_callback(self, in_data, frame_count, time_info, status):
+        ''' Get an audio chunk from internal stream '''
+        self.frames.append(in_data)
+
+        return ('', pyaudio.paContinue)
 
     def get_data(self):
         memory_file = BytesIO()
@@ -47,14 +43,11 @@ class MicCapture(Thread):
         data = memory_file.read()
         memory_file.close()
 
+        # purge read frames
         self.frames.clear()
         
         return data
 
-    def get_audio_chunk(self):
-        ''' Get an audio chunk from internal stream '''
-        raw_data = self.stream.read(CHUNK, exception_on_overflow=False)
-        self.frames.append(raw_data)
 
     def close(self):
         ''' Close stream '''
