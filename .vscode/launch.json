@@ -3,32 +3,30 @@
     // Hover to view descriptions of existing attributes.
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Run Web Server",
-            "type": "python",
-            "request": "launch",
-            "stopOnEntry": true,
-            "pythonPath": "${config:python.pythonPath}",
-            "module": "r_server.web_server",
-            "cwd": "${workspaceRoot}/src",
-            "env": {},
-            "envFile": "${workspaceRoot}/.env",
-            "debugOptions": [
-                "WaitOnAbnormalExit",
-                "WaitOnNormalExit",
-                "RedirectOutput"
-            ]
-        },
-        {
-            "name": "Attach to Pi(Remote Debug)",
+    "configurations": [{
+            "name": "Python: Attach",
             "type": "python",
             "request": "attach",
-            "localRoot": "${workspaceRoot}/src",
-            "remoteRoot": "/home/pi/groovy-robot/src",
             "port": 5678,
-            "secret": "kriekpi",
-            "host": "192.168.1.67"
+            "host": "192.168.1.67",
+            "pathMappings": [{
+                "localRoot": "${workspaceFolder}/src",
+                "remoteRoot": "/home/pi/groovy-robot/src"
+            }]
+        },
+        {
+            "name": "Python: Current File (Integrated Terminal)",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: Current File (External Terminal)",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "externalTerminal"
         }
     ]
 }

@@ -7,7 +7,7 @@ import pygame
 
 # VS Debug support
 from ptvsd import enable_attach as enableAttach
-enableAttach('kriekpi') 
+enable_attach(redirect_output=True)
 
 from motors.adafruit_motors import AdafruitMotors
 
