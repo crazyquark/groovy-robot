@@ -28,7 +28,7 @@ class MicCapture:
         ''' Get an audio chunk from internal stream '''
         self.frames.append(in_data)
 
-        return ('', pyaudio.paContinue)
+        return (in_data, pyaudio.paContinue)
 
     def get_data(self):
         memory_file = BytesIO()
