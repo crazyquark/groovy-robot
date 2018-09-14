@@ -5,8 +5,8 @@ function webAudioTouchUnlock(context) {
         if (context.state === 'suspended' && 'ontouchstart' in window) {
             var unlock = function () {
                 context.resume().then(function () {
-                        document.body.removeEventListener('touchstart', unlock);
-                        document.body.removeEventListener('touchend', unlock);
+                        document.removeEventListener('touchstart', unlock);
+                        document.removeEventListener('touchend', unlock);
 
                         resolve(true);
                     },
@@ -15,8 +15,8 @@ function webAudioTouchUnlock(context) {
                     });
             };
 
-            document.body.addEventListener('touchstart', unlock, false);
-            document.body.addEventListener('touchend', unlock, false);
+            document.addEventListener('touchstart', unlock, false);
+            document.addEventListener('touchend', unlock, false);
         } else {
             resolve(false);
         }
