@@ -28,6 +28,10 @@ class MicCapture:
         ''' Get an audio chunk from internal stream '''
         self.frames.append(in_data)
 
+        if len(self.frames) > MAX_FRAMES:
+            print('Dropping audio data')
+            self.frames = self.frames[MAX_FRAMES:]
+
         return (in_data, pyaudio.paContinue)
 
     def get_data(self):
