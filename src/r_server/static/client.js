@@ -104,7 +104,7 @@ function connect(host) {
                 mic_ws.send('1');
             };
 
-            var nextTime = 0;
+            var nextTime = audioContext.currentTime;
             mic_ws.onmessage = (event) => {
                 audioContext.decodeAudioData(event.data, function (buffer) {
                     var source = audioContext.createBufferSource();
