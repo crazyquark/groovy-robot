@@ -111,7 +111,7 @@ function connect(host) {
                     source.channelCount = 1;
                     source.buffer = buffer;
                     source.connect(audioContext.destination);
-                    source.start(nextTime);
+                    source.start(0);
 
                     nextTime += buffer.duration;
                 }, function (err) {
