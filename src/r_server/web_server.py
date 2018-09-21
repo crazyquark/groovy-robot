@@ -121,6 +121,7 @@ async def halt(_):
     '''
         Stop web server
     '''
+    app.mic.close()
     app.robot.halt()
     app.camera.halt()
     app.ps3controller.halt()
