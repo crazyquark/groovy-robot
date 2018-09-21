@@ -1,3 +1,8 @@
 #!/bin/bash
 PID=`cat server.pid`
-kill -9 $PID
+
+`wget http://localhost:8080/halt`
+sleep 2
+
+kill -9  $PID
+
