@@ -7,8 +7,9 @@ from threading import Thread
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 48000
-CHUNK = 4096
-MAX_FRAMES = 5 * CHUNK
+CHUNK = 1024
+MAX_SECONDS = 2
+MAX_FRAMES = RATE / MAX_SECONDS * CHUNK
 
 
 class MicCapture:
@@ -29,12 +30,12 @@ class MicCapture:
         self.frames.append(in_data)
 
         if len(self.frames) > MAX_FRAMES:
-            print('Dropping audio data')
-            self.frames = self.frames[MAX_FRAMES:]
-
+            self.frames.clear()
+        
         return (in_data, pyaudio.paContinue)
 
-    def get_data(self):
+    def get_data(self):   
+        # convert current chunk    
         memory_file = BytesIO()
         wave_file = wave.open(memory_file, 'wb')
         wave_file.setnchannels(CHANNELS)
