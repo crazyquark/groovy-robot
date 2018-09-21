@@ -8,9 +8,8 @@ FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 48000
 CHUNK = 1024
-MAX_SECONDS = 2
+MAX_SECONDS = 10
 MAX_FRAMES = RATE / MAX_SECONDS * CHUNK
-
 
 class MicCapture:
     ''' Captures mic input as audio chunks '''
