@@ -24,22 +24,20 @@ function webAudioTouchUnlock(context) {
 }
 
 function joysticks() {
-    let main = document.getElementById('main');
-    let joystick = nipplejs.create(
-        {
-            zone: main
-        }
-    );
-    
+    let camera = document.getElementById('camera');
+    let joystick = nipplejs.create({
+        zone: camera
+    });
+
     let sendKey = window.sendKey;
     if (sendKey === undefined) {
         return;
     }
-    
+
     let key = null;
     joystick.on('dir', (event, data) => {
         let dir = data.direction;
-        switch(dir.angle) {
+        switch (dir.angle) {
             case 'up':
                 key = 'w';
                 break;
@@ -65,6 +63,22 @@ function joysticks() {
         if (key !== null) {
             sendKey(key.toUpperCase());
         }
+    });
+
+    let camPlusButton = document.getElementById('cam+');
+    let camMinusButton = document.getElementById('cam-');
+    camPlusButton.addEventListener('mousedown', () => {
+        sendKey('q');
+    });
+    camPlusButton.addEventListener('mouseup', () => {
+        sendKey('Q');
+    });
+
+    camMinusButton.addEventListener('mousedown', () => {
+        sendKey('e');
+    });
+    camMinusButton.addEventListener('mouseup', () => {
+        sendKey('E');
     });
 }
 
