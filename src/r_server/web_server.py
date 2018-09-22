@@ -127,7 +127,7 @@ async def halt(_):
     app.ps3controller.halt()
     app.display.halt()
 
-    app.stop()
+    return app.stop()
 
 if __name__ == "__main__":
     # Setup aux objects and store them on our app for namespace cleanness

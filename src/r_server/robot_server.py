@@ -5,6 +5,9 @@ import platform
 import traceback
 from threading import Thread, Lock
 from time import sleep
+import os
+
+import RPi.GPIO as GPIO
 
 from motors.adafruit_motors import AdafruitMotors
 from motors.stepper_motor import StepperMotor
@@ -52,6 +55,8 @@ class RobotServer(Thread):
 
         print('We are running on: ', arch)
 
+        self.setupBatterySafeStop()
+
         # Camera control
         self.camera_state = 0
 
@@ -65,6 +70,17 @@ class RobotServer(Thread):
         self.manual_mode_right_power = 0
         self.running = True
         self.start()
+
+    def setupBatterySafeStop(self):
+        def shutdown():
+            print('Low battery detected, shutting down now!')
+            self.halt()
+            os.system('sudo shutdown -s now')
+
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(16, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+        GPIO.add_event_detect(16, GPIO.FALLING)
+        GPIO.add_event_callback(16, shutdown)
 
     def tilt_camera(self, dir):
         self.camera_state = dir

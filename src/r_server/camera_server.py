@@ -74,9 +74,9 @@ class CameraServer(Thread):
         '''
         data = np.fromstring(frame, dtype=np.uint8)
         image = cv2.imdecode(data, cv2.IMREAD_COLOR)
-        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        # gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-        result = cv2.imencode('.jpg', gray)
+        result = cv2.imencode('.jpg', image)
         data = np.array(result[1], dtype=np.uint8).tostring()
 
         return data
