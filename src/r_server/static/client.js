@@ -23,6 +23,51 @@ function webAudioTouchUnlock(context) {
     });
 }
 
+function joysticks() {
+    let main = document.getElementById('main');
+    let joystick = nipplejs.create(
+        {
+            zone: main
+        }
+    );
+    
+    let sendKey = window.sendKey;
+    if (sendKey === undefined) {
+        return;
+    }
+    
+    let key = null;
+    joystick.on('dir', (event, data) => {
+        let dir = data.direction;
+        switch(dir.angle) {
+            case 'up':
+                key = 'w';
+                break;
+            case 'down':
+                key = 's';
+                break;
+            case 'left':
+                key = 'a';
+                break;
+            case 'right':
+                key = 'd';
+                break;
+            default:
+                key = null;
+        }
+
+        if (key !== null) {
+            sendKey(key);
+        }
+    });
+
+    joystick.on('end', (event, data) => {
+        if (key !== null) {
+            sendKey(key.toUpperCase());
+        }
+    });
+}
+
 function connect(host) {
     var ws = new WebSocket('ws://' + host + '/ws');
     ws.onopen = () => {
@@ -59,6 +104,8 @@ function connect(host) {
             ws.send(keyName);
         }
     };
+
+    window.sendKey = sendKey;
 
     var keydownHandler = (event) => {
         // Ignore repeated events FFS
@@ -115,7 +162,7 @@ function connect(host) {
 
                     nextTime += buffer.duration;
                 }, function (err) {
-                    console.log(err);
+                    // console.log(err);
                 });
 
                 mic_ws.send('1');

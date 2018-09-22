@@ -8,9 +8,11 @@
     <script src="http://{{host}}/static/jquery/jquery-3.3.1.min.js"></script>
     <script src="http://{{host}}/static/popper/popper.min.js"></script>
     <script src="http://{{host}}/static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="http://{{host}}/static/nipplejs/nipplejs.min.js"></script>
+
+    <script src="http://{{host}}/static/client.js"></script>
 
     <link rel="stylesheet" href="http://{{host}}/static/style.css"> 
-    <script src="http://{{host}}/static/client.js"></script>
     
     <script type="text/javascript">
         connect('{{host}}');
@@ -21,5 +23,8 @@
             <img id="cam" src=""/><br>
         </center>
     </div>
+    <script type="text/javascript">
+            joysticks();
+    </script>
 </body>
 </html>
