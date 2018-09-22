@@ -72,13 +72,19 @@ class RobotServer(Thread):
         self.start()
 
     def setupBatterySafeStop(self):
-        def shutdown():
+        def shutdown(_):
             print('Low battery detected, shutting down now!')
             self.halt()
-            os.system('sudo shutdown -s now')
+            os.system('sudo shutdown -h now')
 
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(16, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+
+        status = GPIO.input(16)
+        if (status == 0):
+            # we are running in battery free mode
+            return
+
         GPIO.add_event_detect(16, GPIO.FALLING)
         GPIO.add_event_callback(16, shutdown)
 
