@@ -28,20 +28,12 @@ class CameraServer(Thread):
         self.camera = None
 
         if RUNNING_ON_PI:
-            # Camera setup
-            self.camera = picamera.PiCamera()
-
             # Create stream
-            self.stream = PiRGBArray(self.camera)
+            self.stream = cv2.VideoCapture(0)
 
-            # Let camera warm up (??)
-            self.camera.start_preview()
-            time.sleep(2)
-
-            self.camera.resolution = (800, 600)
-            self.camera.framerate = 25
-            self.camera.hflip = True
-            self.camera.vflip = True
+            # self.stream.set(cv2.CAP_PROP_FPS, 25)
+            # self.stream.set(cv2.CAP_PROP_FRAME_WIDTH, 800)
+            # self.stream.set(cv2.CAP_PROP_FRAME_HEIGHT, 600)
 
         self.fps = 0
         self.frame = None
@@ -75,10 +67,10 @@ class CameraServer(Thread):
             return
 
         prev_time = 0
-        for frame in self.camera.capture_continuous(self.stream, format='bgr', use_video_port=True):
-            # Stop thread
-            if not self.running:
-                return
+        while self.running:
+            (grabbed, frame) = self.stream.read()
+            if not grabbed:
+                continue
 
             current_time = time.time()
             if prev_time != 0:
@@ -88,15 +80,12 @@ class CameraServer(Thread):
 
             # Process frame
             self.frame = self.process_frame(frame, False)
-            
-            # reset stream for next frame
-            self.stream.truncate(0)
 
     def process_frame(self, frame, detect):
         '''
             Process frame with OpenCV
         '''
-        image = frame.array
+        image = cv2.flip(frame, -1)
 
         if detect:
             # MobileNet requires fixed dimensions for input image(s)
@@ -180,6 +169,5 @@ class CameraServer(Thread):
             Stop server thread
         '''
         self.running = False
-        if self.camera:
-            self.camera.close()
-            self.stream.close()
+        if self.stream:
+            self.stream.release()
