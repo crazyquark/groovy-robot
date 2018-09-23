@@ -34,9 +34,10 @@ function joysticks() {
         return;
     }
 
-    let key = null;
+    let pressed_keys = [];
     joystick.on('dir', (event, data) => {
         let dir = data.direction;
+        let key = null;
         switch (dir.angle) {
             case 'up':
                 key = 'w';
@@ -56,13 +57,16 @@ function joysticks() {
 
         if (key !== null) {
             sendKey(key);
+            pressed_keys.push(key);
         }
     });
 
-    joystick.on('end', (event, data) => {
-        if (key !== null) {
+    joystick.on('end', () => {
+        for (let key of pressed_keys) {
             sendKey(key.toUpperCase());
         }
+
+        pressed_keys = [];
     });
 
     let camPlusButton = document.getElementById('cam+');
