@@ -28,7 +28,7 @@ env = Environment(loader=PackageLoader('r_server', 'templates')
 
 from ptvsd import enable_attach, wait_for_attach
 enable_attach(redirect_output=True)
-wait_for_attach()
+# wait_for_attach()
 
 @app.websocket('/ws')
 async def websocket(_, socket):
