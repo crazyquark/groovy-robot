@@ -96,6 +96,34 @@ function init_ui() {
     camMinusButton.addEventListener('touchended', () => {
         sendKey('Q');
     });
+
+    let spdPlusButton = document.getElementById('spd+');
+    let spdMinusButton = document.getElementById('spd-');
+    spdPlusButton.addEventListener('mousedown', () => {
+        sendKey('x');
+    });
+    spdPlusButton.addEventListener('touchstart', () => {
+        sendKey('x');
+    });
+    camPlusButton.addEventListener('mouseup', () => {
+        sendKey('X');
+    });
+    camPlusButton.addEventListener('touchended', () => {
+        sendKey('X');
+    });
+
+    spdMinusButton.addEventListener('mousedown', () => {
+        sendKey('z');
+    });
+    spdMinusButton.addEventListener('touchstart', () => {
+        sendKey('z');
+    });
+    spdMinusButton.addEventListener('mouseup', () => {
+        sendKey('Z');
+    });
+    spdMinusButton.addEventListener('touchended', () => {
+        sendKey('Z');
+    });
 }
 
 function connect(host) {
