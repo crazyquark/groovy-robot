@@ -54,7 +54,7 @@ class CameraServer(Thread):
         '''
         if not hasattr(self, 'frame'):
             with open('./r_server/static/wall-e-800.jpg', 'rb') as image:
-                self.frame = image.read()
+                return image.read()
 
     def load_model(self):
         # based on: https://github.com/djmv/MobilNet_SSD_opencv
@@ -79,7 +79,7 @@ class CameraServer(Thread):
                 return
 
             # Store frame
-            self.frame = frame
+            self.frame = self.process_frame(frame)
 
             # reset stream for next frame
             self.stream.truncate(0)
@@ -158,7 +158,10 @@ class CameraServer(Thread):
         '''
             Get current camera frame
         '''
-        return self.process_frame(self.frame)
+        if self.frame:
+            return self.frame
+        else:
+            return self.dummy_frame()
 
     def halt(self):
         '''
