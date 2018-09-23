@@ -72,17 +72,29 @@ function joysticks() {
     let camPlusButton = document.getElementById('cam+');
     let camMinusButton = document.getElementById('cam-');
     camPlusButton.addEventListener('mousedown', () => {
-        sendKey('q');
+        sendKey('e');
+    });
+    camPlusButton.addEventListener('touchstart', () => {
+        sendKey('e');
     });
     camPlusButton.addEventListener('mouseup', () => {
-        sendKey('Q');
+        sendKey('E');
+    });
+    camPlusButton.addEventListener('touchended', () => {
+        sendKey('E');
     });
 
     camMinusButton.addEventListener('mousedown', () => {
-        sendKey('e');
+        sendKey('q');
+    });
+    camMinusButton.addEventListener('touchstart', () => {
+        sendKey('q');
     });
     camMinusButton.addEventListener('mouseup', () => {
-        sendKey('E');
+        sendKey('Q');
+    });
+    camMinusButton.addEventListener('touchended', () => {
+        sendKey('Q');
     });
 }
 
