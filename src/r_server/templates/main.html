@@ -4,8 +4,9 @@
 <head>
     <title>Groovy Robot</title>
 
-    <!-- Bootstrap! -->
     <link rel="stylesheet" href="http://{{host}}/static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://{{host}}/static/style.css">
+
     <script src="http://{{host}}/static/jquery/jquery-3.3.1.min.js"></script>
     <script src="http://{{host}}/static/popper/popper.min.js"></script>
     <script src="http://{{host}}/static/bootstrap/js/bootstrap.min.js"></script>
@@ -13,7 +14,6 @@
 
     <script src="http://{{host}}/static/client.js"></script>
 
-    <link rel="stylesheet" href="http://{{host}}/static/style.css">
 
     <script type="text/javascript">
         connect('{{host}}');
@@ -30,7 +30,7 @@
         <button type="button" class="btn btn-primary" id="cam-">Camera -</button>
     </div>
     <script type="text/javascript">
-        joysticks();
+        init_ui();
     </script>
 </body>
 

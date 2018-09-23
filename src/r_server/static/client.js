@@ -23,7 +23,7 @@ function webAudioTouchUnlock(context) {
     });
 }
 
-function joysticks() {
+function init_ui() {
     let camera = document.getElementById('camera');
     let joystick = nipplejs.create({
         zone: camera
