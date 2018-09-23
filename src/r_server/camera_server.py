@@ -43,8 +43,8 @@ class CameraServer(Thread):
             self.camera.hflip = True
             self.camera.vflip = True
 
+        self.fps = 0
         self.frame = None
-        self.dummy_frame()
 
         self.load_model()
 
@@ -52,11 +52,10 @@ class CameraServer(Thread):
 
     def dummy_frame(self):
         '''
-            If not on RPi return a dummy frame
+            Filler frame
         '''
-        if not hasattr(self, 'frame'):
-            with open('r_server/static/wall-e-800.jpg', 'rb') as image:
-                return image.read()
+        with open('r_server/static/wall-e-800.jpg', 'rb') as image:
+            return image.read()
 
     def load_model(self):
         # based on: https://github.com/djmv/MobilNet_SSD_opencv
@@ -75,18 +74,20 @@ class CameraServer(Thread):
         if not RUNNING_ON_PI:
             return
 
-        frame_counter = 0
+        prev_time = 0
         for frame in self.camera.capture_continuous(self.stream, format='bgr', use_video_port=True):
             # Stop thread
             if not self.running:
                 return
 
-            # Process frame
-            self.frame = self.process_frame(frame, True)
-            frame_counter += 1
+            current_time = time.time()
+            if prev_time != 0:
+                delta = current_time - prev_time
+                self.fps = round(1/delta, 2)
+            prev_time = current_time
 
-            if frame_counter >= 30:
-                frame_counter = 0
+            # Process frame
+            self.frame = self.process_frame(frame, False)
             
             # reset stream for next frame
             self.stream.truncate(0)
@@ -156,6 +157,9 @@ class CameraServer(Thread):
                                             (255, 255, 255), cv2.FILLED)
                         cv2.putText(image, label, (xLeftBottom, yLeftBottom),
                                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0))
+        
+        # print FPS on image
+        cv2.putText(image, str(self.fps), (0, 12), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0))
 
         result = cv2.imencode('.jpg', image)
         data = np.array(result[1], dtype=np.uint8).tostring()
