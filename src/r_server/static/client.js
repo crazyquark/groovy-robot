@@ -106,14 +106,14 @@ function connect(host) {
     };
 
     ws.onmessage = (event) => {
-        let msg = event.data
+        let msg = event.data;
         document.getElementById('cam')
             .setAttribute('src', 'data:image/jpg;base64,' + msg);
         ws.send('1');
     };
 
     ws.onclose = () => {
-        console.log('server connection lost')
+        console.log('server connection lost');
 
         document.removeEventListener('keydown', keydownHandler, false);
         document.removeEventListener('keyup', keyupHandler, false);
@@ -192,7 +192,7 @@ function connect(host) {
 
                     nextTime += buffer.duration;
                 }, function (err) {
-                    // console.log(err);
+                    console.log(err);
                 });
 
                 mic_ws.send('1');
