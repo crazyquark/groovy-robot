@@ -1,11 +1,12 @@
 try:
     import picamera
+    from picamera.array import PiRGBArray
     RUNNING_ON_PI = True
 except ImportError:
     RUNNING_ON_PI = False
 
 from threading import Thread
-import time, io
+import time
 import cv2
 import numpy as np
 
@@ -23,11 +24,12 @@ class CameraServer(Thread):
         self.camera = None
 
         if RUNNING_ON_PI:
-            # Create stream
-            self.stream = io.BytesIO()
-
             # Camera setup
             self.camera = picamera.PiCamera()
+
+            # Create stream
+            self.stream = PiRGBArray(self.camera)
+
 
             # Let camera warm up (??)
             self.camera.start_preview()
@@ -41,6 +43,8 @@ class CameraServer(Thread):
         self.frame = None
         self.dummy_frame()
 
+        self.load_model()
+
         self.start()
 
     def dummy_frame(self):
@@ -51,30 +55,57 @@ class CameraServer(Thread):
             with open('./r_server/static/wall-e-800.jpg', 'rb') as image:
                 self.frame = image.read()
 
+    def load_model(self):
+        # based on: https://github.com/djmv/MobilNet_SSD_opencv
+        # MIT License
+        self.cv_classnames = {0: 'background',
+                             1: 'aeroplane', 2: 'bicycle', 3: 'bird', 4: 'boat',
+                             5: 'bottle', 6: 'bus', 7: 'car', 8: 'cat', 9: 'chair',
+                             10: 'cow', 11: 'diningtable', 12: 'dog', 13: 'horse',
+                             14: 'motorbike', 15: 'person', 16: 'pottedplant',
+                             17: 'sheep', 18: 'sofa', 19: 'train', 20: 'tvmonitor'}
+
+        self.net = cv2.dnn.readNetFromCaffe(
+            'cv/MobileNetSSD_deploy.prototxt', 'cv/MobileNetSSD_deploy.caffemodel')
+    
     def run(self):
         if not RUNNING_ON_PI:
             return
 
-        for _ in self.camera.capture_continuous(self.stream, 'jpeg', use_video_port=True):
+        for frame in self.camera.capture_continuous(self.stream, format='bgr', use_video_port=True):
             # Stop thread
             if not self.running:
                 return
 
             # Store frame
-            self.stream.seek(0)
-            self.frame = self.stream.read()
+            self.frame = frame
 
             # reset stream for next frame
-            self.stream.seek(0)
-            self.stream.truncate()
+            self.stream.truncate(0)
 
-    def to_grayscale(self, frame):
+    def process_frame(self, frame):
         '''
-            IMG to grayscale as numpy array
+            Process frame with OpenCV
         '''
-        data = np.fromstring(frame, dtype=np.uint8)
-        image = cv2.imdecode(data, cv2.IMREAD_COLOR)
-        # gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        image = frame.array
+        
+        # MobileNet requires fixed dimensions for input image(s)
+        # so we have to ensure that it is resized to 300x300 pixels.
+        # set a scale factor to image because network the objects has differents size. 
+        # We perform a mean subtraction (127.5, 127.5, 127.5) to normalize the input;
+        # after executing this command our "blob" now has the shape:
+        # (1, 3, 300, 300)
+        frame_resized = cv2.resize(image,(300,300))
+
+        blob = cv2.dnn.blobFromImage(frame_resized, 0.007843, (300, 300), (127.5, 127.5, 127.5), False)
+        #Set to network the input blob 
+        self.net.setInput(blob)
+        #Prediction of network
+        detections = self.net.forward()
+
+        #Size of frame resize (300x300)
+        cols = frame_resized.shape[1] 
+        rows = frame_resized.shape[0]
 
         result = cv2.imencode('.jpg', image)
         data = np.array(result[1], dtype=np.uint8).tostring()
@@ -85,7 +116,7 @@ class CameraServer(Thread):
         '''
             Get current camera frame
         '''
-        return self.to_grayscale(self.frame)
+        return self.process_frame(self.frame)
 
     def halt(self):
         '''
