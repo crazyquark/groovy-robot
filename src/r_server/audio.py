@@ -9,7 +9,7 @@ CHANNELS = 1
 RATE = 48000
 CHUNK = 1024
 MAX_SECONDS = 2
-MAX_FRAMES = int(RATE / MAX_SECONDS * CHUNK)
+MAX_FRAMES = 5
 
 class MicCapture:
     ''' Captures mic input as audio chunks '''
