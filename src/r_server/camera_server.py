@@ -38,7 +38,7 @@ class CameraServer(Thread):
         self.fps = 0
         self.frame = None
 
-        self.load_model()
+        # self.load_model()
 
         self.start()
 
@@ -68,9 +68,6 @@ class CameraServer(Thread):
 
     def run(self):
         if not RUNNING_ON_PI:
-            return
-
-        if not self.stream.isOpened():
             return
 
         prev_time = 0
