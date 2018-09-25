@@ -9,7 +9,7 @@ CHANNELS = 1
 RATE = 48000
 CHUNK = 1024
 MAX_SECONDS = 2
-MAX_FRAMES = 5
+MAX_FRAMES = 3
 
 class MicCapture:
     ''' Captures mic input as audio chunks '''
@@ -44,7 +44,7 @@ class MicCapture:
         wave_file.setnchannels(CHANNELS)
         wave_file.setsampwidth(self.audio.get_sample_size(FORMAT))
         wave_file.setframerate(RATE)
-        wave_file.writeframes(b''.join(self.frames[2:]))
+        wave_file.writeframes(b''.join(self.frames[1:]))
         wave_file.close()
 
         memory_file.seek(0)
