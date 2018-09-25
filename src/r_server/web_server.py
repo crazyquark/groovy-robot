@@ -97,6 +97,11 @@ async def mic_websocket(_, socket):
             break
 
         audio_chunk = app.mic.get_data()
+        
+        # Data is not yet available
+        if not audio_chunk:
+            continue
+
         try:
             await socket.send(audio_chunk)
         except (ConnectionClosed, RequestTimeout):

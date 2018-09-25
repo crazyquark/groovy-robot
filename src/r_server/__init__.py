@@ -1,4 +1,4 @@
 '''
 	Robot Server components
 '''
-print('Server module laoded')
+print('Server module loaded')

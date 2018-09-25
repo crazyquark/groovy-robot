@@ -2,14 +2,14 @@ import pyaudio
 import wave
 import time
 from io import BytesIO
+from collections import deque
 from threading import Thread
 
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 48000
 CHUNK = 1024
-MAX_SECONDS = 2
-MAX_FRAMES = 3
+MAX_FRAMES = 5
 
 class MicCapture:
     ''' Captures mic input as audio chunks '''
@@ -21,30 +21,26 @@ class MicCapture:
                                       input_device_index=2,
                                       frames_per_buffer=CHUNK, stream_callback=self.stream_callback)
 
-        self.frames = []
+        self.frames = deque([], MAX_FRAMES)
         self.stream.start_stream()
 
     def stream_callback(self, in_data, frame_count, time_info, status):
         ''' Get an audio chunk from internal stream '''
         self.frames.append(in_data)
 
-        if len(self.frames) == MAX_FRAMES + 1:
-            # drop oldest frame
-            self.frames = self.frames[1:]
-        
         return (in_data, pyaudio.paContinue)
 
-    def get_data(self):   
-        if len(self.frames) < MAX_FRAMES:
-            return b''
-
+    def get_data(self):
+        if len(self.frames) == 0:
+            return
+        
         # convert current chunk    
         memory_file = BytesIO()
         wave_file = wave.open(memory_file, 'wb')
         wave_file.setnchannels(CHANNELS)
         wave_file.setsampwidth(self.audio.get_sample_size(FORMAT))
         wave_file.setframerate(RATE)
-        wave_file.writeframes(b''.join(self.frames[1:]))
+        wave_file.writeframes(self.frames.pop())
         wave_file.close()
 
         memory_file.seek(0)
