@@ -28,27 +28,28 @@ class MicCapture:
         ''' Get an audio chunk from internal stream '''
         self.frames.append(in_data)
 
-        if len(self.frames) > MAX_FRAMES:
-            self.frames.clear()
+        if len(self.frames) == MAX_FRAMES + 1:
+            # drop oldest frame
+            self.frames = self.frames[1:]
         
         return (in_data, pyaudio.paContinue)
 
     def get_data(self):   
+        if len(self.frames) < MAX_FRAMES:
+            return b''
+
         # convert current chunk    
         memory_file = BytesIO()
         wave_file = wave.open(memory_file, 'wb')
         wave_file.setnchannels(CHANNELS)
         wave_file.setsampwidth(self.audio.get_sample_size(FORMAT))
         wave_file.setframerate(RATE)
-        wave_file.writeframes(b''.join(self.frames))
+        wave_file.writeframes(b''.join(self.frames[2:]))
         wave_file.close()
 
         memory_file.seek(0)
         data = memory_file.read()
         memory_file.close()
-
-        # purge read frames
-        self.frames.clear()
         
         return data
 
