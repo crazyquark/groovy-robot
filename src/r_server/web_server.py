@@ -2,6 +2,7 @@
     Server implementation using sanic in python3 for speed
 '''
 from base64 import b64encode
+from asyncio import sleep
 
 from sanic import Sanic
 from sanic.response import html
@@ -27,7 +28,7 @@ env = Environment(loader=PackageLoader('r_server', 'templates')
                   )  # pylint: disable=invalid-name
 
 from ptvsd import enable_attach, wait_for_attach
-enable_attach(redirect_output=True)
+# enable_attach(redirect_output=True)
 # wait_for_attach()
 
 @app.websocket('/ws')
@@ -97,10 +98,6 @@ async def mic_websocket(_, socket):
             break
 
         audio_chunk = app.mic.get_data()
-        
-        # Data is not yet available
-        if not audio_chunk:
-            continue
 
         try:
             await socket.send(audio_chunk)
