@@ -7,7 +7,7 @@ from threading import Thread
 
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
-RATE = 48000
+RATE = 44100
 CHUNK = 1024
 MAX_FRAMES = 5
 
@@ -18,7 +18,6 @@ class MicCapture:
         self.audio = pyaudio.PyAudio()
         self.stream = self.audio.open(format=FORMAT, channels=CHANNELS,
                                       rate=RATE, input=True,
-                                      input_device_index=2,
                                       frames_per_buffer=CHUNK, stream_callback=self.stream_callback)
 
         self.frames = deque([], MAX_FRAMES)
