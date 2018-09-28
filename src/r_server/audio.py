@@ -25,8 +25,8 @@ class MicCapture:
         ''' Get an audio chunk from internal stream '''
         self.frames.append(in_data)
 
-        if len(self.frames) > MAX_FRAMES:
-            self.frames = self.frames[1:]
+        # if len(self.frames) > MAX_FRAMES:
+        #     self.frames = self.frames[1:]
 
         return (in_data, pyaudio.paContinue)
 

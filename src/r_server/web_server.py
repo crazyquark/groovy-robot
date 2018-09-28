@@ -16,8 +16,6 @@ from .camera_server import CameraServer
 # from .keyboard_controller import KeyboardController
 from .ps3_controller import PS3Controller
 from .display import PiDisplay
-
-import pyximport; pyximport.install()
 from .audio import MicCapture
 
 app = Sanic()  # pylint: disable=invalid-name
@@ -99,12 +97,12 @@ async def mic_websocket(_, socket):
         except (ConnectionClosed, RequestTimeout):
             break
 
-        audio_chunk = app.mic.get_data()
+        # audio_chunk = app.mic.get_data()
 
-        try:
-            await socket.send(audio_chunk)
-        except (ConnectionClosed, RequestTimeout):
-            break
+        # try:
+        #     await socket.send(audio_chunk)
+        # except (ConnectionClosed, RequestTimeout):
+        #     break
 
 @app.route('/')
 async def index(request):
