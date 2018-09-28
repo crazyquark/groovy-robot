@@ -16,7 +16,8 @@ from .camera_server import CameraServer
 # from .keyboard_controller import KeyboardController
 from .ps3_controller import PS3Controller
 from .display import PiDisplay
-from .audio import MicCapture
+from .audio_process import AudioProcess
+from .mic_capture import MicCapture
 
 app = Sanic()  # pylint: disable=invalid-name
 
@@ -28,7 +29,7 @@ env = Environment(loader=PackageLoader('r_server', 'templates')
                   )  # pylint: disable=invalid-name
 
 from ptvsd import enable_attach, wait_for_attach
-# enable_attach(redirect_output=True)
+enable_attach(redirect_output=True)
 # wait_for_attach()
 
 @app.websocket('/ws')
@@ -97,12 +98,13 @@ async def mic_websocket(_, socket):
         except (ConnectionClosed, RequestTimeout):
             break
 
-        # audio_chunk = app.mic.get_data()
+        audio_chunk = app.mic_queue.get()
+        wave = MicCapture.encode_data(audio_chunk)
 
-        # try:
-        #     await socket.send(audio_chunk)
-        # except (ConnectionClosed, RequestTimeout):
-        #     break
+        try:
+            await socket.send(wave)
+        except (ConnectionClosed, RequestTimeout):
+            break
 
 @app.route('/')
 async def index(request):
@@ -124,7 +126,8 @@ async def halt(_):
     '''
         Stop web server
     '''
-    app.mic.close()
+    AudioProcess.stop_capture()
+
     app.robot.halt()
     app.camera.halt()
     app.ps3controller.halt()
@@ -140,6 +143,6 @@ if __name__ == "__main__":
     app.ps3controller = PS3Controller(app.robot)
     app.display = PiDisplay()
 
-    app.mic = MicCapture()
+    app.mic_queue = AudioProcess.start_capture()
 
     app.run(host="0.0.0.0", port=8080)

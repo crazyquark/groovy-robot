@@ -4,6 +4,7 @@ import time
 from io import BytesIO
 
 FORMAT = pyaudio.paInt16
+SAMPLEWIDTH = 2 # int16
 CHANNELS = 1
 RATE = 44100
 CHUNK = 2048
@@ -25,27 +26,23 @@ class MicCapture:
         ''' Get an audio chunk from internal stream '''
         self.frames.append(in_data)
 
-        # if len(self.frames) > MAX_FRAMES:
-        #     self.frames = self.frames[1:]
-
         return (in_data, pyaudio.paContinue)
 
-    def get_data(self):
+    @staticmethod
+    def encode_data(raw_data):
         # convert current chunk    
         memory_file = BytesIO()
         wave_file = wave.open(memory_file, 'wb')
         wave_file.setnchannels(CHANNELS)
-        wave_file.setsampwidth(self.audio.get_sample_size(FORMAT))
+        wave_file.setsampwidth(SAMPLEWIDTH)
         wave_file.setframerate(RATE)
-        wave_file.writeframes(b''.join(self.frames))
+        wave_file.writeframes(raw_data)
         wave_file.close()
 
         memory_file.seek(0)
         data = memory_file.read()
         memory_file.close()
 
-        self.frames.clear()
-        
         return data
 
 
