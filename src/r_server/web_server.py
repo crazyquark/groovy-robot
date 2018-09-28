@@ -16,6 +16,8 @@ from .camera_server import CameraServer
 # from .keyboard_controller import KeyboardController
 from .ps3_controller import PS3Controller
 from .display import PiDisplay
+
+import pyximport; pyximport.install()
 from .audio import MicCapture
 
 app = Sanic()  # pylint: disable=invalid-name
