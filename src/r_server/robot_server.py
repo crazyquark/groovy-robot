@@ -73,7 +73,8 @@ class RobotServer(Thread):
 
     def setupBatterySafeStop(self):
         def shutdown(_):
-            print('Low battery detected, shutting down now!')
+            pass
+	    #print('Low battery detected, shutting down now!')
             #self.halt()
             #os.system('sudo shutdown -h now')
 
@@ -115,7 +116,7 @@ class RobotServer(Thread):
                     self.camera_stepper.step(self.camera_state)
                 else:
                     self.camera_stepper.stop()
-                
+
                 # DC motors control
                 if self.manual:
                     self.motors.control_motors(

@@ -145,4 +145,4 @@ if __name__ == "__main__":
 
     app.mic_queue = AudioProcess.start_capture()
 
-    app.run(host="0.0.0.0", port=8080)
+    app.run(host="0.0.0.0", port=8080, workers=1)
