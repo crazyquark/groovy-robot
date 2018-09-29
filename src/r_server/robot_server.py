@@ -188,8 +188,6 @@ class RobotServer(Thread):
         '''
             Move robot
         '''
-        print('MOVE: ', direction)
-
         if not self.running_on_pi:
             return
 
@@ -199,8 +197,6 @@ class RobotServer(Thread):
         '''
             Full stop
         '''
-        print('STOP: ', direction)
-
         if not self.running_on_pi:
             return
 
