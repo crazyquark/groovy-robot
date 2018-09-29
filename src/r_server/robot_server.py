@@ -91,7 +91,6 @@ class RobotServer(Thread):
 
     def tilt_camera(self, dir):
         self.camera_state = dir
-        print(self.camera_state)
 
     def no_key_pressed(self):
         '''
