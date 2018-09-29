@@ -116,22 +116,22 @@ class PS3Controller(Thread):
             as digital inputs
         '''
         if event.type == 1: # key press
-            if event.code == 297:
+            if event.code == SixAxisButtonCodes.R2:
                 if event.value == 1:
                     self.robot.move(Directions.Forward)
                 else:
                     self.robot.stop(Directions.Forward)
-            elif event.code == 296:
+            elif event.code == SixAxisButtonCodes.L2:
                 if event.value == 1:
                     self.robot.move(Directions.Back)
                 else:
                     self.robot.stop(Directions.Back)
-            elif event.code == 298:
+            elif event.code == SixAxisButtonCodes.L1:
                 if event.value == 1:
                     self.robot.move(Directions.Left)
                 else:
                     self.robot.stop(Directions.Left)
-            elif event.code == 299:
+            elif event.code == SixAxisButtonCodes.R1:
                 if event.value == 1:
                     self.robot.move(Directions.Right)
                 else:
