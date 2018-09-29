@@ -139,12 +139,12 @@ class PS3Controller(Thread):
             elif event.code == SixAxisButtonCodes.R3:
                 if event.value == 1:
                     self.robot.tilt_camera(CameraMovement.Up)
-                else
+                else:
                     self.robot.tilt_camera(CameraMovement.Idle)
             elif event.code == SixAxisButtonCodes.L3:
                 if event.value == 1:
                     self.robot.tilt_camera(CameraMovement.Up)
-                else
+                else:
                     self.robot.tilt_camera(CameraMovement.Idle)
 
     def halt(self):
