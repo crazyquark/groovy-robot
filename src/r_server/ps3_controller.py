@@ -1,5 +1,5 @@
 from threading import Thread
-from .robot_server import Directions, Throttle
+from .robot_server import Directions, Throttle, CameraMovement
 
 try:
     import evdev
@@ -143,7 +143,7 @@ class PS3Controller(Thread):
                     self.robot.tilt_camera(CameraMovement.Idle)
             elif event.code == SixAxisButtonCodes.L3:
                 if event.value == 1:
-                    self.robot.tilt_camera(CameraMovement.Up)
+                    self.robot.tilt_camera(CameraMovement.Down)
                 else:
                     self.robot.tilt_camera(CameraMovement.Idle)
 
