@@ -8,12 +8,6 @@ except ImportError:
     print('evdev is not available')
     EVDEV_AVAILABLE = False
 
-class ControlScheme(object):
-    '''
-        Simple enumeration of the available control schemes
-    '''
-    SimpleMode, GameMode, TankMode, NumSchemes = range(4)
-
 class PS3Controller(Thread):
     '''
         Connects to any available PS3 controller and reads events
@@ -33,19 +27,11 @@ class PS3Controller(Thread):
         if not self.device:
             print('Failed to detect sixaxis controller!')
 
-        Thread.__init__(self)
-
-        self.control_scheme = ControlScheme.SimpleMode
-
-        # Used for tank mode
-        self.current_direction = Directions.Forward
+        super(PS3Controller, self).__init__()
 
         self.robot = robot
         self.running = True
         self.start()
-
-        self.tank_mode_left_power = 0
-        self.tank_mode_right_power = 0
 
     def run(self):
         if not self.device:
@@ -58,34 +44,11 @@ class PS3Controller(Thread):
 
             self.process_event(event)
 
-    def switch_scheme(self):
-        '''
-            Changes control scheme
-        '''
-        self.control_scheme += 1
-        if self.control_scheme == ControlScheme.NumSchemes:
-            self.control_scheme = 0
-
-        self.robot.set_speed() # reset speed
-
-        self.robot.manual_mode(self.control_scheme == ControlScheme.TankMode)
-
-        print('Control scheme switched to: ', str(self.control_scheme))
-
     def process_event(self, event):
         '''
             Executs action based on button presses
         '''
-        if event.type == 1 and event.code == 288 and event.value == 1:
-            # Select changes control scheme
-            self.switch_scheme()
-        else:
-            if self.control_scheme == ControlScheme.SimpleMode:
-                self.simple_mode_process(event)
-            elif self.control_scheme == ControlScheme.GameMode:
-                self.game_mode_process(event)
-            elif self.control_scheme == ControlScheme.TankMode:
-                self.tank_mode_process(event)
+        self.simple_mode_process(event)
 
     def tank_mode_process(self, event):
         if event.type == 3:
