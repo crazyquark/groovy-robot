@@ -26,8 +26,6 @@ if device:
     print('Waiting for input')
     for event in device.read_loop():
 	    # Start pressed, yo!
-        if event.type == 3:
-            print(event)
         if event.type == 1 and event.code == 291 and event.value == 1:
             display.append_text('Starting server')
             # Bootstrap our server

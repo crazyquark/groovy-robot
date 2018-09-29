@@ -32,8 +32,8 @@ class CameraServer(Thread):
             self.stream = cv2.VideoCapture(0)
 
             # self.stream.set(cv2.CAP_PROP_FPS, 25)
-            # self.stream.set(cv2.CAP_PROP_FRAME_WIDTH, 480)
-            # self.stream.set(cv2.CAP_PROP_FRAME_HEIGHT, 640)
+            self.stream.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+            self.stream.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
         self.fps = 0
         self.frame = None

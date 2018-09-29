@@ -115,7 +115,6 @@ class PS3Controller(Thread):
             A simplistic control scheme which uses only the shoulder buttons
             as digital inputs
         '''
-        print(event.code)
         if event.type == 1: # key press
             if event.code == 297:
                 if event.value == 1:
