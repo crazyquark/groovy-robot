@@ -8,6 +8,27 @@ except ImportError:
     print('evdev is not available')
     EVDEV_AVAILABLE = False
 
+class SixAxisButtonCodes:
+    '''
+        Enum to map PS3 evdev button codes
+    '''
+    Select = 314
+    Start = 315
+    Cross = 304
+    Circle = 305
+    Triangle = 307
+    Square = 308
+    R1 = 311
+    R2 = 313
+    R3 = 318
+    L1 = 310
+    L2 = 312
+    L3 = 317
+    DPadUp = 544
+    DPadDown = 545
+    DPadLeft = 546
+    DPadRight = 547
+
 class PS3Controller(Thread):
     '''
         Connects to any available PS3 controller and reads events
@@ -94,6 +115,7 @@ class PS3Controller(Thread):
             A simplistic control scheme which uses only the shoulder buttons
             as digital inputs
         '''
+        print(event.code)
         if event.type == 1: # key press
             if event.code == 297:
                 if event.value == 1:
