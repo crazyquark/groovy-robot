@@ -74,7 +74,7 @@ class RobotServer(Thread):
     def setupBatterySafeStop(self):
         def shutdown(_):
             pass
-	    #print('Low battery detected, shutting down now!')
+	        #print('Low battery detected, shutting down now!')
             #self.halt()
             #os.system('sudo shutdown -h now')
 
