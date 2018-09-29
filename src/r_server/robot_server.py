@@ -78,7 +78,7 @@ class RobotServer(Thread):
             os.system('sudo shutdown -h now')
 
         GPIO.setmode(GPIO.BCM)
-        GPIO.setup(16, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+        GPIO.setup(16, GPIO.IN)
 
         status = GPIO.input(16)
         if (status == 0):
