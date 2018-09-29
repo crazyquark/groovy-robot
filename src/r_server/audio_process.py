@@ -17,10 +17,16 @@ class AudioProcess(Process):
                 # Make room in the queue
                 if self.queue.full():
                     while not self.queue.empty():
-                        self.queue.get_nowait()
-
-                self.queue.put_nowait(frame)
-
+                        try:
+                            self.queue.get_nowait()
+                        except:
+                            # empty queue error
+                            break
+                try:
+                    self.queue.put_nowait(frame)
+                except:
+                    # full exception happens because empty and full are unreliable
+                    continue
     @classmethod
     def start_capture(cls):
         # Singleton
