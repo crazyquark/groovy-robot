@@ -98,13 +98,14 @@ async def mic_websocket(_, socket):
         except (ConnectionClosed, RequestTimeout):
             break
 
-        audio_chunk = app.mic_queue.get()
-        wave = MicCapture.encode_data(audio_chunk)
+        if not app.mic_queue.empty():
+            audio_chunk = app.mic_queue.get()
+            wave = MicCapture.encode_data(audio_chunk)
 
-        try:
-            await socket.send(wave)
-        except (ConnectionClosed, RequestTimeout):
-            break
+            try:
+                await socket.send(wave)
+            except (ConnectionClosed, RequestTimeout):
+                break
 
 @app.route('/')
 async def index(request):

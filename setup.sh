@@ -13,6 +13,8 @@ sudo apt install -y python3-evdev
 sudo apt install -y python3-pil
 sudo apt install -y python3-pyaudio
 
+# Also see https://github.com/Arkq/bluez-alsa
+# for configuration
 sudo apt install bluealsa
 
 pushd lib/adafruit_motor_hat
