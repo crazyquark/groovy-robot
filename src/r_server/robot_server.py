@@ -60,7 +60,8 @@ class RobotServer(Thread):
         # Camera control
         self.camera_state = 0
 
-        self.motors = AdafruitMotors()
+        # Adjust for veering left
+        self.motors = AdafruitMotors(right_trim=-10)
         self.camera_stepper = StepperMotor(self.motors)
 
         Thread.__init__(self)

@@ -14,8 +14,8 @@ class AdafruitMotors(Motors):
     '''
     default_speed = 170
 
-    def __init__(self, addr=0x60, left_id=2, right_id=1):
-        Motors.__init__(self)
+    def __init__(self, addr=0x60, left_id=2, right_id=1, left_trim=0, right_trim=0):
+        Motors.__init__(self, left_trim=left_trim, right_trim=right_trim)
 
         # Start at ~60% speed
         self.speed = AdafruitMotors.default_speed
@@ -55,15 +55,15 @@ class AdafruitMotors(Motors):
 
             if self.power_left != power_left or self.speed_changed:
                 # Adjust left motor if we have to
-                self.power_left = power_left
-                self.left_motor.setSpeed(int(float(abs(power_left)) / 100.0 * self.speed))
+                self.power_left = power_left + self.left_trim
+                self.left_motor.setSpeed(int(float(abs(self.power_left)) / 100.0 * self.speed))
                 self.left_motor.run(
                     Adafruit_MotorHAT.FORWARD if power_left >= 0 else Adafruit_MotorHAT.BACKWARD)
 
             if self.power_right != power_right or self.speed_changed:
                 # Same for right motor
-                self.power_right = power_right
-                self.right_motor.setSpeed(int(float(abs(power_right)) / 100.0 * self.speed))
+                self.power_right = power_right + self.right_trim
+                self.right_motor.setSpeed(int(float(abs(self.power_right)) / 100.0 * self.speed))
                 self.right_motor.run(
                     Adafruit_MotorHAT.FORWARD if power_right >= 0 else Adafruit_MotorHAT.BACKWARD)
 
