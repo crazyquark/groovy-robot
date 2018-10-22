@@ -53,17 +53,21 @@ class PS3Controller(Thread):
         self.start()
 
     def detect_controller(self):
-        devices = [evdev.InputDevice(fn) for fn in evdev.list_devices()]
-        for dev in devices:
-            if dev.name == 'Sony Computer Entertainment Wireless Controller':
-                self.device = dev
-                break
+        try:
+            devices = [evdev.InputDevice(fn) for fn in evdev.list_devices()]
+            for dev in devices:
+                if dev.name == 'Sony Computer Entertainment Wireless Controller':
+                    self.device = dev
+                    break
+        except:
+            return
 
     def run(self):
         while not self.device:
             self.detect_controller()
             sleep(5)
-
+        
+        print('Controller connected')
         for event in self.device.read_loop():
             if not self.running:
                 return
