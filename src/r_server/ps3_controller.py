@@ -1,4 +1,5 @@
 from threading import Thread
+from time import sleep
 from .robot_server import Directions, Throttle, CameraMovement
 
 try:
@@ -7,6 +8,7 @@ try:
 except ImportError:
     print('evdev is not available')
     EVDEV_AVAILABLE = False
+
 
 class SixAxisButtonCodes:
     '''
@@ -29,24 +31,20 @@ class SixAxisButtonCodes:
     DPadLeft = 546
     DPadRight = 547
 
+
 class PS3Controller(Thread):
     '''
         Connects to any available PS3 controller and reads events
         Inspired by http://www.ev3dev.org/docs/tutorials/using-ps3-sixaxis/
     '''
+
     def __init__(self, robot):
         if not EVDEV_AVAILABLE:
             print('No evdev, no joy, exiting...')
             return
-        
+
         self.device = None
-        devices = [evdev.InputDevice(fn) for fn in evdev.list_devices()]
-        for dev in devices:
-            if dev.name == 'Sony Computer Entertainment Wireless Controller':
-                self.device = dev
-                break
-        if not self.device:
-            print('Failed to detect sixaxis controller!')
+        self.detect_controller()
 
         super(PS3Controller, self).__init__()
 
@@ -54,10 +52,17 @@ class PS3Controller(Thread):
         self.running = True
         self.start()
 
+    def detect_controller(self):
+        devices = [evdev.InputDevice(fn) for fn in evdev.list_devices()]
+        for dev in devices:
+            if dev.name == 'Sony Computer Entertainment Wireless Controller':
+                self.device = dev
+                break
+
     def run(self):
-        if not self.device:
-            print('No controller connected, existing')
-            return
+        while not self.device:
+            self.detect_controller()
+            sleep(5)
 
         for event in self.device.read_loop():
             if not self.running:
