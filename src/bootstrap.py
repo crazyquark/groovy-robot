@@ -36,6 +36,6 @@ if device:
     display.halt()
 
     print('Start pressed, good job!')
-    err = subprocess.check_call(['/home/pi/groovy-robot/run_server.sh'])
+    err = subprocess.check_call(['/home/pi/groovy-robot/start_server.sh'])
     print('Process result: ', err)
     sys.exit(0)
