@@ -237,7 +237,7 @@ class RobotServer(Thread):
             freq = 0
             with open('/sys/class/thermal/thermal_zone0/temp') as fd:
                 temp = int(fd.read())
-                temp = float(temp / 1000)
+                temp = int(temp / 1000)
 
             p = Popen(['vcgencmd', 'measure_clock', 'arm'], stdin=PIPE, stdout=PIPE, stderr=PIPE)
             output, _ = p.communicate()
