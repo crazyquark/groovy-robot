@@ -244,7 +244,7 @@ class RobotServer(Thread):
             p.wait()
 
             freq = int(output.decode('UTF-8').split('=')[1])
-            freq = float(freq / 1000000)
+            freq = int(freq / 1000000)
             
             color = 'red' if temp > 80 else 'blue'
             self.display.append_text(' T: ' + str(temp) + '°C', color)
