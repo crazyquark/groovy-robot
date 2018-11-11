@@ -250,7 +250,7 @@ class RobotServer(Thread):
             self.display.append_text(' T: ' + str(temp) + '°C', color)
             
             color = 'red' if freq < 1200 else 'purple'
-            self.display.append_text('CPU: ' + str(freq) + 'MHz', freq)
+            self.display.append_text('CPU: ' + str(freq) + 'MHz', color)
 
     def halt(self):
         '''
