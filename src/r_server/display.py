@@ -23,6 +23,12 @@ RST = 24
 # Note the following are only used with SPI:
 DC = 23
 
+class Text:
+    def __init__(self, text, color = None):
+        self.text = text
+        self.color = color
+        if not self.color:
+            self.color = 'green'
 
 class PiDisplay(Thread):
     def __init__(self):
@@ -39,7 +45,7 @@ class PiDisplay(Thread):
         self.device = ssd1331(serial)
 
         self.refresh = True
-        self.text = ['Hi there']
+        self.text = [Text('Ready')]
         self.draw_text()
 
         Thread.__init__(self)
@@ -64,17 +70,21 @@ class PiDisplay(Thread):
                            outline='orange', fill='black')
             height = 10
             for line in self.text:
-                draw.text((10, height), line, fill='green')
+                draw.text((10, height), line.text, fill=line.color)
                 height += 10
 
-    def set_text(self, text):
-        self.text = text
+    def set_text(self, text, color = None):
+        self.text = []
+        for line in text:
+            self.text.append(Text(line, color))
+
         self.refresh = True
 
-    def append_text(self, text):
-        self.text.append(text)
+    def append_text(self, text, color = None):
+        self.text.append(Text(text, color))
         self.refresh = True
 
     def halt(self):
+        self.device.cleanup()
         self.running = False
         self.join()

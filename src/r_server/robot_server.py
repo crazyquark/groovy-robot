@@ -4,7 +4,8 @@
 import platform
 import traceback
 from threading import Thread, Lock
-from time import sleep
+from subprocess import Popen, PIPE
+from time import sleep, time
 import os
 
 import RPi.GPIO as GPIO
@@ -38,7 +39,9 @@ class RobotServer(Thread):
         Uses an autostart thread to run its update loop
     '''
 
-    def __init__(self):
+    def __init__(self, display):
+        self.display = display
+
         self.fwd_pressed = False
         self.back_pressed = False
         self.left_pressed = False
@@ -108,8 +111,12 @@ class RobotServer(Thread):
             (self.left_pressed and self.right_pressed)
 
     def run(self):
+        self.last_update = 0
+
         while self.running:
             try:
+                self.get_pi_status()
+
                 # Camera stepper control
                 if self.camera_state != CameraMovement.Idle:
                     # Tilt camera up or down
@@ -218,6 +225,32 @@ class RobotServer(Thread):
 
         self.manual_mode_left_power = min(100, max(-100, left_power))
         self.manual_mode_right_power = min(100, max(-100, right_power))
+
+    def get_pi_status(self):
+        # Update every 5 seconds
+        now = time()
+        if now - self.last_update > 5:
+            self.last_update = now
+            self.display.set_text([])
+
+            temp = 0
+            freq = 0
+            with open('/sys/class/thermal/thermal_zone0/temp') as fd:
+                temp = int(fd.read())
+                temp = float(temp / 1000)
+
+            p = Popen(['vcgencmd', 'measure_clock', 'arm'], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+            output, _ = p.communicate()
+            p.wait()
+
+            freq = int(output.decode('UTF-8').split('=')[1])
+            freq = float(freq / 1000000)
+            
+            color = 'red' if temp > 80 else 'blue'
+            self.display.append_text(' T: ' + str(temp) + '°C', color)
+            
+            color = 'red' if freq < 1200 else 'purple'
+            self.display.append_text('CPU: ' + str(freq) + 'MHz', freq)
 
     def halt(self):
         '''

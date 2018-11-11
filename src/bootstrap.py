@@ -10,7 +10,7 @@ from r_server import display
 from r_server.ps3_controller import SixAxisButtonCodes
 
 display = display.PiDisplay()
-display.set_text(['Booting'])
+display.set_text(['Init'])
 
 device = None
 while not device:
@@ -20,7 +20,7 @@ while not device:
         if dev.name == 'Sony Computer Entertainment Wireless Controller':
             device = dev
             print('Found controller')
-            display.append_text('Controller: ON')
+            display.append_text('Controller ON')
             break
 
 if device:

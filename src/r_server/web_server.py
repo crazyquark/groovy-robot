@@ -137,11 +137,12 @@ async def halt(_):
 
 if __name__ == "__main__":
     # Setup aux objects and store them on our app for namespace cleanness
-    app.robot = RobotServer()
+    app.display = PiDisplay()
+
+    app.robot = RobotServer(app.display)
     app.camera = CameraServer()
     #app.keyboard_controller = KeyboardController(app.robot)
     app.ps3controller = PS3Controller(app.robot)
-    app.display = PiDisplay()
 
     app.mic_queue = AudioProcess.start_capture()
 
