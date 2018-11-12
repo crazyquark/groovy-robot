@@ -9,13 +9,14 @@ sudo apt install -y python3-pip
 #apt install -y python3-pygame
 #apt install -y python3-opencv
 sudo apt install -y python3-smbus
-sudo apt install -y python3-evdev
+#sudo apt install -y python3-evdev
 sudo apt install -y python3-pil
 sudo apt install -y python3-pyaudio
+sudo apt install -y python3-numpy
 
 # Also see https://github.com/Arkq/bluez-alsa
 # for configuration
-sudo apt install bluealsa
+sudo apt install -y bluealsa
 
 pushd lib/adafruit_motor_hat
 python3 setup.py install

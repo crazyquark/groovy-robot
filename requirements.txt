@@ -1,5 +1,6 @@
 # only install if needed 
 #pygame
+
 ptvsd
 wheel
 sanic
@@ -9,5 +10,7 @@ picamera
 evdev
 RPi.GPIO
 luma.oled
-pyaudio
-numpy
+
+# installed w/ apt:
+#pyaudio
+#numpy
