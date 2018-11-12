@@ -58,7 +58,7 @@ class PiDisplay(Thread):
 
         while self.running:
             if self.refresh:
-                self.device.clear()
+                # self.device.clear()
                 self.draw_text()
                 self.refresh = False
 
