@@ -73,16 +73,16 @@ class PiDisplay(Thread):
                 draw.text((10, height), line.text, fill=line.color)
                 height += 10
 
-    def set_text(self, text, color = None):
+    def set_text(self, text, color = None, refresh = True):
         self.text = []
         for line in text:
             self.text.append(Text(line, color))
 
-        self.refresh = True
+        self.refresh = refresh
 
-    def append_text(self, text, color = None):
+    def append_text(self, text, color = None, refresh = True):
         self.text.append(Text(text, color))
-        self.refresh = True
+        self.refresh = refresh
 
     def halt(self):
         self.device.cleanup()

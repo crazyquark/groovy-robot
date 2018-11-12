@@ -231,10 +231,10 @@ class RobotServer(Thread):
         now = time()
         if now - self.last_update > 5:
             self.last_update = now
-            self.display.set_text([])
 
             temp = 0
             freq = 0
+            throttle = 0
             with open('/sys/class/thermal/thermal_zone0/temp') as fd:
                 temp = int(fd.read())
                 temp = int(temp / 1000)
@@ -245,12 +245,22 @@ class RobotServer(Thread):
 
             freq = int(output.decode('UTF-8').split('=')[1])
             freq = int(freq / 1000000)
+
+            p = Popen(['vcgencmd', 'get_throttled'], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+            output, _ = p.communicate()
+            p.wait()
+
+            throttle = str(output.decode('UTF-8').split('=')[1])
             
+            self.display.set_text([], refresh = False)
+
             color = 'red' if temp > 80 else 'blue'
-            self.display.append_text(' T: ' + str(temp) + '°C', color)
+            self.display.append_text(' T: ' + str(temp) + '°C', color, False)
             
             color = 'red' if freq < 1200 else 'purple'
-            self.display.append_text('CPU: ' + str(freq) + 'MHz', color)
+            self.display.append_text('CPU: ' + str(freq) + 'MHz', color, False)
+
+            self.display.append_text(throttle, 'yellow')
 
     def halt(self):
         '''
