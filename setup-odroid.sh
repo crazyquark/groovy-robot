@@ -1,4 +1,4 @@
-echo 'git & tools'
+echo 'apt'
 apt install -y git
 apt install -y i2c-tools
 apt install -y python3-pip
@@ -9,6 +9,7 @@ apt install -y python3-evdev
 apt install -y python3-pyaudio
 apt install -y python3-opencv
 apt install -y libusb-dev
+apt install -y joystick
 
 echo 'wiringPi'
 git clone https://github.com/hardkernel/wiringPi
