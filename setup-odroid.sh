@@ -1,8 +1,13 @@
 echo 'git & tools'
-apt install git
-apt install i2c-tools
-apt install python3-pip
-apt install python3-pil
+apt install -y git
+apt install -y i2c-tools
+apt install -y python3-pip
+apt install -y python3-pil
+apt install -y python3-numpy
+apt install -y python3-smbus
+apt install -y python3-evdev
+apt install -y python3-pyaudio
+apt install -y python3-opencv
 
 echo 'wiringPi'
 git clone https://github.com/hardkernel/wiringPi
