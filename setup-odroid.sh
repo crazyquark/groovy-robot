@@ -8,6 +8,7 @@ apt install -y python3-smbus
 apt install -y python3-evdev
 apt install -y python3-pyaudio
 apt install -y python3-opencv
+apt install -y libusb-dev
 
 echo 'wiringPi'
 git clone https://github.com/hardkernel/wiringPi
