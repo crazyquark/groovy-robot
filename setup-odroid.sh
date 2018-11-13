@@ -10,7 +10,10 @@ apt install -y python3-pyaudio
 apt install -y python3-opencv
 apt install -y libusb-dev
 apt install -y joystick
+apt install -y libbluetooth-dev
 apt install -y bluez
+apt install -y pkg-config
+apt install -y checkinstall
 
 echo 'wiringPi'
 git clone https://github.com/hardkernel/wiringPi
@@ -32,6 +35,15 @@ popd
 
 pushd lib/adafruit_motor_hat
 python3 setup.py install
+popd
+
+echo 'sixad'
+git clone https://github.com/RetroPie/sixad.git
+pushd sixad
+make
+mkdir -p /var/lib/sixad/profiles
+checkinstall
+dpkg -i sixad_*.deb
 popd
 
 echo 'modules'
