@@ -58,7 +58,7 @@ class RobotServer(Thread):
 
         print('We are running on: ', arch)
 
-        self.setupBatterySafeStop()
+        #self.setupBatterySafeStop()
 
         # Camera control
         self.camera_state = 0
