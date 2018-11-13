@@ -27,6 +27,10 @@ python3 setup.py build install
 python setup.py build install
 popd
 
+pushd lib/adafruit_motor_hat
+python3 setup.py install
+popd
+
 echo 'modules'
 echo aml_i2c >> /etc/modules
 echo spicc >> /etc/modules
