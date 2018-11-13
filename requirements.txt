@@ -6,7 +6,7 @@ wheel
 sanic
 jinja2
 websockets
-picamera
+#picamera
 evdev
 RPi.GPIO
 luma.oled

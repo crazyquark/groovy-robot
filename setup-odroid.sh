@@ -31,3 +31,7 @@ echo 'modules'
 echo aml_i2c >> /etc/modules
 echo spicc >> /etc/modules
 echo spidev >> /etc/modules
+
+echo 'pip3'
+pip3 install -r requirements.txt
+
