@@ -239,16 +239,16 @@ class RobotServer(Thread):
                 temp = int(fd.read())
                 temp = int(temp / 1000)
 
-            p = Popen(['vcgencmd', 'measure_clock', 'arm'], stdin=PIPE, stdout=PIPE, stderr=PIPE)
-            output, _ = p.communicate()
-            p.wait()
+            #p = Popen(['vcgencmd', 'measure_clock', 'arm'], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+            #output, _ = p.communicate()
+            #p.wait()
 
-            freq = int(output.decode('UTF-8').split('=')[1])
-            freq = int(freq / 1000000)
+            #freq = int(output.decode('UTF-8').split('=')[1])
+            #freq = int(freq / 1000000)
 
-            p = Popen(['vcgencmd', 'get_throttled'], stdin=PIPE, stdout=PIPE, stderr=PIPE)
-            output, _ = p.communicate()
-            p.wait()
+            #p = Popen(['vcgencmd', 'get_throttled'], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+            #output, _ = p.communicate()
+            #p.wait()
 
             throttle = str(output.decode('UTF-8').split('=')[1])
             
