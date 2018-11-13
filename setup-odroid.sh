@@ -10,6 +10,7 @@ apt install -y python3-pyaudio
 apt install -y python3-opencv
 apt install -y libusb-dev
 apt install -y joystick
+apt install -y bluez
 
 echo 'wiringPi'
 git clone https://github.com/hardkernel/wiringPi
