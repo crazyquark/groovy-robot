@@ -250,17 +250,17 @@ class RobotServer(Thread):
             #output, _ = p.communicate()
             #p.wait()
 
-            throttle = str(output.decode('UTF-8').split('=')[1])
+            #throttle = str(output.decode('UTF-8').split('=')[1])
             
             self.display.set_text([], refresh = False)
 
             color = 'red' if temp > 80 else 'blue'
-            self.display.append_text(' T: ' + str(temp) + '°C', color, False)
+            self.display.append_text(' T: ' + str(temp) + '°C', color, True)
             
-            color = 'red' if freq < 1200 else 'purple'
-            self.display.append_text('CPU: ' + str(freq) + 'MHz', color, False)
+            #color = 'red' if freq < 1200 else 'purple'
+            #self.display.append_text('CPU: ' + str(freq) + 'MHz', color, False)
 
-            self.display.append_text(throttle, 'yellow')
+            #self.display.append_text(throttle, 'yellow')
 
     def halt(self):
         '''
