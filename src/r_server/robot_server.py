@@ -238,8 +238,7 @@ class RobotServer(Thread):
             temp = 0
             freqs = [0 for i in range(0, 4)]
             with open('/sys/class/thermal/thermal_zone0/temp') as fd:
-                temp = int(fd.read())
-                temp = int(temp / 1000)
+                temp = int(int(fd.read()) / 1000)
 
                 color = 'red' if temp > 80 else 'blue'
                 self.display.append_text(
@@ -247,7 +246,7 @@ class RobotServer(Thread):
 
             for i in range(0, 4):
                 with open('/sys/devices/system/cpu/cpu' + str(i) + '/cpufreq/scaling_cur_freq') as fd:
-                    freqs[i] = int(fd.read()) / 1000
+                    freqs[i] = int(int(fd.read()) / 1000)
                     self.display.append_text(
                         'CPU' + str(i) + ':' + str(freqs[i]) + 'MHz', 'purple')
 
