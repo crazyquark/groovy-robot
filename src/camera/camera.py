@@ -18,14 +18,17 @@ class Camera:
         with open('r_server/static/wall-e-800.jpg', 'rb') as image:
             return image.read()
 
-    def get_frame(self):
-        if not self.frame:
-            self.frame = self.dummy_frame()
-        
+    def compute_fps(self):
         current_time = time()
         if self.prev_time != 0:
             delta = current_time - self.prev_time
             self.fps = round(1/delta, 2)
         self.prev_time = current_time
+
+    def get_frame(self):
+        if not self.frame:
+            self.frame = self.dummy_frame()
+
+        self.compute_fps()
 
         return self.frame

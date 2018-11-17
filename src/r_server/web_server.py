@@ -17,6 +17,7 @@ from microphone.mic_capture import MicCapture
 
 from microphone.audio_process import AudioProcess
 from camera.camera_process import CameraProcess
+from camera.pixy_camera import PixyCamera
 
 app = Sanic()  # pylint: disable=invalid-name
 
@@ -135,6 +136,6 @@ if __name__ == "__main__":
     app.ps3controller = PS3Controller(app.robot)
 
     app.mic_queue = AudioProcess.start_capture()
-    app.camera_queue = CameraProcess.start_camera()
+    app.camera_queue = CameraProcess.start_camera(camera_type=PixyCamera)
 
     app.run(host='0.0.0.0', port=8080, workers=1)
