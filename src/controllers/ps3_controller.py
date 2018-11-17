@@ -1,6 +1,6 @@
 from threading import Thread
 from time import sleep
-from .robot_server import Directions, Throttle, CameraMovement
+from r_server.robot_server import Directions, Throttle, CameraMovement
 
 try:
     import evdev
