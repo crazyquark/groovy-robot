@@ -20,11 +20,13 @@ class Directions(object):
     '''
     Forward, Back, Left, Right = range(4)
 
+
 class CameraMovement(object):
     '''
         Enumeration of camera directions
     '''
     Up, Down, Idle = [1, -1, 0]
+
 
 class Throttle(object):
     '''
@@ -58,7 +60,7 @@ class RobotServer(Thread):
 
         print('We are running on: ', arch)
 
-        #self.setupBatterySafeStop()
+        # self.setupBatterySafeStop()
 
         # Camera control
         self.camera_state = 0
@@ -78,8 +80,8 @@ class RobotServer(Thread):
     def setupBatterySafeStop(self):
         def shutdown(_):
             pass
-	        #print('Low battery detected, shutting down now!')
-            #self.halt()
+            #print('Low battery detected, shutting down now!')
+            # self.halt()
             #os.system('sudo shutdown -h now')
 
         GPIO.setmode(GPIO.BCM)
@@ -115,7 +117,7 @@ class RobotServer(Thread):
 
         while self.running:
             try:
-                self.get_pi_status()
+                self.get_sbc_status()
 
                 # Camera stepper control
                 if self.camera_state != CameraMovement.Idle:
@@ -226,41 +228,30 @@ class RobotServer(Thread):
         self.manual_mode_left_power = min(100, max(-100, left_power))
         self.manual_mode_right_power = min(100, max(-100, right_power))
 
-    def get_pi_status(self):
+    def get_sbc_status(self):
         # Update every 5 seconds
         now = time()
         if now - self.last_update > 5:
             self.last_update = now
+            self.display.set_text([])
 
             temp = 0
-            freq = 0
-            throttle = 0
+            freqs = [0 for i in range(0, 4)]
             with open('/sys/class/thermal/thermal_zone0/temp') as fd:
                 temp = int(fd.read())
                 temp = int(temp / 1000)
 
-            #p = Popen(['vcgencmd', 'measure_clock', 'arm'], stdin=PIPE, stdout=PIPE, stderr=PIPE)
-            #output, _ = p.communicate()
-            #p.wait()
+                color = 'red' if temp > 80 else 'blue'
+                self.display.append_text(
+                    ' T: ' + str(temp) + '°C', color)
 
-            #freq = int(output.decode('UTF-8').split('=')[1])
-            #freq = int(freq / 1000000)
+            for i in range(0, 4) as fd:
+                with open('/sys/devices/system/cpu/cpu' + str(i) + '/cpufreq/scaling_cur_freq'):
+                    freqs[i] = int(fd.read()) / 1000
+                    self.display.append_text(
+                        'CPU' + str(i) + ':' + str(freqs[i]) + 'MHz', 'purple')
 
-            #p = Popen(['vcgencmd', 'get_throttled'], stdin=PIPE, stdout=PIPE, stderr=PIPE)
-            #output, _ = p.communicate()
-            #p.wait()
-
-            #throttle = str(output.decode('UTF-8').split('=')[1])
-            
-            self.display.set_text([], refresh = False)
-
-            color = 'red' if temp > 80 else 'blue'
-            self.display.append_text(' T: ' + str(temp) + '°C', color, True)
-            
-            #color = 'red' if freq < 1200 else 'purple'
-            #self.display.append_text('CPU: ' + str(freq) + 'MHz', color, False)
-
-            #self.display.append_text(throttle, 'yellow')
+            self.display.set_refresh(True)
 
     def halt(self):
         '''
