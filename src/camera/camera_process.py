@@ -53,7 +53,7 @@ class CameraProcess(DebuggableProcess):
             cls.instance.terminate()
 
     @staticmethod
-    def encoded_frame(frame):
+    def encode_frame(frame):
         '''
             Base64 image
         '''
