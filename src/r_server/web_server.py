@@ -22,6 +22,7 @@ app = Sanic()  # pylint: disable=invalid-name
 
 # Serves files from the static folder to the URL /static
 app.static('/static', './r_server/static')
+app.static('/favicon.ico', './r_server/static/favicon.ico')
 
 # Jinja2 templates
 env = Environment(loader=PackageLoader('r_server', 'templates')
@@ -136,4 +137,4 @@ if __name__ == "__main__":
     app.mic_queue = AudioProcess.start_capture()
     app.camera_queue = CameraProcess.start_camera()
 
-    app.run(host="0.0.0.0", port=8080, workers=1)
+    app.run(host='0.0.0.0', port=8080, workers=1)
