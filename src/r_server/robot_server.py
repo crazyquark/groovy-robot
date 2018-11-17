@@ -245,8 +245,8 @@ class RobotServer(Thread):
                 self.display.append_text(
                     ' T: ' + str(temp) + '°C', color)
 
-            for i in range(0, 4) as fd:
-                with open('/sys/devices/system/cpu/cpu' + str(i) + '/cpufreq/scaling_cur_freq'):
+            for i in range(0, 4):
+                with open('/sys/devices/system/cpu/cpu' + str(i) + '/cpufreq/scaling_cur_freq') as fd:
                     freqs[i] = int(fd.read()) / 1000
                     self.display.append_text(
                         'CPU' + str(i) + ':' + str(freqs[i]) + 'MHz', 'purple')
