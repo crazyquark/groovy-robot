@@ -13,18 +13,14 @@ import numpy as np
 import cv2
 
 
-class CameraServer(Thread):
+class PiCamera:
     '''
-        An autostart camera thread that continously captures images from the camera for processing
+        Class for using a Pi Camera. Used to be a thread.
         Inspired from https://github.com/crazyquark/flask-video-streaming/blob/master/camera_pi.py
     '''
 
     def __init__(self):
-        Thread.__init__(self)
-
         self.resolution = (800, 600)
-        self.running = True
-
         self.camera = None
 
         if RUNNING_ON_PI:
@@ -39,8 +35,6 @@ class CameraServer(Thread):
         self.frame = None
 
         # self.load_model()
-
-        self.start()
 
     def dummy_frame(self):
         '''
@@ -67,12 +61,15 @@ class CameraServer(Thread):
             'cv/haarcascade_frontalface_default.xml')
 
     def run(self):
+        '''
+            Used to be the thread's entry point
+        '''
         if not RUNNING_ON_PI:
             self.frame = self.dummy_frame()
             return
 
         prev_time = 0
-        while self.running:
+        while True:
             (grabbed, frame) = self.stream.read()
             if not grabbed:
                 break
@@ -192,8 +189,7 @@ class CameraServer(Thread):
 
     def halt(self):
         '''
-            Stop server thread
+            Release camera
         '''
-        self.running = False
         if self.stream:
             self.stream.release()

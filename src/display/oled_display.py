@@ -30,7 +30,7 @@ class Text:
         if not self.color:
             self.color = 'green'
 
-class PiDisplay(Thread):
+class OledDisplay(Thread):
     def __init__(self):
         if not RUNNING_ON_PI:
             print('Display disabled')

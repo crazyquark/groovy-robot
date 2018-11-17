@@ -12,12 +12,12 @@ from websockets.exceptions import ConnectionClosed
 from jinja2 import Environment, PackageLoader
 
 from .robot_server import RobotServer, Directions, CameraMovement, Throttle
-from .camera_server import CameraServer
-# from .keyboard_controller import KeyboardController
 from .ps3_controller import PS3Controller
 from .display import PiDisplay
 from .audio_process import AudioProcess
 from .mic_capture import MicCapture
+
+from camera.pixy_camera import PixyCamera
 
 app = Sanic()  # pylint: disable=invalid-name
 
@@ -139,9 +139,8 @@ if __name__ == "__main__":
     # Setup aux objects and store them on our app for namespace cleanness
     app.display = PiDisplay()
 
+    app.camera = PixyCamera()
     app.robot = RobotServer(app.display)
-    app.camera = CameraServer()
-    #app.keyboard_controller = KeyboardController(app.robot)
     app.ps3controller = PS3Controller(app.robot)
 
     app.mic_queue = AudioProcess.start_capture()
