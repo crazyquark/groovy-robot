@@ -1,4 +1,4 @@
-from multiprocessing import Process, Queue
+from multiprocessing import Queue
 from base64 import b64encode
 
 from debug.debuggable_process import DebuggableProcess

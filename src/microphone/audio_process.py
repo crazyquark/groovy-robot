@@ -1,13 +1,16 @@
-from multiprocessing import Process, Queue
+from multiprocessing import Queue
 
+from debug.debuggable_process import DebuggableProcess
 from .mic_capture import MicCapture, MAX_FRAMES
 
-class AudioProcess(Process):
+class AudioProcess(DebuggableProcess):
     def __init__(self, queue):
         super(AudioProcess, self).__init__()
         self.queue = queue
 
     def run(self):
+        self.enable_debug(port=1234)
+
         mic = MicCapture()
 
         while True:
