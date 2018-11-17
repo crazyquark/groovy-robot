@@ -27,8 +27,8 @@ app.static('/static', './r_server/static')
 env = Environment(loader=PackageLoader('r_server', 'templates')
                   )  # pylint: disable=invalid-name
 
-from ptvsd import enable_attach, wait_for_attach
-enable_attach(redirect_output=True)
+# from ptvsd import enable_attach, wait_for_attach
+# enable_attach(redirect_output=True)
 # wait_for_attach()
 
 @app.websocket('/ws')

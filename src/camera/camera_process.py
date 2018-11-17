@@ -1,11 +1,14 @@
 from multiprocessing import Process, Queue
+from base64 import b64encode
 
+from debug.debuggable_process import DebuggableProcess
 from .camera import Camera
 
 # Frame buffer size
 MAX_FRAMES = 5
 
-class CameraProcess(Process):
+
+class CameraProcess(DebuggableProcess):
     '''
         Class for a forked camera process
     '''
@@ -19,20 +22,14 @@ class CameraProcess(Process):
         self.camera_type = camera_type
 
     def run(self):
+        self.enable_debug()
+
         camera = self.camera_type()
 
         while True:
             frame = camera.get_frame()
 
             if frame:
-                # Make room in the queue
-                if self.queue.full():
-                    while not self.queue.empty():
-                        try:
-                            self.queue.get_nowait()
-                        except:
-                            # empty queue error
-                            break
                 try:
                     self.queue.put_nowait(frame)
                 except:
@@ -40,17 +37,27 @@ class CameraProcess(Process):
                     continue
 
     @classmethod
-    def start_camera(cls):
+    def start_camera(cls, camera_type=Camera):
         if hasattr(cls, 'instance'):
             return cls.queue
 
         cls.queue = Queue(MAX_FRAMES)
-        cls.instance = CameraProcess(cls.queue)
+        cls.instance = CameraProcess(cls.queue, camera_type)
         cls.instance.start()
 
         return cls.queue
-    
-    @staticmethod
+
+    @classmethod
     def stop_camera(cls):
         if hasattr(cls, 'instance'):
             cls.instance.terminate()
+
+    @staticmethod
+    def encoded_frame(frame):
+        '''
+            Base64 image
+        '''
+        if frame:
+            frame = b64encode(frame).decode('utf-8')
+
+        return frame

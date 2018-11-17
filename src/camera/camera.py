@@ -1,5 +1,4 @@
 from time import time
-from base64 import b64encode
 
 class Camera:
     '''
@@ -30,14 +29,3 @@ class Camera:
         self.prev_time = current_time
 
         return self.frame
-    
-    @staticmethod
-    def encoded_frame(frame):
-        '''
-            Base64 image
-        '''
-        if frame:
-            frame = b64encode(frame).decode('utf-8')
-        
-        return frame
-    
