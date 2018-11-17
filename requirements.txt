@@ -10,6 +10,9 @@ websockets
 evdev
 RPi.GPIO
 luma.oled
+# alternative to pyaudio
+sounddevice
+soundfile
 
 # installed w/ apt:
 #pyaudio

@@ -1,4 +1,4 @@
-from audio import MicCapture, FORMAT, RATE, CHANNELS
+from mic_capture import MicCapture, FORMAT, RATE, CHANNELS, SAMPLEWIDTH
 import wave
 from multiprocessing import Process, Queue
 
@@ -24,7 +24,7 @@ class P(Process):
 if __name__ == '__main__':  
     wave_file = wave.open('test.wav', 'wb')
     wave_file.setnchannels(CHANNELS)
-    wave_file.setsampwidth(2)
+    wave_file.setsampwidth(SAMPLEWIDTH)
     wave_file.setframerate(RATE)
 
     q = Queue()

@@ -17,6 +17,7 @@ class MicCapture:
         self.audio = pyaudio.PyAudio()
         self.stream = self.audio.open(format=FORMAT, channels=CHANNELS,
                                       rate=RATE, input=True,
+                                      input_device_index=1, # usb audio card
                                       frames_per_buffer=CHUNK, stream_callback=self.stream_callback)
 
         self.frames = []

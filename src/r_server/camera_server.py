@@ -68,6 +68,7 @@ class CameraServer(Thread):
 
     def run(self):
         if not RUNNING_ON_PI:
+            self.frame = dummy_frame()
             return
 
         prev_time = 0

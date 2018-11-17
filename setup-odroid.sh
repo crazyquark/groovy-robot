@@ -7,6 +7,7 @@ apt install -y python3-numpy
 apt install -y python3-smbus
 apt install -y python3-evdev
 apt install -y python3-pyaudio
+apt install -y python3-cffi
 apt install -y python3-opencv
 apt install -y libusb-dev
 apt install -y joystick
