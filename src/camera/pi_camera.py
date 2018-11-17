@@ -1,47 +1,33 @@
-try:
-    import picamera
-    from picamera.array import PiRGBArray
-    RUNNING_ON_PI = True
-except ImportError:
-    RUNNING_ON_PI = False
+import picamera
+from picamera.array import PiRGBArray
 
 import time
-from threading import Thread
-
 import numpy as np
 
 import cv2
 
+from .camera import Camera
 
-class PiCamera:
+
+class PiCamera(Camera):
     '''
-        Class for using a Pi Camera. Used to be a thread.
+        Class for using a Pi Camera
         Inspired from https://github.com/crazyquark/flask-video-streaming/blob/master/camera_pi.py
     '''
 
     def __init__(self):
-        self.resolution = (800, 600)
+        super(PiCamera, self).__init__()
+
         self.camera = None
 
-        if RUNNING_ON_PI:
-            # Create stream
-            self.stream = cv2.VideoCapture(0)
+        # Create stream
+        self.stream = cv2.VideoCapture(0)
 
-            # self.stream.set(cv2.CAP_PROP_FPS, 25)
-            self.stream.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-            self.stream.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
-
-        self.fps = 0
-        self.frame = None
+        # self.stream.set(cv2.CAP_PROP_FPS, 25)
+        self.stream.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+        self.stream.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
         # self.load_model()
-
-    def dummy_frame(self):
-        '''
-            Filler frame
-        '''
-        with open('r_server/static/wall-e-800.jpg', 'rb') as image:
-            return image.read()
 
     def load_model(self):
         # based on: https://github.com/djmv/MobilNet_SSD_opencv
@@ -59,29 +45,6 @@ class PiCamera:
         # Based on https://github.com/shantnu/FaceDetect/blob/master/face_detect_cv3.py
         self.faces_detector = cv2.CascadeClassifier(
             'cv/haarcascade_frontalface_default.xml')
-
-    def run(self):
-        '''
-            Used to be the thread's entry point
-        '''
-        if not RUNNING_ON_PI:
-            self.frame = self.dummy_frame()
-            return
-
-        prev_time = 0
-        while True:
-            (grabbed, frame) = self.stream.read()
-            if not grabbed:
-                break
-
-            current_time = time.time()
-            if prev_time != 0:
-                delta = current_time - prev_time
-                self.fps = round(1/delta, 2)
-            prev_time = current_time
-
-            # Process frame
-            self.frame = self.process_frame(frame, False)
 
     def process_frame(self, frame, detect):
         '''
@@ -184,8 +147,6 @@ class PiCamera:
         '''
         if self.frame:
             return self.frame
-        else:
-            return self.dummy_frame()
 
     def halt(self):
         '''

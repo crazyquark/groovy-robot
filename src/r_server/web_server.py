@@ -1,7 +1,6 @@
 '''
     Server implementation using sanic in python3 for speed
 '''
-from base64 import b64encode
 from asyncio import sleep
 
 from sanic import Sanic
@@ -12,12 +11,12 @@ from websockets.exceptions import ConnectionClosed
 from jinja2 import Environment, PackageLoader
 
 from .robot_server import RobotServer, Directions, CameraMovement, Throttle
-from .ps3_controller import PS3Controller
-from .display import PiDisplay
-from .audio_process import AudioProcess
-from .mic_capture import MicCapture
+from controllers.ps3_controller import PS3Controller
+from display.oled_display import PiDisplay
+from microphone.mic_capture import MicCapture
 
-from camera.pixy_camera import PixyCamera
+from microphone.audio_process import AudioProcess
+from camera.camera_process import CameraProcess
 
 app = Sanic()  # pylint: disable=invalid-name
 
@@ -35,18 +34,8 @@ enable_attach(redirect_output=True)
 @app.websocket('/ws')
 async def websocket(_, socket):
     '''
-        Keyboard websocket
+        Main command websocket
     '''
-    def encode_frame():
-        '''
-            Base64 image
-        '''
-        if app.camera:
-            frame = app.camera.get_frame()
-            data = b64encode(frame)
-
-        return data.decode('utf-8')
-
     while True:
         try:
             message = await socket.recv()
@@ -55,7 +44,8 @@ async def websocket(_, socket):
 
         if message == '1':
             # send frame
-            data = encode_frame()
+            frame = app.camera_queue.get()
+            data = CameraProcess.encode_frame(frame)
             if data:
                 try:
                     await socket.send(data)
@@ -127,6 +117,7 @@ async def halt(_):
         Stop web server
     '''
     AudioProcess.stop_capture()
+    CameraProcess.stop_camera()
 
     app.robot.halt()
     app.camera.halt()
@@ -139,10 +130,10 @@ if __name__ == "__main__":
     # Setup aux objects and store them on our app for namespace cleanness
     app.display = PiDisplay()
 
-    app.camera = PixyCamera()
     app.robot = RobotServer(app.display)
     app.ps3controller = PS3Controller(app.robot)
 
     app.mic_queue = AudioProcess.start_capture()
+    app.camera_queue = CameraProcess.start_camera()
 
     app.run(host="0.0.0.0", port=8080, workers=1)
