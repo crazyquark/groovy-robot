@@ -3,22 +3,9 @@ from sys import path
 path.insert(0, '../lib/pixy2/build/python_demos')
 
 import pixy
-from ctypes import *
-from pixy import *
+from pixy import Uint32Array
 
 from .camera import Camera
-
-
-class Blocks (Structure):
-    _fields_ = [("m_signature", c_uint),
-                ("m_x", c_uint),
-                ("m_y", c_uint),
-                ("m_width", c_uint),
-                ("m_height", c_uint),
-                ("m_angle", c_uint),
-                ("m_index", c_uint),
-                ("m_age", c_uint)]
-
 
 class PixyCamera(Camera):
     '''
@@ -32,7 +19,8 @@ class PixyCamera(Camera):
         pixy.change_prog('video')
 
     def get_frame(self):
-        self.frame = video_get_RGB(158, 104)
+        self.frame = Uint32Array(316*208)
+        pixy.video_get_raw_frame(self.frame)
 
         self.compute_fps()
 
