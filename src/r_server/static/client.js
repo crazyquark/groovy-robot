@@ -136,7 +136,7 @@ function connect(host) {
     ws.onmessage = (event) => {
         let msg = event.data;
         document.getElementById('cam')
-            .setAttribute('src', 'data:image/jpg;base64,' + msg);
+            .setAttribute('src', 'data:image/jpeg;base64,' + msg);
         ws.send('1');
     };
 
