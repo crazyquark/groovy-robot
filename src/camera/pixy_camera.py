@@ -30,6 +30,7 @@ class PixyCamera(Camera):
             self.frame_height, self.frame_width, 3))
         
         memory_file = BytesIO()
+        img = img.resize((640, 480), Image.ANTIALIAS)
         img.save(memory_file, 'JPEG')
 
         memory_file.seek(0)
