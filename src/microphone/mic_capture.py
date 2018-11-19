@@ -2,7 +2,6 @@ import sounddevice as sd
 import soundfile as sf
 import numpy
 
-import wave
 import time
 import queue
 from io import BytesIO
@@ -32,11 +31,9 @@ class MicCapture:
     def encode_data(raw_data):
         # convert current chunk    
         memory_file = BytesIO()
-        wave_file = wave.open(memory_file, 'wb')
-        wave_file.setnchannels(CHANNELS)
-        wave_file.setsampwidth(SAMPLEWIDTH)
-        wave_file.setframerate(RATE)
-        wave_file.writeframes(raw_data)
+        wave_file = sf.SoundFile(memory_file, mode='x', samplerate=RATE, format='wav',
+            channels=CHANNELS)
+        wave_file.write(raw_data)
         wave_file.close()
 
         memory_file.seek(0)
