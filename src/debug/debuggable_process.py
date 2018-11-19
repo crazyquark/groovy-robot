@@ -10,5 +10,5 @@ class DebuggableProcess(Process):
         super(DebuggableProcess, self).__init__()
     
     def enable_debug(self, port=5678):
-        enable_attach(redirect_output=True)
+        enable_attach(address=('0.0.0.0', port), redirect_output=True)
         wait_for_attach()

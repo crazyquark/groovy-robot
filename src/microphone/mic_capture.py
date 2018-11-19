@@ -1,9 +1,12 @@
-import pyaudio
+import sounddevice as sd
+import soundfile as sf
+import numpy
+
 import wave
 import time
+import queue
 from io import BytesIO
 
-FORMAT = pyaudio.paInt16
 SAMPLEWIDTH = 2 # int16
 CHANNELS = 1
 RATE = 44100
@@ -14,20 +17,16 @@ class MicCapture:
     ''' Captures mic input as audio chunks '''
 
     def __init__(self):
-        self.audio = pyaudio.PyAudio()
-        self.stream = self.audio.open(format=FORMAT, channels=CHANNELS,
-                                      rate=RATE, input=True,
-                                      input_device_index=1, # usb audio card
-                                      frames_per_buffer=CHUNK, stream_callback=self.stream_callback)
+        self.stream = sd.InputStream(samplerate=RATE, 
+            channels=CHANNELS, device=1, callback=self.stream_callback)
 
-        self.frames = []
-        self.stream.start_stream()
+        self.queue = queue.Queue()
+
+        self.stream.start()
 
     def stream_callback(self, in_data, frame_count, time_info, status):
         ''' Get an audio chunk from internal stream '''
-        self.frames.append(in_data)
-
-        return (in_data, pyaudio.paContinue)
+        self.queue.put(in_data.copy())
 
     @staticmethod
     def encode_data(raw_data):
@@ -49,7 +48,4 @@ class MicCapture:
 
     def close(self):
         ''' Close stream '''
-        self.is_running = False
-        self.stream.stop_stream()
         self.stream.close()
-        self.audio.terminate()
