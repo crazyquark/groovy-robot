@@ -231,5 +231,5 @@ function connect(host) {
     document.addEventListener('keydown', keydownHandler, true);
     document.addEventListener('keyup', keyupHandler, true);
 
-    stream_mic(host);
+    // stream_mic(host);
 }
