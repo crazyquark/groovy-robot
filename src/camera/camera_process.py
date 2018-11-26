@@ -23,6 +23,7 @@ class CameraProcess(DebuggableProcess):
 
     def run(self):
         # self.enable_debug()
+        self.enable_logging('camera')
 
         camera = self.camera_type()
 

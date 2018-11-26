@@ -11,6 +11,7 @@ class AudioProcess(DebuggableProcess):
 
     def run(self):
         # self.enable_debug(port=1234)
+        self.enable_logging('microphone')
 
         mic = MicCapture()
 
