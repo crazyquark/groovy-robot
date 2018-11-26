@@ -1,5 +1,6 @@
 *.pyc
 *.pid
+*.out
 
 server.log
 .vscode/settings.json
