@@ -3,12 +3,13 @@
 '''
 import platform
 import traceback
-from threading import Thread, Lock
 from subprocess import Popen, PIPE
 from time import sleep, time
 import os
 
 import RPi.GPIO as GPIO
+
+from debug.debuggable_process import DebuggableProcess
 
 from motors.adafruit_motors import AdafruitMotors
 from motors.stepper_motor import StepperMotor
@@ -35,7 +36,7 @@ class Throttle(object):
     Up, Down = (1, -1)
 
 
-class RobotServer(Thread):
+class RobotServer(DebuggableProcess):
     '''
         Server component for controlling a local GrovePi based robot
         Uses an autostart thread to run its update loop
@@ -69,7 +70,7 @@ class RobotServer(Thread):
         self.motors = AdafruitMotors(right_trim=-10)
         self.camera_stepper = StepperMotor(self.motors)
 
-        Thread.__init__(self)
+        super(RobotServer, self).__init__()
 
         self.manual = False
         self.manual_mode_left_power = 0
