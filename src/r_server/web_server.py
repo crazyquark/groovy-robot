@@ -12,7 +12,6 @@ from jinja2 import Environment, PackageLoader
 
 from .robot_server import RobotServer, Directions, CameraMovement, Throttle
 from controllers.ps3_controller import PS3Controller
-from display.oled_display import OledDisplay
 from microphone.mic_capture import MicCapture
 
 from microphone.audio_process import AudioProcess
@@ -130,12 +129,11 @@ async def halt(_):
 
 if __name__ == "__main__":
     # Setup aux objects and store them on our app for namespace cleanness
-    app.display = OledDisplay()
 
-    app.robot = RobotServer(app.display)
     app.ps3controller = PS3Controller(app.robot)
 
     app.mic_queue = AudioProcess.start_capture()
     app.camera_queue = CameraProcess.start_camera(camera_type=PixyCamera)
+    app.robot_queue = RobotServer.start_robot()
 
     app.run(host='0.0.0.0', port=8080, workers=1)

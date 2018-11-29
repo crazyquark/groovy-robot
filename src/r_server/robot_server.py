@@ -10,6 +10,7 @@ import os
 import RPi.GPIO as GPIO
 
 from debug.debuggable_process import DebuggableProcess
+from display.oled_display import OledDisplay
 
 from motors.adafruit_motors import AdafruitMotors
 from motors.stepper_motor import StepperMotor
@@ -42,8 +43,8 @@ class RobotServer(DebuggableProcess):
         Uses an autostart thread to run its update loop
     '''
 
-    def __init__(self, display):
-        self.display = display
+    def __init__(self, queue):
+        self.queue = queue
 
         self.fwd_pressed = False
         self.back_pressed = False
@@ -114,6 +115,7 @@ class RobotServer(DebuggableProcess):
             (self.left_pressed and self.right_pressed)
 
     def run(self):
+        self.display = OledDisplay()
         self.last_update = 0
 
         while self.running:
