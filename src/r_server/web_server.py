@@ -118,10 +118,9 @@ async def halt(_):
     '''
     AudioProcess.stop_capture()
     CameraProcess.stop_camera()
+    RobotServer.stop_robot()
 
-    app.robot.halt()
     app.camera.halt()
-    app.ps3controller.halt()
     app.display.halt()
 
     return app.stop()

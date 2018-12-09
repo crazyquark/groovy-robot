@@ -100,7 +100,7 @@ class RobotServer(DebuggableProcess):
             (self.left_pressed and self.right_pressed)
 
     def run(self):
-        self.display = OledDisplay()
+        self.display = OledDisplay() if self.running_on_pi else None
         self.last_update = 0
 
         while self.running:
@@ -224,6 +224,9 @@ class RobotServer(DebuggableProcess):
         self.manual_mode_right_power = min(100, max(-100, right_power))
 
     def get_sbc_status(self):
+        if not self.running_on_pi:
+            return
+
         # Update every 5 seconds
         now = time()
         if now - self.last_update > 5:
@@ -267,7 +270,7 @@ class RobotServer(DebuggableProcess):
         return cls.queue
 
     @classmethod
-    def stop_camera(cls):
+    def stop_robot(cls):
         if hasattr(cls, 'instance'):
             cls.instance.halt()
             cls.instance.terminate()
