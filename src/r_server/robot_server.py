@@ -100,6 +100,8 @@ class RobotServer(DebuggableProcess):
             (self.left_pressed and self.right_pressed)
 
     def run(self):
+        self.enable_logging('robot')
+
         self.display = OledDisplay() if self.running_on_pi else None
         self.last_update = 0
 
