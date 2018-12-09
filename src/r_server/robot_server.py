@@ -5,36 +5,22 @@ import platform
 import traceback
 from subprocess import Popen, PIPE
 from time import sleep, time
+from multiprocessing import Queue
 import os
 
-import RPi.GPIO as GPIO
+try:
+    import RPi.GPIO as GPIO
+except:
+    print('No GPIO available')
 
-from debug.debuggable_process import DebuggableProcess
 from display.oled_display import OledDisplay
+from debug.debuggable_process import DebuggableProcess
+from controllers.ps3_controller import PS3Controller
 
 from motors.adafruit_motors import AdafruitMotors
 from motors.stepper_motor import StepperMotor
 
-
-class Directions(object):
-    '''
-        Simple enumeration of the available directions
-    '''
-    Start, Forward, Back, Left, Right, End = range(1, 7)
-
-
-class CameraMovement(object):
-    '''
-        Enumeration of camera directions
-    '''
-    Up, Down, Idle = [1, -1, 0]
-
-
-class Throttle(object):
-    '''
-        Simple enumerations of the directions signs: up or down
-    '''
-    Up, Down = (1, -1)
+from controllers.enums import Directions, Throttle, CameraMovement
 
 
 class RobotServer(DebuggableProcess):
@@ -77,9 +63,8 @@ class RobotServer(DebuggableProcess):
         self.manual_mode_left_power = 0
         self.manual_mode_right_power = 0
         self.running = True
-        self.start()
 
-    def setupBatterySafeStop(self):
+    def setup_battery_check(self):
         def shutdown(_):
             pass
             #print('Low battery detected, shutting down now!')
@@ -269,3 +254,20 @@ class RobotServer(DebuggableProcess):
         self.running = False
         self.motors.stop()
         self.camera_stepper.stop()
+
+    @classmethod
+    def start_robot(cls):
+        if hasattr(cls, 'instance'):
+            return cls.queue
+
+        cls.queue = Queue(5)
+        cls.instance = RobotServer(cls.queue)
+        cls.instance.start()
+
+        return cls.queue
+
+    @classmethod
+    def stop_camera(cls):
+        if hasattr(cls, 'instance'):
+            cls.instance.halt()
+            cls.instance.terminate()

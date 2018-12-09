@@ -11,7 +11,6 @@ from websockets.exceptions import ConnectionClosed
 from jinja2 import Environment, PackageLoader
 
 from .robot_server import RobotServer, Directions, CameraMovement, Throttle
-from controllers.ps3_controller import PS3Controller
 from microphone.mic_capture import MicCapture
 
 from microphone.audio_process import AudioProcess
@@ -129,8 +128,6 @@ async def halt(_):
 
 if __name__ == "__main__":
     # Setup aux objects and store them on our app for namespace cleanness
-
-    app.ps3controller = PS3Controller(app.robot)
 
     app.mic_queue = AudioProcess.start_capture()
     app.camera_queue = CameraProcess.start_camera(camera_type=PixyCamera)
