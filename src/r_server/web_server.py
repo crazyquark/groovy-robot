@@ -54,31 +54,31 @@ async def websocket(_, socket):
                     break
 
         elif message == 'w':
-            app.robot.move(Directions.Forward)
+            app.robot_queue.put_nowait(Directions.Forward)
         elif message == 'W':
-            app.robot.stop(Directions.Forward)
+            app.robot_queue.put_nowait(Directions.Forward)
         elif message == 's':
-            app.robot.move(Directions.Back)
+            app.robot_queue.put_nowait(Directions.Back)
         elif message == 'S':
-            app.robot.stop(Directions.Back)
+            app.robot_queue.put_nowait(Directions.Back)
         elif message == 'a':
-            app.robot.move(Directions.Left)
+            app.robot_queue.put_nowait(Directions.Left)
         elif message == 'A':
-            app.robot.stop(Directions.Left)
+            app.robot_queue.put_nowait(Directions.Left)
         elif message == 'd':
-            app.robot.move(Directions.Right)
+            app.robot_queue.put_nowait(Directions.Right)
         elif message == 'D':
-            app.robot.stop(Directions.Right)
+            app.robot_queue.put_nowait(Directions.Right)
         elif message == 'x':
-            app.robot.speed_adjust(Throttle.Up)
+            app.robot_queue.put_nowait(Throttle.Up)
         elif message == 'z':
-            app.robot.speed_adjust(Throttle.Down)
+            app.robot_queue.put_nowait(Throttle.Down)
         elif message == 'q':
-            app.robot.tilt_camera(CameraMovement.Up)
+            app.robot_queue.put_nowait(CameraMovement.Up)
         elif message == 'e':
-            app.robot.tilt_camera(CameraMovement.Down)
+            app.robot_queue.put_nowait(CameraMovement.Down)
         elif message == 'Q' or message == 'E':
-            app.robot.tilt_camera(CameraMovement.Idle)
+            app.robot_queue.put_nowait(CameraMovement.Idle)
 
 
 @app.websocket('/mic')

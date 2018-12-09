@@ -20,7 +20,7 @@ class Directions(object):
     '''
         Simple enumeration of the available directions
     '''
-    Forward, Back, Left, Right = range(4)
+    Start, Forward, Back, Left, Right, End = range(1, 7)
 
 
 class CameraMovement(object):
@@ -129,6 +129,9 @@ class RobotServer(DebuggableProcess):
                 else:
                     self.camera_stepper.stop()
 
+                message = self.queue.get()
+                self.process_message(message)
+
                 # DC motors control
                 if self.manual:
                     self.motors.control_motors(
@@ -184,18 +187,22 @@ class RobotServer(DebuggableProcess):
         if self.running_on_pi:
             self.motors.set_speed(speed)
 
-    def process_press(self, direction, is_on):
+    def process_message(self, message):
+        if message > Directions.Start and message < Directions.End:
+            self.process_press(message)
+
+    def process_press(self, direction):
         '''
             Interpret a key press from UI or a controller that requires continous movements
         '''
         if direction == Directions.Forward:
-            self.fwd_pressed = is_on
+            self.fwd_pressed = not self.fwd_pressed
         elif direction == Directions.Back:
-            self.back_pressed = is_on
+            self.back_pressed = not self.back_pressed
         elif direction == Directions.Left:
-            self.left_pressed = is_on
+            self.left_pressed = not self.left_pressed
         elif direction == Directions.Right:
-            self.right_pressed = is_on
+            self.right_pressed = not self.right_pressed
 
     def move(self, direction):
         '''
@@ -204,7 +211,7 @@ class RobotServer(DebuggableProcess):
         if not self.running_on_pi:
             return
 
-        self.process_press(direction, True)
+        self.process_press(direction)
 
     def stop(self, direction):
         '''
@@ -213,7 +220,7 @@ class RobotServer(DebuggableProcess):
         if not self.running_on_pi:
             return
 
-        self.process_press(direction, False)
+        self.process_press(direction)
 
     def manual_mode(self, enable):
         '''
