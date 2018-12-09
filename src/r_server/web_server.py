@@ -120,9 +120,6 @@ async def halt(_):
     CameraProcess.stop_camera()
     RobotServer.stop_robot()
 
-    app.camera.halt()
-    app.display.halt()
-
     return app.stop()
 
 if __name__ == "__main__":
