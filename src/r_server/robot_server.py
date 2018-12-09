@@ -116,8 +116,11 @@ class RobotServer(DebuggableProcess):
                 else:
                     self.camera_stepper.stop()
 
-                message = self.queue.get()
-                self.process_message(message)
+                try:
+                    message = self.queue.get_nowait()
+                    self.process_message(message)
+                except:
+                    pass
 
                 # DC motors control
                 if self.manual:
