@@ -17,3 +17,6 @@ soundfile
 # installed w/ apt:
 #pyaudio
 #numpy
+
+# motor kit
+adafruit-circuitpython-motorkit

@@ -2,7 +2,8 @@
     Adafruit DC HAT implementation for Motors
 '''
 try:
-    from Adafruit_MotorHAT import Adafruit_MotorHAT
+    from adafruit_blinka import agnostic
+    from adafruit_motorkit import MotorKit
 except:
     print('Adafruit Motor HAT lib is not available')
 
@@ -33,15 +34,22 @@ class AdafruitMotors(Motors):
         if self.running_on_pi:
             import atexit
 
-            # default I2C address is 0x60
-            self.motors = Adafruit_MotorHAT(addr)
+            # hack for Odroid
+            agnostic.board_id = 'raspi_3'
 
-            self.left_motor = self.motors.getMotor(left_id)
-            self.right_motor = self.motors.getMotor(right_id)
+            # default I2C address is 0x60
+            self.motors = MotorKit()
+
+            # dc motors
+            self.left_motor = self.motors.motor1
+            self.right_motor = self.motors.motor2
+
+            # stepper
+            self.stepper = self.motors.stepper2
 
             # Start with motors turned off.
-            self.left_motor.run(Adafruit_MotorHAT.RELEASE)
-            self.right_motor.run(Adafruit_MotorHAT.RELEASE)
+            self.left_motor.throttle = 0.0
+            self.right_motor.throttle = 0.0
 
             # Configure all motors to stop at program exit if desired.
             atexit.register(self.stop)
