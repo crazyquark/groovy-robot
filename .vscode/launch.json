@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Attach port 5678",
+            "name": "Attach camera",
             "type": "python",
             "request": "attach",
             "port": 5678,
@@ -16,7 +16,7 @@
             }]
         },
         {
-            "name": "Attach port 1234",
+            "name": "Attach audio",
             "type": "python",
             "request": "attach",
             "port": 1234,
