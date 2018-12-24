@@ -16,6 +16,7 @@ from microphone.mic_capture import MicCapture
 from microphone.audio_process import AudioProcess
 from camera.camera_process import CameraProcess
 from camera.pixy_camera import PixyCamera
+from camera.camera import Camera
 
 app = Sanic()  # pylint: disable=invalid-name
 
@@ -125,10 +126,10 @@ async def halt(_):
     return app.stop()
 
 
-def start_web_server():
+def start_web_server(running_on_arm):
     # Setup aux objects and store them on our app for namespace cleanness
     app.mic_queue = AudioProcess.start_capture()
-    app.camera_queue = CameraProcess.start_camera(camera_type=PixyCamera)
-    app.robot_queue = RobotProcess.start_robot()
+    app.camera_queue = CameraProcess.start_camera(camera_type=PixyCamera if running_on_arm else Camera)
+    app.robot_queue = RobotProcess.start_robot(running_on_arm)
 
     app.run(host='0.0.0.0', port=8080, workers=1)

@@ -1,7 +1,6 @@
 '''
     Robot Server
 '''
-import platform
 import traceback
 from subprocess import Popen, PIPE
 from time import sleep, time
@@ -27,7 +26,9 @@ class RobotProcess(DebuggableProcess):
         Robot process
     '''
 
-    def __init__(self, queue):
+    def __init__(self, queue, running_on_arm):
+        self.running_on_arm = running_on_arm
+        
         self.queue = queue
 
         self.fwd_pressed = False
@@ -40,19 +41,13 @@ class RobotProcess(DebuggableProcess):
         # How much to increase speed at one time
         self.speed_increment = 5
 
-        # Check if this is the real deal
-        arch = platform.uname()[4]
-        self.running_on_arm = True if arch.startswith('arm') else False
-
-        print('We are running on: ', arch)
-
         # self.setupBatterySafeStop()
 
         # Camera control
         self.camera_state = 0
 
         # Adjust for veering left
-        self.motors = AdafruitMotors(right_trim=-4)
+        self.motors = AdafruitMotors(right_trim=-4, running_on_arm = self.running_on_arm)
 
         super(RobotProcess, self).__init__()
 
@@ -258,12 +253,12 @@ class RobotProcess(DebuggableProcess):
         self.motors.stop()
 
     @classmethod
-    def start_robot(cls):
+    def start_robot(cls, running_on_arm):
         if hasattr(cls, 'instance'):
             return cls.queue
 
         cls.queue = Queue(5)
-        cls.instance = RobotProcess(cls.queue)
+        cls.instance = RobotProcess(cls.queue, running_on_arm)
         cls.instance.start()
 
         return cls.queue

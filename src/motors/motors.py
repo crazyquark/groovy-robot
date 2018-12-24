@@ -6,7 +6,7 @@ class Motors(object):
     '''
         Generic motors implementation
     '''
-    def __init__(self, left_trim=0, right_trim=0):
+    def __init__(self, running_on_arm, left_trim=0, right_trim=0):
         self.speed = 0
 
         # for uneven motors, we need to trim
@@ -16,8 +16,7 @@ class Motors(object):
         # Default speed values: 0 - 100
         self.max_speed = 100
 
-        from platform import uname
-        self.running_on_arm = uname()[4].startswith('arm')
+        self.running_on_arm = running_on_arm
 
     def change_speed(self, amount):
         '''

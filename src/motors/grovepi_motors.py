@@ -12,8 +12,8 @@ class GrovePiMotors(Motors):
     '''
         The GrovePi implementation
     '''
-    def __init__(self):
-        Motors.__init__(self)
+    def __init__(self, running_on_arm):
+        Motors.__init__(self, running_on_arm)
 
         # Directions
         # '0b1010' defines the output polarity,

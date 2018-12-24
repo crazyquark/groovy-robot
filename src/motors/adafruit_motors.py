@@ -15,9 +15,11 @@ except:
 
 from .motors import Motors
 
+
 class StepperDirections:
     Forward = stepper.FORWARD
     Backward = stepper.BACKWARD
+
 
 class AdafruitMotors(Motors):
     '''
@@ -25,8 +27,9 @@ class AdafruitMotors(Motors):
     '''
     default_speed = 170
 
-    def __init__(self, addr=0x60, left_id=2, right_id=1, left_trim=0, right_trim=0):
-        Motors.__init__(self, left_trim=left_trim, right_trim=right_trim)
+    def __init__(self, running_on_arm, addr=0x60, left_id=2, right_id=1, left_trim=0, right_trim=0):
+        Motors.__init__(self, left_trim=left_trim,
+                        right_trim=right_trim, running_on_arm=running_on_arm)
 
         # Scale for [-1, 1] range
         self.left_trim = float(self.left_trim) / 100.0
@@ -90,7 +93,7 @@ class AdafruitMotors(Motors):
         '''
         if speed == None:
             speed = AdafruitMotors.default_speed
-        
+
         Motors.set_speed(self, speed)
         self.speed_changed = True
 
