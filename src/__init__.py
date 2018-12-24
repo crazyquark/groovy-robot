@@ -1,3 +1,0 @@
-'''
-	Top src package
-'''

@@ -126,10 +126,9 @@ async def halt(_):
 
 
 def start_web_server():
-    if __name__ == "__main__":
-        # Setup aux objects and store them on our app for namespace cleanness
-        app.mic_queue = AudioProcess.start_capture()
-        app.camera_queue = CameraProcess.start_camera(camera_type=PixyCamera)
-        app.robot_queue = RobotProcess.start_robot()
+    # Setup aux objects and store them on our app for namespace cleanness
+    app.mic_queue = AudioProcess.start_capture()
+    app.camera_queue = CameraProcess.start_camera(camera_type=PixyCamera)
+    app.robot_queue = RobotProcess.start_robot()
 
-        app.run(host='0.0.0.0', port=8080, workers=1)
+    app.run(host='0.0.0.0', port=8080, workers=1)
