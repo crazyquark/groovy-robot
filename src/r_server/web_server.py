@@ -46,8 +46,11 @@ async def websocket(_, socket):
 
         if message == '1':
             # send frame
-            frame = app.camera_queue.get()
-            data = CameraProcess.encode_frame(frame)
+            try:
+                frame = app.camera_queue.get_nowait()
+                data = CameraProcess.encode_frame(frame)
+            except:
+                continue
             if data:
                 try:
                     await socket.send(data)
