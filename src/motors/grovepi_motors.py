@@ -23,7 +23,7 @@ class GrovePiMotors(Motors):
         self.left_dir = 0b1001
         self.right_dir = 0b0110
 
-        if self.running_on_pi:
+        if self.running_on_arm:
             # You can initialize with a different address too:
             # grove_i2c_motor_driver.motor_driver(address=0x0a)
             self.motors = motor_driver()

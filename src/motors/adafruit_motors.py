@@ -1,6 +1,8 @@
 '''
     Adafruit DC HAT implementation for Motors
 '''
+import atexit
+
 try:
     from adafruit_blinka import agnostic
     from adafruit_motorkit import MotorKit
@@ -18,11 +20,15 @@ class AdafruitMotors(Motors):
     def __init__(self, addr=0x60, left_id=2, right_id=1, left_trim=0, right_trim=0):
         Motors.__init__(self, left_trim=left_trim, right_trim=right_trim)
 
+        # Scale for [-1, 1] range
+        self.left_trim = float(self.left_trim) / 100.0
+        self.right_trim = float(self.right_trim) / 100.0
+
         # Start at ~60% speed
         self.speed = AdafruitMotors.default_speed
 
-        # Speed values are 0 - 255
-        self.max_speed = 255
+        # Speed values are in [-1.0, 1.0]
+        self.max_speed = 1.0
 
         # We need to make the motors stateful
         # They don't seem to deal well with quick on/off actions
@@ -31,9 +37,7 @@ class AdafruitMotors(Motors):
 
         self.speed_changed = False
 
-        if self.running_on_pi:
-            import atexit
-
+        if self.running_on_arm:
             # hack for Odroid
             agnostic.board_id = 'raspi_3'
 
@@ -41,8 +45,8 @@ class AdafruitMotors(Motors):
             self.motors = MotorKit()
 
             # dc motors
-            self.left_motor = self.motors.motor1
-            self.right_motor = self.motors.motor2
+            self.right_motor = self.motors.motor1
+            self.left_motor = self.motors.motor2
 
             # stepper
             self.stepper = self.motors.stepper2
@@ -56,25 +60,22 @@ class AdafruitMotors(Motors):
         else:
             self.motors = None
 
+    def step(self, _):
+        pass
+
     def control_motors(self, power_left, power_right):
-        if self.running_on_pi:
+        if self.running_on_arm:
             if power_left == power_right == 0:
                 return self.stop()
 
             if self.power_left != power_left or self.speed_changed:
                 # Adjust left motor if we have to
-                self.power_left = power_left + self.left_trim
-                self.left_motor.setSpeed(int(float(abs(self.power_left)) / 100.0 * self.speed))
-                self.left_motor.run(
-                    Adafruit_MotorHAT.FORWARD if power_left >= 0 else Adafruit_MotorHAT.BACKWARD)
-
+                self.power_left = float(power_left) / 100.0 + self.left_trim
+                self.left_motor.throttle = self.power_left
             if self.power_right != power_right or self.speed_changed:
                 # Same for right motor
-                self.power_right = power_right + self.right_trim
-                self.right_motor.setSpeed(int(float(abs(self.power_right)) / 100.0 * self.speed))
-                self.right_motor.run(
-                    Adafruit_MotorHAT.FORWARD if power_right >= 0 else Adafruit_MotorHAT.BACKWARD)
-
+                self.power_right = float(power_right) / 100.0 + self.right_trim
+                self.right_motor.throttle = self.power_right
             # Reset flag
             self.speed_changed = False
 
@@ -89,9 +90,9 @@ class AdafruitMotors(Motors):
         self.speed_changed = True
 
     def stop(self):
-        if self.running_on_pi:
+        if self.running_on_arm:
             # Kill power
-            self.power_left = self.power_right = 0
+            self.left_motor.throttle = 0.0
+            self.right_motor.throttle = 0.0
 
-            self.left_motor.run(Adafruit_MotorHAT.RELEASE)
-            self.right_motor.run(Adafruit_MotorHAT.RELEASE)
+            self.power_left = self.power_right = 0.0

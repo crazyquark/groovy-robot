@@ -17,7 +17,7 @@ class Motors(object):
         self.max_speed = 100
 
         from platform import uname
-        self.running_on_pi = uname()[4].startswith('arm')
+        self.running_on_arm = uname()[4].startswith('arm')
 
     def change_speed(self, amount):
         '''
@@ -45,7 +45,7 @@ class Motors(object):
         '''
             Control the 2 motors independetly by applying a power factor
         '''
-        if not self.running_on_pi:
+        if not self.running_on_arm:
             return
 
     def stop(self):

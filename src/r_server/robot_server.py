@@ -18,7 +18,6 @@ from debug.debuggable_process import DebuggableProcess
 from controllers.ps3_controller import PS3Controller
 
 from motors.adafruit_motors import AdafruitMotors
-from motors.stepper_motor import StepperMotor
 
 from controllers.enums import Directions, Throttle, CameraMovement
 
@@ -54,8 +53,7 @@ class RobotServer(DebuggableProcess):
         self.camera_state = 0
 
         # Adjust for veering left
-        self.motors = AdafruitMotors(right_trim=-10)
-        self.camera_stepper = StepperMotor(self.motors)
+        self.motors = AdafruitMotors(right_trim=-4)
 
         super(RobotServer, self).__init__()
 
@@ -112,10 +110,7 @@ class RobotServer(DebuggableProcess):
                 # Camera stepper control
                 if self.camera_state != CameraMovement.Idle:
                     # Tilt camera up or down
-                    self.camera_stepper.step(self.camera_state)
-                else:
-                    self.camera_stepper.stop()
-
+                    self.motors.step(self.camera_state)
                 try:
                     message = self.queue.get_nowait()
                     self.process_message(message)
@@ -261,7 +256,6 @@ class RobotServer(DebuggableProcess):
         '''
         self.running = False
         self.motors.stop()
-        self.camera_stepper.stop()
 
     @classmethod
     def start_robot(cls):
