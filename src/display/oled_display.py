@@ -13,10 +13,10 @@ try:
 
     from PIL import Image, ImageDraw, ImageFont
 
-    RUNNING_ON_PI = True
+    RUNNING_ON_ARM = True
 except ImportError as err:
     print(err)
-    RUNNING_ON_PI = False
+    RUNNING_ON_ARM = False
 
 # Raspberry Pi pin configuration:
 RST = 24
@@ -32,7 +32,7 @@ class Text:
 
 class OledDisplay(Thread):
     def __init__(self):
-        if not RUNNING_ON_PI:
+        if not RUNNING_ON_ARM:
             print('Display disabled')
             self.disp = None
             return
@@ -53,7 +53,7 @@ class OledDisplay(Thread):
         self.start()
 
     def run(self):
-        if not RUNNING_ON_PI:
+        if not RUNNING_ON_ARM:
             return
 
         while self.running:

@@ -10,7 +10,7 @@ from websockets.exceptions import ConnectionClosed
 
 from jinja2 import Environment, PackageLoader
 
-from .robot_process import RobotProcess, Directions, CameraMovement, Throttle
+from r_server.robot_process import RobotProcess, Directions, CameraMovement, Throttle
 from microphone.mic_capture import MicCapture
 
 from microphone.audio_process import AudioProcess
@@ -30,6 +30,7 @@ env = Environment(loader=PackageLoader('r_server', 'templates')
 # from ptvsd import enable_attach, wait_for_attach
 # enable_attach(redirect_output=True)
 # wait_for_attach()
+
 
 @app.websocket('/ws')
 async def websocket(_, socket):
@@ -94,7 +95,8 @@ async def mic_websocket(_, socket):
         try:
             await socket.send(wave)
         except (ConnectionClosed, RequestTimeout):
-                break
+            break
+
 
 @app.route('/')
 async def index(request):
@@ -122,11 +124,12 @@ async def halt(_):
 
     return app.stop()
 
-if __name__ == "__main__":
-    # Setup aux objects and store them on our app for namespace cleanness
 
-    app.mic_queue = AudioProcess.start_capture()
-    app.camera_queue = CameraProcess.start_camera(camera_type=PixyCamera)
-    app.robot_queue = RobotProcess.start_robot()
+def start_web_server():
+    if __name__ == "__main__":
+        # Setup aux objects and store them on our app for namespace cleanness
+        app.mic_queue = AudioProcess.start_capture()
+        app.camera_queue = CameraProcess.start_camera(camera_type=PixyCamera)
+        app.robot_queue = RobotProcess.start_robot()
 
-    app.run(host='0.0.0.0', port=8080, workers=1)
+        app.run(host='0.0.0.0', port=8080, workers=1)

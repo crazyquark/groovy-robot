@@ -42,7 +42,7 @@ class RobotProcess(DebuggableProcess):
 
         # Check if this is the real deal
         arch = platform.uname()[4]
-        self.running_on_pi = True if arch.startswith('arm') else False
+        self.running_on_arm = True if arch.startswith('arm') else False
 
         print('We are running on: ', arch)
 
@@ -100,7 +100,7 @@ class RobotProcess(DebuggableProcess):
         # self.enable_debug(7878)
         self.enable_logging('robot')
 
-        self.display = OledDisplay() if self.running_on_pi else None
+        self.display = OledDisplay() if self.running_on_arm else None
         self.last_update = 0
 
         while self.running:
@@ -161,7 +161,7 @@ class RobotProcess(DebuggableProcess):
         '''
             Increase or decrease speed depending on the sign of direction
         '''
-        if self.running_on_pi:
+        if self.running_on_arm:
             amount = direction * self.speed_increment
             self.motors.change_speed(amount)
 
@@ -169,7 +169,7 @@ class RobotProcess(DebuggableProcess):
         '''
             Sets speed to a specific value
         '''
-        if self.running_on_pi:
+        if self.running_on_arm:
             self.motors.set_speed(speed)
 
     def process_message(self, message):
@@ -193,7 +193,7 @@ class RobotProcess(DebuggableProcess):
         '''
             Move robot
         '''
-        if not self.running_on_pi:
+        if not self.running_on_arm:
             return
 
         self.process_press(direction)
@@ -202,7 +202,7 @@ class RobotProcess(DebuggableProcess):
         '''
             Full stop
         '''
-        if not self.running_on_pi:
+        if not self.running_on_arm:
             return
 
         self.process_press(direction)
@@ -224,7 +224,7 @@ class RobotProcess(DebuggableProcess):
         self.manual_mode_right_power = min(100, max(-100, right_power))
 
     def get_sbc_status(self):
-        if not self.running_on_pi:
+        if not self.running_on_arm:
             return
 
         # Update every 5 seconds

@@ -41,7 +41,8 @@
             "name": "Python: Server",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/src/r_server/web_server.py",
+            "cwd": "${workspaceFolder}/src",
+            "program": "${workspaceFolder}/src/r_server/__init__.py",
             "console": "externalTerminal"
         },
 

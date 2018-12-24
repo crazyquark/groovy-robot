@@ -3,15 +3,15 @@
 '''
 import atexit
 
+from adafruit_blinka import agnostic
+# hack for Odroid
+agnostic.board_id = 'raspi_3'
+
+from adafruit_motor import stepper
 try:
-    from adafruit_blinka import agnostic
-    # hack for Odroid
-    agnostic.board_id = 'raspi_3'
-    
     from adafruit_motorkit import MotorKit
-    from adafruit_motor import stepper
 except:
-    print('Adafruit Motor HAT lib is not available')
+    print('Not running on a supported board for Adafruit''s MotorKit')
 
 from .motors import Motors
 
