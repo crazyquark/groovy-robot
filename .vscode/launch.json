@@ -38,6 +38,13 @@
             }]
         },
         {
+            "name": "Attach robot: local",
+            "type": "python",
+            "request": "attach",
+            "port": 7878,
+            "host": "localhost",
+        },
+        {
             "name": "Python: Server",
             "type": "python",
             "request": "launch",

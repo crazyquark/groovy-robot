@@ -15,7 +15,7 @@ class Camera:
         '''
             Filler frame
         '''
-        with open('r_server/static/wall-e-800.jpg', 'rb') as image:
+        with open('r_server/static/no-signal.jpg', 'rb') as image:
             return image.read()
 
     def compute_fps(self):
