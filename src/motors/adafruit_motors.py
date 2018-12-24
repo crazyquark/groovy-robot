@@ -5,6 +5,9 @@ import atexit
 
 try:
     from adafruit_blinka import agnostic
+    # hack for Odroid
+    agnostic.board_id = 'raspi_3'
+    
     from adafruit_motorkit import MotorKit
 except:
     print('Adafruit Motor HAT lib is not available')
@@ -38,9 +41,6 @@ class AdafruitMotors(Motors):
         self.speed_changed = False
 
         if self.running_on_arm:
-            # hack for Odroid
-            agnostic.board_id = 'raspi_3'
-
             # default I2C address is 0x60
             self.motors = MotorKit()
 
