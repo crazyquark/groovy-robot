@@ -25,16 +25,11 @@ class AdafruitMotors(Motors):
     '''
         Motors implementation for the Adafruit DC & Stepper HAT
     '''
-    default_speed = 170
+    default_speed = 0.6
 
     def __init__(self, running_on_arm, addr=0x60, left_id=2, right_id=1, left_trim=0, right_trim=0):
         Motors.__init__(self, left_trim=left_trim,
                         right_trim=right_trim, running_on_arm=running_on_arm)
-
-        # Scale for [-1, 1] range
-        self.left_trim = float(self.left_trim) / 100.0
-        self.right_trim = float(self.right_trim) / 100.0
-
         # Start at ~60% speed
         self.speed = AdafruitMotors.default_speed
 
@@ -72,20 +67,21 @@ class AdafruitMotors(Motors):
         self.stepper.onestep(direction=dir)
 
     def control_motors(self, power_left, power_right):
-        if self.running_on_arm:
-            if power_left == power_right == 0:
-                return self.stop()
+        if power_left == power_right == 0:
+            return self.stop()
 
-            if self.power_left != power_left or self.speed_changed:
-                # Adjust left motor if we have to
-                self.power_left = float(power_left) / 100.0 + self.left_trim
+        if self.power_left != power_left or self.speed_changed:
+            # Adjust left motor if we have to
+            self.power_left = (float(power_left) + self.left_trim) / 100.0
+            if self.running_on_arm:
                 self.left_motor.throttle = self.power_left
-            if self.power_right != power_right or self.speed_changed:
-                # Same for right motor
-                self.power_right = float(power_right) / 100.0 + self.right_trim
+        if self.power_right != power_right or self.speed_changed:
+            # Same for right motor
+            self.power_right = (float(power_right) + self.right_trim) / 100.0
+            if self.running_on_arm:
                 self.right_motor.throttle = self.power_right
-            # Reset flag
-            self.speed_changed = False
+        # Reset flag
+        self.speed_changed = False
 
     def set_speed(self, speed):
         '''
