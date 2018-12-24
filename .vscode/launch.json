@@ -9,7 +9,7 @@
             "type": "python",
             "request": "attach",
             "port": 5678,
-            "host": "192.168.1.144",
+            "host": "192.168.1.225",
             "pathMappings": [{
                 "localRoot": "${workspaceFolder}/src",
                 "remoteRoot": "/root/groovy-robot/src"
@@ -20,7 +20,18 @@
             "type": "python",
             "request": "attach",
             "port": 1234,
-            "host": "192.168.1.144",
+            "host": "192.168.1.225",
+            "pathMappings": [{
+                "localRoot": "${workspaceFolder}/src",
+                "remoteRoot": "/root/groovy-robot/src"
+            }]
+        },
+        {
+            "name": "Attach robot",
+            "type": "python",
+            "request": "attach",
+            "port": 7878,
+            "host": "192.168.1.225",
             "pathMappings": [{
                 "localRoot": "${workspaceFolder}/src",
                 "remoteRoot": "/root/groovy-robot/src"

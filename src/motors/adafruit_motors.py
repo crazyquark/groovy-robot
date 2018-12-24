@@ -9,10 +9,15 @@ try:
     agnostic.board_id = 'raspi_3'
     
     from adafruit_motorkit import MotorKit
+    from adafruit_motor import stepper
 except:
     print('Adafruit Motor HAT lib is not available')
 
 from .motors import Motors
+
+class StepperDirections:
+    Forward = stepper.FORWARD
+    Backward = stepper.BACKWARD
 
 class AdafruitMotors(Motors):
     '''
@@ -60,8 +65,8 @@ class AdafruitMotors(Motors):
         else:
             self.motors = None
 
-    def step(self, _):
-        pass
+    def step(self, dir):
+        self.stepper.onestep(direction=dir)
 
     def control_motors(self, power_left, power_right):
         if self.running_on_arm:

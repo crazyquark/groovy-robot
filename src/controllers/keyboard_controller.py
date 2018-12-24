@@ -4,7 +4,7 @@ path.insert(0, '../lib/keyboard/')
 
 import keyboard
 
-from r_server.robot_server import Directions, Throttle
+from r_server.robot_process import Directions, Throttle
 
 # These seem to be different on Linux
 ARROW_UP = 103

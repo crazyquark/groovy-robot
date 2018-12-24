@@ -17,15 +17,14 @@ from display.oled_display import OledDisplay
 from debug.debuggable_process import DebuggableProcess
 from controllers.ps3_controller import PS3Controller
 
-from motors.adafruit_motors import AdafruitMotors
+from motors.adafruit_motors import AdafruitMotors, StepperDirections
 
 from controllers.enums import Directions, Throttle, CameraMovement
 
 
-class RobotServer(DebuggableProcess):
+class RobotProcess(DebuggableProcess):
     '''
-        Server component for controlling a local GrovePi based robot
-        Uses an autostart thread to run its update loop
+        Robot process
     '''
 
     def __init__(self, queue):
@@ -55,7 +54,7 @@ class RobotServer(DebuggableProcess):
         # Adjust for veering left
         self.motors = AdafruitMotors(right_trim=-4)
 
-        super(RobotServer, self).__init__()
+        super(RobotProcess, self).__init__()
 
         self.manual = False
         self.manual_mode_left_power = 0
@@ -98,6 +97,7 @@ class RobotServer(DebuggableProcess):
             (self.left_pressed and self.right_pressed)
 
     def run(self):
+        self.enable_debug(7878)
         self.enable_logging('robot')
 
         self.display = OledDisplay() if self.running_on_pi else None
@@ -110,7 +110,7 @@ class RobotServer(DebuggableProcess):
                 # Camera stepper control
                 if self.camera_state != CameraMovement.Idle:
                     # Tilt camera up or down
-                    self.motors.step(self.camera_state)
+                    self.motors.step(StepperDirections.Forward if self.camera_state == CameraMovement.Up else StepperDirections.Backward)
                 try:
                     message = self.queue.get_nowait()
                     self.process_message(message)
@@ -263,7 +263,7 @@ class RobotServer(DebuggableProcess):
             return cls.queue
 
         cls.queue = Queue(5)
-        cls.instance = RobotServer(cls.queue)
+        cls.instance = RobotProcess(cls.queue)
         cls.instance.start()
 
         return cls.queue

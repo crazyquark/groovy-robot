@@ -10,7 +10,7 @@ from websockets.exceptions import ConnectionClosed
 
 from jinja2 import Environment, PackageLoader
 
-from .robot_server import RobotServer, Directions, CameraMovement, Throttle
+from .robot_process import RobotProcess, Directions, CameraMovement, Throttle
 from microphone.mic_capture import MicCapture
 
 from microphone.audio_process import AudioProcess
@@ -118,7 +118,7 @@ async def halt(_):
     '''
     AudioProcess.stop_capture()
     CameraProcess.stop_camera()
-    RobotServer.stop_robot()
+    RobotProcess.stop_robot()
 
     return app.stop()
 
@@ -127,6 +127,6 @@ if __name__ == "__main__":
 
     app.mic_queue = AudioProcess.start_capture()
     app.camera_queue = CameraProcess.start_camera(camera_type=PixyCamera)
-    app.robot_queue = RobotServer.start_robot()
+    app.robot_queue = RobotProcess.start_robot()
 
     app.run(host='0.0.0.0', port=8080, workers=1)
