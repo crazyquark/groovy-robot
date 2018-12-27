@@ -146,10 +146,10 @@ class RobotProcess(DebuggableProcess):
                         # I donno
                         self.motors.control_motors(0, 0)
             except Exception:
-                print('Critical failure, shutting down')
+                print('Motors error, attempting to recover')
                 traceback.print_exc()
-                self.running = False
-                raise Exception('Motors failure')
+                self.motors.stop()
+                continue
 
     def speed_adjust(self, direction):
         '''
