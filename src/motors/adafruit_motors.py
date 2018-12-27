@@ -2,6 +2,7 @@
     Adafruit DC HAT implementation for Motors
 '''
 import atexit
+import math
 
 from adafruit_blinka import agnostic
 # hack for Odroid
@@ -72,12 +73,12 @@ class AdafruitMotors(Motors):
 
         if self.power_left != power_left or self.speed_changed:
             # Adjust left motor if we have to
-            self.power_left = (float(power_left) + self.left_trim) / 100.0
+            self.power_left = math.copysign((float(abs(power_left)) + self.left_trim) / 100.0, power_left)
             if self.running_on_arm:
                 self.left_motor.throttle = self.power_left
         if self.power_right != power_right or self.speed_changed:
             # Same for right motor
-            self.power_right = (float(power_right) + self.right_trim) / 100.0
+            self.power_right = math.copysign((float(abs(power_right)) + self.right_trim) / 100.0, power_right)
             if self.running_on_arm:
                 self.right_motor.throttle = self.power_right
         # Reset flag
