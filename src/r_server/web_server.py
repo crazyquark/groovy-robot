@@ -58,32 +58,37 @@ async def websocket(_, socket):
                     break
 
         elif message == 'w':
-            app.robot_queue.put_nowait(Directions.Forward)
+            send_robot_message(Directions.Forward)
         elif message == 'W':
-            app.robot_queue.put_nowait(Directions.Forward)
+            send_robot_message(Directions.Forward)
         elif message == 's':
-            app.robot_queue.put_nowait(Directions.Back)
+            send_robot_message(Directions.Back)
         elif message == 'S':
-            app.robot_queue.put_nowait(Directions.Back)
+            send_robot_message(Directions.Back)
         elif message == 'a':
-            app.robot_queue.put_nowait(Directions.Left)
+            send_robot_message(Directions.Left)
         elif message == 'A':
-            app.robot_queue.put_nowait(Directions.Left)
+            send_robot_message(Directions.Left)
         elif message == 'd':
-            app.robot_queue.put_nowait(Directions.Right)
+            send_robot_message(Directions.Right)
         elif message == 'D':
-            app.robot_queue.put_nowait(Directions.Right)
+            send_robot_message(Directions.Right)
         elif message == 'x':
-            app.robot_queue.put_nowait(Throttle.Up)
+            send_robot_message(Throttle.Up)
         elif message == 'z':
-            app.robot_queue.put_nowait(Throttle.Down)
+            send_robot_message(Throttle.Down)
         elif message == 'q':
-            app.robot_queue.put_nowait(CameraMovement.Up)
+            send_robot_message(CameraMovement.Up)
         elif message == 'e':
-            app.robot_queue.put_nowait(CameraMovement.Down)
+            send_robot_message(CameraMovement.Down)
         elif message == 'Q' or message == 'E':
-            app.robot_queue.put_nowait(CameraMovement.Idle)
+            send_robot_message(CameraMovement.Idle)
 
+def send_robot_message(message):
+    try:
+        app.robot_queue.put_nowait(message)
+    except:
+        pass
 
 @app.websocket('/mic')
 async def mic_websocket(_, socket):
