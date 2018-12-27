@@ -145,9 +145,8 @@ class RobotProcess(DebuggableProcess):
                     else:
                         # I donno
                         self.motors.control_motors(0, 0)
-            except Exception as ex:
+            except Exception:
                 print('Critical failure, shutting down')
-                print('Possible cause: ' + ex)
                 traceback.print_exc()
                 self.running = False
                 raise Exception('Motors failure')
