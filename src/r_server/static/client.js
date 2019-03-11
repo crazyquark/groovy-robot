@@ -189,9 +189,6 @@ function connect(host) {
 
     var stream_mic = function (host) {
         if (host) {
-            var mic_ws = new WebSocket('ws://' + host + '/mic');
-            mic_ws.binaryType = 'arraybuffer';
-
             var audioContext = new(window.AudioContext || window.webkitAudioContext)();
             webAudioTouchUnlock(audioContext).then(function (unlocked) {
                     if (unlocked) {
@@ -205,12 +202,10 @@ function connect(host) {
                     console.error(reason);
                 });
 
-            mic_ws.onopen = () => {
-                mic_ws.send('1');
-            };
+            const micWorker = new Worker('ws-worker.js');
 
             var nextTime = audioContext.currentTime;
-            mic_ws.onmessage = (event) => {
+            micWorker.onmessage = (event) => {
                 audioContext.decodeAudioData(event.data, function (buffer) {
                     var source = audioContext.createBufferSource();
                     source.channelCount = 1;
@@ -223,8 +218,10 @@ function connect(host) {
                     console.log(err);
                 });
 
-                mic_ws.send('1');
             };
+
+            // Start stream
+            micWorker.postMessage({});
         }
     };
 
