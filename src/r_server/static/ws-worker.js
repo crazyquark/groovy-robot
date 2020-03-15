@@ -9,7 +9,6 @@ onmessage = function () {
 
     websocket.onmessage = (event) => {
         const data = new Float32Array(event.data);
-        // data = convertToFloat32Buffer(data);
         
         postMessage(data);
 
