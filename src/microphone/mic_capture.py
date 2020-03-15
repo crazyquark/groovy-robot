@@ -9,7 +9,7 @@ import soundfile as sf
 SAMPLEWIDTH = 2 # int16
 CHANNELS = 1
 RATE = 44100
-CHUNK = 2048
+CHUNK = 4096
 MAX_FRAMES = 5
 
 class MicCapture:
