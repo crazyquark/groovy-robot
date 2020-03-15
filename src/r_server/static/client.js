@@ -202,7 +202,7 @@ function connect(host) {
                     console.error(reason);
                 });
 
-            const micWorker = new Worker('ws-worker.js');
+            const micWorker = new Worker('/static/ws-worker.js');
 
             var nextTime = audioContext.currentTime;
             micWorker.onmessage = (event) => {
@@ -228,5 +228,5 @@ function connect(host) {
     document.addEventListener('keydown', keydownHandler, true);
     document.addEventListener('keyup', keyupHandler, true);
 
-    // stream_mic(host);
+    stream_mic(host);
 }
