@@ -3,7 +3,7 @@
 function webAudioTouchUnlock(context) {
     return new Promise(function (resolve, reject) {
         if (context.state === 'suspended' && 'ontouchstart' in window) {
-            var unlock = function () {
+            const unlock = function () {
                 context.resume().then(function () {
                         document.removeEventListener('touchstart', unlock);
                         document.removeEventListener('touchend', unlock);
@@ -127,7 +127,7 @@ function init_ui() {
 }
 
 function connect(host) {
-    var ws = new WebSocket('ws://' + host + '/ws');
+    const ws = new WebSocket('ws://' + host + '/ws');
     ws.onopen = () => {
         console.log('connected to server');
         ws.send('1');
@@ -149,7 +149,7 @@ function connect(host) {
         connect(host);
     };
 
-    var sendKey = (keyName) => {
+    const sendKey = (keyName) => {
         if (keyName === 'w' || keyName === 'ArrowUp') {
             ws.send('w');
         } else if (keyName === 's' || keyName === 'ArrowDown') {
@@ -165,7 +165,7 @@ function connect(host) {
 
     window.sendKey = sendKey;
 
-    var keydownHandler = (event) => {
+    const keydownHandler = (event) => {
         // Ignore repeated events FFS
         if (event.repeat) {
             return;
@@ -178,7 +178,7 @@ function connect(host) {
         sendKey(keyName);
     };
 
-    var keyupHandler = (event) => {
+    const keyupHandler = (event) => {
         const keyName = event.key.toUpperCase();
 
         console.log('up: ' + keyName);
@@ -187,9 +187,9 @@ function connect(host) {
 
     };
 
-    var stream_mic = function (host) {
+    const stream_mic = function (host) {
         if (host) {
-            var audioContext = new(window.AudioContext || window.webkitAudioContext)();
+            const audioContext = new(window.AudioContext || window.webkitAudioContext)();
             webAudioTouchUnlock(audioContext).then(function (unlocked) {
                     if (unlocked) {
                         // AudioContext was unlocked from an explicit user action,
