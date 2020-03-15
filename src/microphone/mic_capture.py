@@ -29,22 +29,6 @@ class MicCapture:
         ''' Get an audio chunk from internal stream '''
         self.queue.put(in_data.copy())
 
-    @staticmethod
-    def encode_data(raw_data):
-        # convert current chunk    
-        memory_file = BytesIO()
-        wave_file = sf.SoundFile(memory_file, mode='x', samplerate=RATE, format='wav',
-            channels=CHANNELS)
-        wave_file.write(raw_data)
-        wave_file.close()
-
-        memory_file.seek(0)
-        data = memory_file.read()
-        memory_file.close()
-
-        return data
-
-
     def close(self):
         ''' Close stream '''
         self.stream.close()
