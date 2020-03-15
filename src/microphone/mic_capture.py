@@ -1,10 +1,10 @@
+import queue
+import time
+from io import BytesIO
+
+import numpy
 import sounddevice as sd
 import soundfile as sf
-import numpy
-
-import time
-import queue
-from io import BytesIO
 
 SAMPLEWIDTH = 2 # int16
 CHANNELS = 1

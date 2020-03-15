@@ -90,7 +90,7 @@ async def mic_websocket(_, socket):
             break
 
         audio_chunk = app.mic_queue.get()
-        wave = MicCapture.encode_data(audio_chunk)
+        wave = bytes(audio_chunk)#MicCapture.encode_data(audio_chunk)
 
         try:
             await socket.send(wave)

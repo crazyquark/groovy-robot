@@ -8,7 +8,9 @@ onmessage = function () {
     };
 
     websocket.onmessage = (event) => {
-        const data = event.data;
+        const data = new Float32Array(event.data);
+        // data = convertToFloat32Buffer(data);
+        
         postMessage(data);
 
         websocket.send('1');

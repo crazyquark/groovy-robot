@@ -204,20 +204,19 @@ function connect(host) {
 
             const micWorker = new Worker('/static/ws-worker.js');
 
-            var nextTime = audioContext.currentTime;
+            let nextTime = audioContext.currentTime;
             micWorker.onmessage = (event) => {
-                audioContext.decodeAudioData(event.data, function (buffer) {
-                    var source = audioContext.createBufferSource();
-                    source.channelCount = 1;
-                    source.buffer = buffer;
-                    source.connect(audioContext.destination);
-                    source.start(nextTime);
+                const data = event.data;
+                const buffer = audioContext.createBuffer(1, data.length, audioContext.sampleRate);
+                buffer.copyToChannel(data, 0);
 
-                    nextTime += buffer.duration;
-                }, function (err) {
-                    console.log(err);
-                });
+                const source = audioContext.createBufferSource();
+                source.buffer = buffer;
 
+                source.connect(audioContext.destination);
+                source.start(nextTime);
+
+                nextTime += buffer.duration;
             };
 
             // Start stream
