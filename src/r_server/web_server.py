@@ -84,11 +84,6 @@ async def websocket(_, socket):
 @app.websocket('/mic')
 async def mic_websocket(_, socket):
     while app.is_running:
-        try:
-            await socket.recv()
-        except (ConnectionClosed, RequestTimeout):
-            break
-
         audio_chunk = app.mic_queue.get()
         wave = MicCapture.encode_data(audio_chunk)
 

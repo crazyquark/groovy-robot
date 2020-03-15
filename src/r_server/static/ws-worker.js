@@ -10,7 +10,5 @@ onmessage = function () {
     websocket.onmessage = (event) => {
         const data = event.data;
         postMessage(data);
-
-        websocket.send('1');
     };
 };
