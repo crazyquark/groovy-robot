@@ -4,6 +4,7 @@
 from asyncio import sleep
 
 from sanic import Sanic
+from sanic.response import json
 from sanic.response import html
 from sanic.exceptions import RequestTimeout
 from websockets.exceptions import ConnectionClosed
@@ -36,7 +37,7 @@ async def websocket(_, socket):
     '''
         Main command websocket
     '''
-    while True:
+    while app.is_running:
         try:
             message = await socket.recv()
         except (ConnectionClosed, RequestTimeout):
@@ -82,7 +83,7 @@ async def websocket(_, socket):
 
 @app.websocket('/mic')
 async def mic_websocket(_, socket):
-    while True:
+    while app.is_running:
         try:
             await socket.recv()
         except (ConnectionClosed, RequestTimeout):
@@ -120,7 +121,10 @@ async def halt(_):
     CameraProcess.stop_camera()
     RobotServer.stop_robot()
 
-    return app.stop()
+    app.stop()
+
+    return json({'message':'OK'})
+
 
 if __name__ == "__main__":
     # Setup aux objects and store them on our app for namespace cleanness
