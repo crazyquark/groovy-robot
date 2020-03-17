@@ -15,6 +15,7 @@ apt install -y libbluetooth-dev
 apt install -y bluez
 apt install -y pkg-config
 apt install -y checkinstall
+apt install -y swig
 
 echo 'wiringPi'
 git clone https://github.com/hardkernel/wiringPi
@@ -36,6 +37,12 @@ popd
 
 pushd lib/adafruit_motor_hat
 python3 setup.py install
+popd
+
+pushd lib/pixy2/scripts
+export PYTHON=python3
+. ./build_all.sh
+unset PYTHON
 popd
 
 echo 'sixad'

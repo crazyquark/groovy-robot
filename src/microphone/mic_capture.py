@@ -4,7 +4,6 @@ from io import BytesIO
 
 import numpy
 import sounddevice as sd
-import soundfile as sf
 
 SAMPLEWIDTH = 2 # int16
 CHANNELS = 1
