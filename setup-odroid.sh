@@ -15,13 +15,14 @@ sudo apt install -y python3-smbus
 sudo apt install -y python3-evdev
 sudo apt install -y python3-pyaudio
 sudo apt install -y python3-cffi
-sudo apt install -y libusb-dev
+sudo apt install -y libusb-1.0.0-dev
 sudo apt install -y joystick
 sudo apt install -y libbluetooth-dev 
 sudo apt install -y pkg-config
 sudo apt install -y checkinstall
 sudo apt install -y linux-headers-current-meson64
 sudo apt install -y python3-libgpiod
+sudo apt install -y swig
 # maybe:
 # sudo apt install -y python3-opencv
 # sudo apt install -y bluez
@@ -54,3 +55,10 @@ sudo groupadd gpio
 sudo adduser $USER gpio
 sudo cp ./config/97-gpio.rules /etc/udev/rules.d/
 sudo udevadm control --reload-rules && sudo udevadm trigger
+
+echo 'pixy2'
+pushd lib/pixy2/scripts
+export PYTHON=python3
+. ./build_all.sh
+unset PYTHON
+popd
