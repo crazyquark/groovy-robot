@@ -33,6 +33,8 @@ pushd lib/pixy2/scripts
 export PYTHON=python3
 . ./build_all.sh
 unset PYTHON
+pushd ../src/host/linux
+sudo cp pixy.rules /etc/udev/rules.d/
 popd
 
 echo 'sixad'

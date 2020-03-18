@@ -144,4 +144,4 @@ def start_web_server(running_on_arm):
     app.camera_queue = CameraProcess.start_camera(camera_type=PixyCamera if running_on_arm else Camera)
     app.robot_queue = RobotProcess.start_robot(running_on_arm)
 
-    app.run(host='0.0.0.0', port=8080, workers=1)
+    app.run(host='0.0.0.0', port=8080, workers=4)
