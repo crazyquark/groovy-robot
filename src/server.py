@@ -3,8 +3,8 @@
 '''
 
 from platform import uname
-arch = uname()[4]
-running_on_arm = arch.startswith('arm')
+arch = uname().machine
+running_on_arm = (arch != 'x86_64')
 
 print('We are running on: ', arch)
 
