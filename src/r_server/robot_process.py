@@ -7,7 +7,7 @@ from time import sleep, time
 from multiprocessing import Queue
 import os
 
-from display.oled_display import OledDisplay
+# from display.oled_display import OledDisplay
 from debug.debuggable_process import DebuggableProcess
 from controllers.ps3_controller import PS3Controller
 
@@ -72,12 +72,12 @@ class RobotProcess(DebuggableProcess):
         # self.enable_debug(7878)
         self.enable_logging('robot')
 
-        self.display = OledDisplay() if self.running_on_arm else None
+        # self.display = OledDisplay() if self.running_on_arm else None
         self.last_update = 0
 
         while self.running:
             try:
-                self.get_sbc_status()
+                # self.get_sbc_status()
 
                 # Camera stepper control
                 if self.camera_state != CameraMovement.Idle:
