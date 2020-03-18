@@ -54,5 +54,3 @@ sudo groupadd gpio
 sudo adduser $USER gpio
 sudo cp ./config/97-gpio.rules /etc/udev/rules.d/
 sudo udevadm control --reload-rules && sudo udevadm trigger
-
-echo overlays=uartA | sudo tee -a /boot/armbianEnv.txt
