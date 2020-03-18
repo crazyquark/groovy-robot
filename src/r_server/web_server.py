@@ -4,6 +4,7 @@
 from asyncio import sleep
 
 from sanic import Sanic
+from sanic.response import json
 from sanic.response import html
 from sanic.exceptions import RequestTimeout
 from websockets.exceptions import ConnectionClosed
@@ -38,7 +39,7 @@ async def websocket(_, socket):
     '''
         Main command websocket
     '''
-    while True:
+    while app.is_running:
         try:
             message = await socket.recv()
         except (ConnectionClosed, RequestTimeout):
@@ -92,14 +93,14 @@ def send_robot_message(message):
 
 @app.websocket('/mic')
 async def mic_websocket(_, socket):
-    while True:
+    while app.is_running:
         try:
             await socket.recv()
         except (ConnectionClosed, RequestTimeout):
             break
 
         audio_chunk = app.mic_queue.get()
-        wave = MicCapture.encode_data(audio_chunk)
+        wave = bytes(audio_chunk)
 
         try:
             await socket.send(wave)
@@ -131,7 +132,10 @@ async def halt(_):
     CameraProcess.stop_camera()
     RobotProcess.stop_robot()
 
-    return app.stop()
+    app.stop()
+
+    return json({'message':'OK'})
+
 
 
 def start_web_server(running_on_arm):

@@ -3,7 +3,7 @@
 function webAudioTouchUnlock(context) {
     return new Promise(function (resolve, reject) {
         if (context.state === 'suspended' && 'ontouchstart' in window) {
-            var unlock = function () {
+            const unlock = function () {
                 context.resume().then(function () {
                         document.removeEventListener('touchstart', unlock);
                         document.removeEventListener('touchend', unlock);
@@ -127,7 +127,7 @@ function init_ui() {
 }
 
 function connect(host) {
-    var ws = new WebSocket('ws://' + host + '/ws');
+    const ws = new WebSocket('ws://' + host + '/ws');
     ws.onopen = () => {
         console.log('connected to server');
         ws.send('1');
@@ -149,7 +149,7 @@ function connect(host) {
         connect(host);
     };
 
-    var sendKey = (keyName) => {
+    const sendKey = (keyName) => {
         if (keyName === 'w' || keyName === 'ArrowUp') {
             ws.send('w');
         } else if (keyName === 's' || keyName === 'ArrowDown') {
@@ -165,7 +165,7 @@ function connect(host) {
 
     window.sendKey = sendKey;
 
-    var keydownHandler = (event) => {
+    const keydownHandler = (event) => {
         // Ignore repeated events FFS
         if (event.repeat) {
             return;
@@ -178,7 +178,7 @@ function connect(host) {
         sendKey(keyName);
     };
 
-    var keyupHandler = (event) => {
+    const keyupHandler = (event) => {
         const keyName = event.key.toUpperCase();
 
         console.log('up: ' + keyName);
@@ -187,12 +187,9 @@ function connect(host) {
 
     };
 
-    var stream_mic = function (host) {
+    const stream_mic = function (host) {
         if (host) {
-            var mic_ws = new WebSocket('ws://' + host + '/mic');
-            mic_ws.binaryType = 'arraybuffer';
-
-            var audioContext = new(window.AudioContext || window.webkitAudioContext)();
+            const audioContext = new(window.AudioContext || window.webkitAudioContext)();
             webAudioTouchUnlock(audioContext).then(function (unlocked) {
                     if (unlocked) {
                         // AudioContext was unlocked from an explicit user action,
@@ -205,31 +202,30 @@ function connect(host) {
                     console.error(reason);
                 });
 
-            mic_ws.onopen = () => {
-                mic_ws.send('1');
+            const micWorker = new Worker('/static/ws-worker.js');
+
+            let nextTime = audioContext.currentTime;
+            micWorker.onmessage = (event) => {
+                const data = event.data;
+                const buffer = audioContext.createBuffer(1, data.length, audioContext.sampleRate);
+                buffer.copyToChannel(data, 0);
+
+                const source = audioContext.createBufferSource();
+                source.buffer = buffer;
+
+                source.connect(audioContext.destination);
+                source.start(nextTime);
+
+                nextTime += buffer.duration;
             };
 
-            var nextTime = audioContext.currentTime;
-            mic_ws.onmessage = (event) => {
-                audioContext.decodeAudioData(event.data, function (buffer) {
-                    var source = audioContext.createBufferSource();
-                    source.channelCount = 1;
-                    source.buffer = buffer;
-                    source.connect(audioContext.destination);
-                    source.start(nextTime);
-
-                    nextTime += buffer.duration;
-                }, function (err) {
-                    console.log(err);
-                });
-
-                mic_ws.send('1');
-            };
+            // Start stream
+            micWorker.postMessage({});
         }
     };
 
     document.addEventListener('keydown', keydownHandler, true);
     document.addEventListener('keyup', keyupHandler, true);
 
-    // stream_mic(host);
+    stream_mic(host);
 }

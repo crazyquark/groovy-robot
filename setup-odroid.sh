@@ -28,6 +28,12 @@ sudo apt install -y python3-libgpiod
 
 sudo adduser $USER i2c
 
+pushd lib/pixy2/scripts
+export PYTHON=python3
+. ./build_all.sh
+unset PYTHON
+popd
+
 echo 'sixad'
 git clone https://github.com/RetroPie/sixad.git
 pushd sixad
