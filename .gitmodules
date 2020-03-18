@@ -1,9 +1,6 @@
 [submodule "lib/keyboard"]
 	path = lib/keyboard
 	url = git@github.com:crazyquark/keyboard.git
-[submodule "lib/adafruit_motor_hat"]
-	path = lib/adafruit_motor_hat
-	url = git@github.com:crazyquark/Adafruit-Motor-HAT-Python-Library.git
 [submodule "lib/Adafruit_Python_SSD1306"]
 	path = lib/Adafruit_Python_SSD1306
 	url = https://github.com/adafruit/Adafruit_Python_SSD1306.git

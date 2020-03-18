@@ -1,23 +1,21 @@
-# only install if needed 
-#pygame
-
 ptvsd
 wheel
-sanic
-jinja2
 websockets
-#picamera
+jinja2
+sanic
 evdev
-RPi.GPIO
 luma.oled
 # alternative to pyaudio
 sounddevice
-soundfile
+# disabled for odroid:
+# RPi.GPIO
+# picamera
+# soundfile
 
 # installed w/ apt:
 #pyaudio
 #numpy
 
-# motor kit
+# motor kit - essential!
 adafruit-circuitpython-motorkit
 
