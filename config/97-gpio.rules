@@ -1,6 +1,3 @@
 # /etc/udev/rules.d/97-gpio.rules
 
-SUBSYSTEM=="gpio*", PROGRAM="/bin/sh -c '\
-    chown -R root:gpio /sys/class/gpio && chmod -R 0770 /sys/class/gpio &&\
-    chown -R root:gpio /sys/devices/platform/soc && chmod -R 0770 /sys/devices/platform/soc'" &&\
-    chown -R root:gpio /dev/gpiochip* && chmod -R 0770 /dev/gpiochip*
+SUBSYSTEM=="gpio", GROUP="gpio", MODE="0660"
