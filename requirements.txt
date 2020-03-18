@@ -4,10 +4,10 @@ websockets
 jinja2
 sanic
 evdev
-luma.oled
 # alternative to pyaudio
 sounddevice
 # disabled for odroid:
+# luma.oled
 # RPi.GPIO
 # picamera
 # soundfile
@@ -16,6 +16,8 @@ sounddevice
 #pyaudio
 #numpy
 
+# for the OLED display
+adafruit-circuitpython-rgb-display
+
 # motor kit - essential!
 adafruit-circuitpython-motorkit
-

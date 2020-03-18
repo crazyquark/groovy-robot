@@ -7,11 +7,6 @@ from time import sleep, time
 from multiprocessing import Queue
 import os
 
-try:
-    import RPi.GPIO as GPIO
-except:
-    print('No GPIO available')
-
 from display.oled_display import OledDisplay
 from debug.debuggable_process import DebuggableProcess
 from controllers.ps3_controller import PS3Controller
@@ -55,24 +50,6 @@ class RobotProcess(DebuggableProcess):
         self.manual_mode_left_power = 0
         self.manual_mode_right_power = 0
         self.running = True
-
-    def setup_battery_check(self):
-        def shutdown(_):
-            pass
-            #print('Low battery detected, shutting down now!')
-            # self.halt()
-            #os.system('sudo shutdown -h now')
-
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(16, GPIO.IN)
-
-        status = GPIO.input(16)
-        if (status == 0):
-            # we are running in battery free mode
-            return
-
-        GPIO.add_event_detect(16, GPIO.FALLING)
-        GPIO.add_event_callback(16, shutdown)
 
     def tilt_camera(self, dir):
         self.camera_state = dir

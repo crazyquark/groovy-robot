@@ -28,12 +28,6 @@ sudo apt install -y python3-libgpiod
 
 sudo adduser $USER i2c
 
-git clone https://github.com/jfath/RPi.GPIO-Odroid.git
-pushd RPi.GPIO-Odroid
-sudo python3 setup.py build install
-popd
-rm -rf RPi.GPIO-Odroid
-
 echo 'sixad'
 git clone https://github.com/RetroPie/sixad.git
 pushd sixad
@@ -47,7 +41,12 @@ echo 'pip3'
 pip3 install --upgrade pip
 pip3 install -r requirements.txt
 
+# Also see https://learn.adafruit.com/circuitpython-libaries-linux-odroid-c2/initial-setup
+
 echo 'gpio'
+sudo groupadd gpio
+sudo adduser $USER gpio
 sudo cp ./config/97-gpio.rules /etc/udev/rules.d/
 sudo udevadm control --reload-rules && sudo udevadm trigger
 
+echo overlays=uartA | sudo tee -a /boot/armbianEnv.txt
