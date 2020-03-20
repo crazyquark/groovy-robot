@@ -2,7 +2,8 @@ ptvsd
 wheel
 websockets
 jinja2
-sanic
+flask
+flask-socketio
 evdev
 # alternative to pyaudio
 sounddevice

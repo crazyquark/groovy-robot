@@ -1,6 +1,6 @@
 
 onmessage = function () {
-    const websocket = new WebSocket(`ws://${self.location.hostname}:${self.location.port}/mic`);
+    const websocket = new WebSocket(`ws://${self.location.host}/mic`);
     websocket.binaryType = 'arraybuffer';
 
     websocket.onopen = () => {

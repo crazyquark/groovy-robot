@@ -5,11 +5,11 @@ function webAudioTouchUnlock(context) {
         if (context.state === 'suspended' && 'ontouchstart' in window) {
             const unlock = function () {
                 context.resume().then(function () {
-                        document.removeEventListener('touchstart', unlock);
-                        document.removeEventListener('touchend', unlock);
+                    document.removeEventListener('touchstart', unlock);
+                    document.removeEventListener('touchend', unlock);
 
-                        resolve(true);
-                    },
+                    resolve(true);
+                },
                     function (reason) {
                         reject(reason);
                     });
@@ -126,8 +126,8 @@ function init_ui() {
     });
 }
 
-function connect(host) {
-    const ws = new WebSocket('ws://' + host + '/ws');
+function connect() {
+    const ws = new WebSocket(`ws://${window.location.host}/ws`);
     ws.onopen = () => {
         console.log('connected to server');
         ws.send('1');
@@ -146,7 +146,8 @@ function connect(host) {
         document.removeEventListener('keydown', keydownHandler, false);
         document.removeEventListener('keyup', keyupHandler, false);
 
-        connect(host);
+        connect();
+        worker.terminate();
     };
 
     const sendKey = (keyName) => {
@@ -187,45 +188,45 @@ function connect(host) {
 
     };
 
-    const stream_mic = function (host) {
-        if (host) {
-            const audioContext = new(window.AudioContext || window.webkitAudioContext)();
-            webAudioTouchUnlock(audioContext).then(function (unlocked) {
-                    if (unlocked) {
-                        // AudioContext was unlocked from an explicit user action,
-                        // sound should start playing now
-                    } else {
-                        // There was no need for unlocking, devices other than iOS
-                    }
-                },
-                function (reason) {
-                    console.error(reason);
-                });
+    const stream_mic = function () {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        webAudioTouchUnlock(audioContext).then(function (unlocked) {
+            if (unlocked) {
+                // AudioContext was unlocked from an explicit user action,
+                // sound should start playing now
+            } else {
+                // There was no need for unlocking, devices other than iOS
+            }
+        },
+            function (reason) {
+                console.error(reason);
+            });
 
-            const micWorker = new Worker('/static/ws-worker.js');
+        const micWorker = new Worker('/static/ws-worker.js');
 
-            let nextTime = audioContext.currentTime;
-            micWorker.onmessage = (event) => {
-                const data = event.data;
-                const buffer = audioContext.createBuffer(1, data.length, audioContext.sampleRate);
-                buffer.copyToChannel(data, 0);
+        let nextTime = audioContext.currentTime;
+        micWorker.onmessage = (event) => {
+            const data = event.data;
+            const buffer = audioContext.createBuffer(1, data.length, audioContext.sampleRate);
+            buffer.copyToChannel(data, 0);
 
-                const source = audioContext.createBufferSource();
-                source.buffer = buffer;
+            const source = audioContext.createBufferSource();
+            source.buffer = buffer;
 
-                source.connect(audioContext.destination);
-                source.start(nextTime);
+            source.connect(audioContext.destination);
+            source.start(nextTime);
 
-                nextTime += buffer.duration;
-            };
+            nextTime += buffer.duration;
+        };
 
-            // Start stream
-            micWorker.postMessage({});
-        }
+        // Start stream
+        micWorker.postMessage({});
+
+        return micWorker;
     };
 
     document.addEventListener('keydown', keydownHandler, true);
     document.addEventListener('keyup', keyupHandler, true);
 
-    stream_mic(host);
+    const worker = stream_mic();
 }
