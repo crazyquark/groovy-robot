@@ -10,15 +10,15 @@ from asyncio import sleep
 from flask import Flask, render_template, request
 # from websockets.exceptions import ConnectionClosed
 
-from jinja2 import Environment, PackageLoader
+# from jinja2 import Environment, PackageLoader
 
-from r_server.robot_process import RobotProcess, Directions, CameraMovement, Throttle
-from microphone.mic_capture import MicCapture
+# from r_server.robot_process import RobotProcess, Directions, CameraMovement, Throttle
+# from microphone.mic_capture import MicCapture
 
-from microphone.audio_process import AudioProcess
-from camera.camera_process import CameraProcess
-from camera.pixy_camera import PixyCamera
-from camera.camera import Camera
+# from microphone.audio_process import AudioProcess
+# from camera.camera_process import CameraProcess
+# from camera.pixy_camera import PixyCamera
+# from camera.camera import Camera
 
 # Configure template and static paths
 app = Flask(__name__)
