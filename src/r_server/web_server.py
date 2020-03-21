@@ -26,21 +26,11 @@ socketio = SocketIO(app)
 # app.camera_process = CameraProcess()
 app.robot_queue = Queue()
 app.robot_process = RobotProcess(app.robot_queue, running_on_arm)
+app.robot_process.start()
 
 # from ptvsd import enable_attach, wait_for_attach
 # enable_attach(redirect_output=True)
 # wait_for_attach()
-
-# @app.websocket('/ws')
-# async def websocket(_, socket):
-#     '''
-#         Main command websocket
-#     '''
-#     while app.is_running:
-#         try:
-#             message = await socket.recv()
-#         except (ConnectionClosed, RequestTimeout):
-#             break
 
 #         if message == '1':
 #             # send frame
@@ -54,39 +44,6 @@ app.robot_process = RobotProcess(app.robot_queue, running_on_arm)
 #                     await socket.send(data)
 #                 except (ConnectionClosed, RequestTimeout):
 #                     break
-
-#         elif message == 'w':
-#             send_robot_message(Directions.Forward)
-#         elif message == 'W':
-#             send_robot_message(Directions.Forward)
-#         elif message == 's':
-#             send_robot_message(Directions.Back)
-#         elif message == 'S':
-#             send_robot_message(Directions.Back)
-#         elif message == 'a':
-#             send_robot_message(Directions.Left)
-#         elif message == 'A':
-#             send_robot_message(Directions.Left)
-#         elif message == 'd':
-#             send_robot_message(Directions.Right)
-#         elif message == 'D':
-#             send_robot_message(Directions.Right)
-#         elif message == 'x':
-#             send_robot_message(Throttle.Up)
-#         elif message == 'z':
-#             send_robot_message(Throttle.Down)
-#         elif message == 'q':
-#             send_robot_message(CameraMovement.Up)
-#         elif message == 'e':
-#             send_robot_message(CameraMovement.Down)
-#         elif message == 'Q' or message == 'E':
-#             send_robot_message(CameraMovement.Idle)
-
-# def send_robot_message(message):
-#     try:
-#         app.robot_queue.put_nowait(message)
-#     except:
-#         pass
 
 # @app.websocket('/mic')
 # async def mic_websocket(_, socket):
@@ -107,12 +64,43 @@ app.robot_process = RobotProcess(app.robot_queue, running_on_arm)
 
 @socketio.on('connect', namespace='/control')
 def client_connect():
-    emit('status', {'data': 'connected'})
+    emit('status', 'connected')
 
 
 @socketio.on('control_key', namespace='/control')
-def on_control_key(event):
-    print(event)
+def on_control_key(message):
+    if message == 'w':
+        send_robot_message(Directions.Forward)
+    elif message == 'W':
+        send_robot_message(Directions.Forward)
+    elif message == 's':
+        send_robot_message(Directions.Back)
+    elif message == 'S':
+        send_robot_message(Directions.Back)
+    elif message == 'a':
+        send_robot_message(Directions.Left)
+    elif message == 'A':
+        send_robot_message(Directions.Left)
+    elif message == 'd':
+        send_robot_message(Directions.Right)
+    elif message == 'D':
+        send_robot_message(Directions.Right)
+    elif message == 'x':
+        send_robot_message(Throttle.Up)
+    elif message == 'z':
+        send_robot_message(Throttle.Down)
+    elif message == 'q':
+        send_robot_message(CameraMovement.Up)
+    elif message == 'e':
+        send_robot_message(CameraMovement.Down)
+    elif message == 'Q' or message == 'E':
+        send_robot_message(CameraMovement.Idle)
+
+def send_robot_message(message):
+    try:
+        app.robot_queue.put_nowait(message)
+    except:
+        pass
 
 @app.route('/')
 def index():

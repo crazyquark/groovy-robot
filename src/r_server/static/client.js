@@ -110,15 +110,15 @@ class RobotClient {
         socket.on('disconnect', () => {
             console.log('Disconnected from control socket');
 
-            console.log('server connection lost');
-
             this.connect();
             // worker.terminate();
         });
 
         socket.on('status', (event) => {
-            console.log('Server confirmed connection');
-            this._setupKeyHandlers(socket);
+            if (event === 'connected') {
+                console.log('Server confirmed connection');
+                this._setupKeyHandlers(socket);
+            }
         });
 
 
