@@ -2,7 +2,7 @@
     Web server implementation
 '''
 from flask import Flask, render_template, request
-from flask_socketio import SocketIO
+from flask_socketio import SocketIO, emit
 from multiprocessing import Queue
 
 from r_server.robot_process import RobotProcess, Directions, CameraMovement, Throttle
@@ -106,9 +106,13 @@ app.robot_process = RobotProcess(app.robot_queue, running_on_arm)
 
 
 @socketio.on('connect', namespace='/control')
-def test_connect():
-    emit('response', {'data': 'Connected'})
+def client_connect():
+    emit('status', {'data': 'connected'})
 
+
+@socketio.on('control_key', namespace='/control')
+def on_control_key(event):
+    print(event)
 
 @app.route('/')
 def index():
@@ -134,4 +138,4 @@ def halt():
 
 
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port=8080)
+    socketio.run(app, host='0.0.0.0', port=8080, debug=True)

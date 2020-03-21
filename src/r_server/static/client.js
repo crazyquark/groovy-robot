@@ -3,18 +3,13 @@
 class RobotClient {
     constructor() {
     }
-    
+
     initUI() {
         let camera = document.getElementById('camera');
         let joystick = nipplejs.create({
             zone: camera
         });
-    
-        let sendKey = window.sendKey;
-        if (sendKey === undefined) {
-            return;
-        }
-    
+
         let pressed_keys = [];
         joystick.on('dir', (event, data) => {
             let dir = data.direction;
@@ -35,145 +30,132 @@ class RobotClient {
                 default:
                     key = null;
             }
-    
+
             if (key !== null) {
-                sendKey(key);
+                this._sendKey(key);
                 pressed_keys.push(key);
             }
         });
-    
+
         joystick.on('end', () => {
             for (let key of pressed_keys) {
-                sendKey(key.toUpperCase());
+                this._sendKey(key.toUpperCase());
             }
-    
+
             pressed_keys = [];
         });
-    
+
         let camPlusButton = document.getElementById('cam+');
         let camMinusButton = document.getElementById('cam-');
         camPlusButton.addEventListener('mousedown', () => {
-            sendKey('e');
+            this._sendKey('e');
         });
         camPlusButton.addEventListener('touchstart', () => {
-            sendKey('e');
+            this._sendKey('e');
         });
         camPlusButton.addEventListener('mouseup', () => {
-            sendKey('E');
+            this._sendKey('E');
         });
         camPlusButton.addEventListener('touchended', () => {
-            sendKey('E');
+            this._sendKey('E');
         });
-    
+
         camMinusButton.addEventListener('mousedown', () => {
-            sendKey('q');
+            this._sendKey('q');
         });
         camMinusButton.addEventListener('touchstart', () => {
-            sendKey('q');
+            this._sendKey('q');
         });
         camMinusButton.addEventListener('mouseup', () => {
-            sendKey('Q');
+            this._sendKey('Q');
         });
         camMinusButton.addEventListener('touchended', () => {
-            sendKey('Q');
+            this._sendKey('Q');
         });
-    
+
         let spdPlusButton = document.getElementById('spd+');
         let spdMinusButton = document.getElementById('spd-');
         spdPlusButton.addEventListener('mousedown', () => {
-            sendKey('x');
+            this._sendKey('x');
         });
         spdPlusButton.addEventListener('touchstart', () => {
-            sendKey('x');
+            this._sendKey('x');
         });
         camPlusButton.addEventListener('mouseup', () => {
-            sendKey('X');
+            this._sendKey('X');
         });
         camPlusButton.addEventListener('touchended', () => {
-            sendKey('X');
+            this._sendKey('X');
         });
-    
+
         spdMinusButton.addEventListener('mousedown', () => {
-            sendKey('z');
+            this._sendKey('z');
         });
         spdMinusButton.addEventListener('touchstart', () => {
-            sendKey('z');
+            this._sendKey('z');
         });
         spdMinusButton.addEventListener('mouseup', () => {
-            sendKey('Z');
+            this._sendKey('Z');
         });
         spdMinusButton.addEventListener('touchended', () => {
-            sendKey('Z');
+            this._sendKey('Z');
         });
     }
 
     connect() {
-        const ws = io(`http://${window.location.host}/control`);
-        ws.onopen = () => {
-            console.log('connected to server');
-            // ws.send('1');
-        };
-    
-        ws.onmessage = (event) => {
-            let msg = event.data;
-            document.getElementById('cam')
-                .setAttribute('src', 'data:image/jpeg;base64,' + msg);
-            // ws.send('1');
-        };
-    
-        ws.onclose = () => {
+        const socket = io('/control');
+        socket.on('connect', () => {
+            console.log('Connected to control socket');
+        });
+        socket.on('disconnect', () => {
+            console.log('Disconnected from control socket');
+
             console.log('server connection lost');
-    
-            document.removeEventListener('keydown', keydownHandler, false);
-            document.removeEventListener('keyup', keyupHandler, false);
-    
-            connect();
+
+            this.connect();
             // worker.terminate();
-        };
-    
-        const sendKey = (keyName) => {
-            if (keyName === 'w' || keyName === 'ArrowUp') {
-                ws.send('w');
-            } else if (keyName === 's' || keyName === 'ArrowDown') {
-                ws.send('s');
-            } else if (keyName === 'a' || keyName === 'ArrowLeft') {
-                ws.send('a');
-            } else if (keyName === 'd' || keyName === 'ArrowRight') {
-                ws.send('d');
-            } else {
-                ws.send(keyName);
-            }
-        };
-    
-        window.sendKey = sendKey;
-    
+        });
+
+        socket.on('status', (event) => {
+            console.log('Server confirmed connection');
+            this._setupKeyHandlers(socket);
+        });
+
+
+        // const worker = stream_mic();
+    }
+
+    _sendKey = (socket, keyName) => {
+        if (keyName === 'w' || keyName === 'ArrowUp') {
+            socket.emit('control_key', 'w');
+        } else if (keyName === 's' || keyName === 'ArrowDown') {
+            socket.emit('control_key', 's');
+        } else if (keyName === 'a' || keyName === 'ArrowLeft') {
+            socket.emit('control_key', 'a');
+        } else if (keyName === 'd' || keyName === 'ArrowRight') {
+            socket.emit('control_key', 'd');
+        } else {
+            socket.emit('control_key', keyName);
+        }
+    };
+
+    _setupKeyHandlers(socket) {
         const keydownHandler = (event) => {
             // Ignore repeated events FFS
             if (event.repeat) {
                 return;
             }
-    
             const keyName = event.key.toLowerCase();
-    
             console.log('down: ' + keyName);
-    
-            sendKey(keyName);
+            this._sendKey(socket, keyName);
         };
-    
         const keyupHandler = (event) => {
             const keyName = event.key.toUpperCase();
-    
             console.log('up: ' + keyName);
-    
-            sendKey(keyName);
-    
+            this._sendKey(socket, keyName);
         };
-    
-    
         document.addEventListener('keydown', keydownHandler, true);
         document.addEventListener('keyup', keyupHandler, true);
-    
-        // const worker = stream_mic();
     }
 
     _streamMic() {
