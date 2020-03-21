@@ -3,7 +3,7 @@
 '''
 import traceback
 from subprocess import Popen, PIPE
-from time import sleep, time
+from time import sleep
 from multiprocessing import Queue
 import os
 
@@ -78,16 +78,16 @@ class RobotProcess(DebuggableProcess):
         while self.running:
             try:
                 # self.get_sbc_status()
-
+                sleep(0.1)
                 # Camera stepper control
-                if self.camera_state != CameraMovement.Idle:
-                    # Tilt camera up or down
-                    self.motors.step(StepperDirections.Forward if self.camera_state == CameraMovement.Up else StepperDirections.Backward)
-                try:
-                    message = self.queue.get_nowait()
-                    self.process_message(message)
-                except:
-                    pass
+                # if self.camera_state != CameraMovement.Idle:
+                #     # Tilt camera up or down
+                #     self.motors.step(StepperDirections.Forward if self.camera_state == CameraMovement.Up else StepperDirections.Backward)
+                # try:
+                #     message = self.queue.get_nowait()
+                #     self.process_message(message)
+                # except:
+                #     pass
 
                 # DC motors control
                 if self.manual:

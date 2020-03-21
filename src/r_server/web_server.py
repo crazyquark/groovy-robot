@@ -23,10 +23,9 @@ app.config['SECRET_KEY'] = 'STZjV3G7'
 socketio = SocketIO(app)
 
 # Start secondary processes
-# app.camera_process = CameraProcess()
-app.robot_queue = Queue()
-app.robot_process = RobotProcess(app.robot_queue, running_on_arm)
-app.robot_process.start()
+# app.mic_queue = AudioProcess.start_capture()
+# app.camera_queue = CameraProcess.start_camera(camera_type=PixyCamera if running_on_arm else Camera)
+app.robot_queue = RobotProcess.start_robot(running_on_arm)
 
 # from ptvsd import enable_attach, wait_for_attach
 # enable_attach(redirect_output=True)
@@ -126,4 +125,4 @@ def halt():
 
 
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port=8080, debug=True)
+    socketio.run(app, host='0.0.0.0', port=8080, debug=False)

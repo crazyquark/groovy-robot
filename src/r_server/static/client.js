@@ -103,43 +103,42 @@ class RobotClient {
     }
 
     connect() {
-        const socket = io('/control');
-        socket.on('connect', () => {
+        this.socket = io('/control');
+        this.socket.on('connect', () => {
             console.log('Connected to control socket');
         });
-        socket.on('disconnect', () => {
+        this.socket.on('disconnect', () => {
             console.log('Disconnected from control socket');
 
             this.connect();
             // worker.terminate();
         });
 
-        socket.on('status', (event) => {
+        this.socket.on('status', (event) => {
             if (event === 'connected') {
                 console.log('Server confirmed connection');
-                this._setupKeyHandlers(socket);
+                this._setupKeyHandlers();
             }
         });
-
 
         // const worker = stream_mic();
     }
 
-    _sendKey = (socket, keyName) => {
+    _sendKey = (keyName) => {
         if (keyName === 'w' || keyName === 'ArrowUp') {
-            socket.emit('control_key', 'w');
+            this.socket.emit('control_key', 'w');
         } else if (keyName === 's' || keyName === 'ArrowDown') {
-            socket.emit('control_key', 's');
+            this.socket.emit('control_key', 's');
         } else if (keyName === 'a' || keyName === 'ArrowLeft') {
-            socket.emit('control_key', 'a');
+            this.socket.emit('control_key', 'a');
         } else if (keyName === 'd' || keyName === 'ArrowRight') {
-            socket.emit('control_key', 'd');
+            this.socket.emit('control_key', 'd');
         } else {
-            socket.emit('control_key', keyName);
+            this.socket.emit('control_key', keyName);
         }
     };
 
-    _setupKeyHandlers(socket) {
+    _setupKeyHandlers() {
         const keydownHandler = (event) => {
             // Ignore repeated events FFS
             if (event.repeat) {
@@ -147,12 +146,12 @@ class RobotClient {
             }
             const keyName = event.key.toLowerCase();
             console.log('down: ' + keyName);
-            this._sendKey(socket, keyName);
+            this._sendKey(keyName);
         };
         const keyupHandler = (event) => {
             const keyName = event.key.toUpperCase();
             console.log('up: ' + keyName);
-            this._sendKey(socket, keyName);
+            this._sendKey(keyName);
         };
         document.addEventListener('keydown', keydownHandler, true);
         document.addEventListener('keyup', keyupHandler, true);
