@@ -4,6 +4,7 @@ websockets
 jinja2
 flask
 flask-socketio
+gevent-websocket
 evdev
 # alternative to pyaudio
 sounddevice
@@ -14,8 +15,9 @@ sounddevice
 # soundfile
 
 # installed w/ apt:
-#pyaudio
-#numpy
+# gevent
+# pyaudio
+# numpy
 
 # for the OLED display
 adafruit-circuitpython-rgb-display

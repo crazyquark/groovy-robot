@@ -1,27 +1,31 @@
 '''
-    Server implementation using sanic in python3 for speed
+    Web server implementation
 '''
-from asyncio import sleep
-
-# from sanic import Sanic
-# from sanic.response import json
-# from sanic.response import html
-# from sanic.exceptions import RequestTimeout
 from flask import Flask, render_template, request
-# from websockets.exceptions import ConnectionClosed
+from flask_socketio import SocketIO
+from multiprocessing import Queue
 
-# from jinja2 import Environment, PackageLoader
-
-# from r_server.robot_process import RobotProcess, Directions, CameraMovement, Throttle
+from r_server.robot_process import RobotProcess, Directions, CameraMovement, Throttle
 # from microphone.mic_capture import MicCapture
 
 # from microphone.audio_process import AudioProcess
-# from camera.camera_process import CameraProcess
-# from camera.pixy_camera import PixyCamera
-# from camera.camera import Camera
+from camera.camera_process import CameraProcess
+from camera.pixy_camera import PixyCamera
+from camera.camera import Camera
+
+# Detect platform
+from platform import uname
+running_on_arm = uname().machine != 'x86_64'
 
 # Configure template and static paths
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'STZjV3G7'
+socketio = SocketIO(app)
+
+# Start secondary processes
+# app.camera_process = CameraProcess()
+app.robot_queue = Queue()
+app.robot_process = RobotProcess(app.robot_queue, running_on_arm)
 
 # from ptvsd import enable_attach, wait_for_attach
 # enable_attach(redirect_output=True)
@@ -101,12 +105,18 @@ app = Flask(__name__)
 #             break
 
 
+@socketio.on('connect', namespace='/control')
+def test_connect():
+    emit('response', {'data': 'Connected'})
+
+
 @app.route('/')
 def index():
     '''
         Main index handler
     '''
     return render_template('main.html')
+
 
 @app.route('/halt')
 def halt():
@@ -121,3 +131,7 @@ def halt():
     print('Shutting down...')
 
     return 'OK'
+
+
+if __name__ == '__main__':
+    socketio.run(app, host='0.0.0.0', port=8080)

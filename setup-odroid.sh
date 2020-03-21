@@ -15,6 +15,7 @@ sudo apt install -y python3-smbus
 sudo apt install -y python3-evdev
 sudo apt install -y python3-pyaudio
 sudo apt install -y python3-cffi
+sudo apt install -y python3-gevent
 sudo apt install -y libusb-1.0.0-dev
 sudo apt install -y joystick
 sudo apt install -y libbluetooth-dev 
@@ -64,3 +65,6 @@ export PYTHON=python3
 . ./build_all.sh
 unset PYTHON
 popd
+
+echo 'nvm'
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash

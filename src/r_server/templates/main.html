@@ -4,19 +4,19 @@
 <head>
     <title>Groovy Robot</title>
 
-    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/style.css">
 
-    <script src="/static/jquery/jquery-3.3.1.min.js"></script>
-    <script src="/static/popper/popper.min.js"></script>
-    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
-    <script src="/static/nipplejs/nipplejs.min.js"></script>
-
+    <script src="/static/node_modules/nipplejs/dist/nipplejs.js"></script>
+    <script src="/static/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="/static/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/static/node_modules/socket.io-client/dist/socket.io.js"></script>
     <script src="/static/client.js"></script>
 
 
     <script type="text/javascript">
-        connect();
+        var client = new RobotClient();
+        client.connect();
     </script>
 
 <body>
@@ -33,7 +33,7 @@
         <button type="button" class="btn btn-primary" id="spd-">Speed - (z)</button>
     </div>
     <script type="text/javascript">
-        init_ui();
+        client.initUI();
     </script>
 </body>
 
