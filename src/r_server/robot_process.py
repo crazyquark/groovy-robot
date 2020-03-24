@@ -42,7 +42,7 @@ class RobotProcess(DebuggableProcess):
         self.camera_state = 0
 
         # Adjust for veering left
-        self.motors = AdafruitMotors(right_trim=-4, running_on_arm = self.running_on_arm)
+        self.motors = AdafruitMotors(running_on_arm = self.running_on_arm)
 
         super(RobotProcess, self).__init__()
 
@@ -78,16 +78,17 @@ class RobotProcess(DebuggableProcess):
         while self.running:
             try:
                 # self.get_sbc_status()
-                sleep(0.1)
                 # Camera stepper control
                 # if self.camera_state != CameraMovement.Idle:
                 #     # Tilt camera up or down
                 #     self.motors.step(StepperDirections.Forward if self.camera_state == CameraMovement.Up else StepperDirections.Backward)
-                # try:
-                #     message = self.queue.get_nowait()
-                #     self.process_message(message)
-                # except:
-                #     pass
+                try:
+                    if (not self.queue.empty()):
+                        message = self.queue.get_nowait()
+                        self.process_message(message)
+                except Exception as ex:
+                    print(ex)
+                    continue
 
                 # DC motors control
                 if self.manual:

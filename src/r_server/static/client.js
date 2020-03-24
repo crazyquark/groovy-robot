@@ -100,6 +100,8 @@ class RobotClient {
         spdMinusButton.addEventListener('touchended', () => {
             this._sendKey('Z');
         });
+
+        this._setupKeyHandlers();
     }
 
     connect() {
@@ -117,7 +119,6 @@ class RobotClient {
         this.socket.on('status', (event) => {
             if (event === 'connected') {
                 console.log('Server confirmed connection');
-                this._setupKeyHandlers();
             }
         });
 
