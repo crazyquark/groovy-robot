@@ -69,7 +69,7 @@ class RobotProcess(DebuggableProcess):
             (self.left_pressed and self.right_pressed)
 
     def run(self):
-        self.enable_debug(7878)
+        # self.enable_debug(7878)
         self.enable_logging('robot')
 
         # self.display = OledDisplay() if self.running_on_arm else None
@@ -236,6 +236,7 @@ class RobotProcess(DebuggableProcess):
 
         cls.queue = Queue(5)
         cls.instance = RobotProcess(cls.queue, running_on_arm)
+        cls.instance.daemon = True
         cls.instance.start()
 
         return cls.queue
