@@ -106,10 +106,10 @@ class RobotProcess(DebuggableProcess):
                         self.motors.control_motors(-100, -100)
                     elif not self.back_pressed and not self.fwd_pressed and self.right_pressed:
                         # In place right turn
-                        self.motors.control_motors(100, -100)
+                        self.motors.control_motors(100, 0)
                     elif not self.back_pressed and not self.fwd_pressed and self.left_pressed:
                         # In place left turn
-                        self.motors.control_motors(-100, 100)
+                        self.motors.control_motors(0, 100)
                     elif (self.fwd_pressed or self.back_pressed) and self.right_pressed:
                         # Attempt to turn right
                         sign = 1 if self.fwd_pressed else -1
