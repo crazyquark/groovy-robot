@@ -95,7 +95,7 @@ class AdafruitMotors(Motors):
     def stop(self):
         if self.running_on_arm:
             # Kill power
-            self.left_motor.throttle = 0.0
-            self.right_motor.throttle = 0.0
+            self.left_motor.throttle = None
+            self.right_motor.throttle = None
 
             self.power_left = self.power_right = 0.0
