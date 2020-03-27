@@ -13,8 +13,8 @@ class Motors(object):
         self.left_trim = left_trim
         self.right_trim = right_trim
 
-        # Default speed values: 0 - 100
-        self.max_speed = 100
+        # Default speed values: 0 - 1.0
+        self.max_speed = 1.0
 
         self.running_on_arm = running_on_arm
 

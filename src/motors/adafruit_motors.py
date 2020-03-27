@@ -27,7 +27,7 @@ class AdafruitMotors(Motors):
     def __init__(self, running_on_arm, addr=0x60, left_id=2, right_id=1, left_trim=0, right_trim=0):
         Motors.__init__(self, left_trim=left_trim,
                         right_trim=right_trim, running_on_arm=running_on_arm)
-        # Start at ~60% speed
+        # Start at 100% speed
         self.speed = AdafruitMotors.default_speed
 
         # Speed values are in [-1.0, 1.0]
