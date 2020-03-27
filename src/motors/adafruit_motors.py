@@ -22,7 +22,7 @@ class AdafruitMotors(Motors):
     '''
         Motors implementation for the Adafruit DC & Stepper HAT
     '''
-    default_speed = 0.6
+    default_speed = 1.0
 
     def __init__(self, running_on_arm, addr=0x60, left_id=2, right_id=1, left_trim=0, right_trim=0):
         Motors.__init__(self, left_trim=left_trim,
@@ -72,13 +72,13 @@ class AdafruitMotors(Motors):
             self.power_left = math.copysign((float(abs(power_left)) + self.left_trim) / 100.0, power_left)
             assert self.power_left >= -1.0 and self.power_left <= 1.0
             if self.running_on_arm:
-                self.left_motor.throttle = self.power_left
+                self.left_motor.throttle = self.power_left * self.speed
         if self.power_right != power_right or self.speed_changed:
             # Same for right motor
             self.power_right = math.copysign((float(abs(power_right)) + self.right_trim) / 100.0, power_right)
             assert self.power_right >= -1.0 and self.power_right <= 1.0
             if self.running_on_arm:
-                self.right_motor.throttle = self.power_right
+                self.right_motor.throttle = self.power_right * self.speed
         # Reset flag
         self.speed_changed = False
 

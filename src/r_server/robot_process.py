@@ -34,7 +34,7 @@ class RobotProcess(DebuggableProcess):
         self.turn_factor = 2  # controls how sharp the turns will be
 
         # How much to increase speed at one time
-        self.speed_increment = 5
+        self.speed_increment = 0.05 # 5%
 
         # self.setupBatterySafeStop()
 
@@ -69,7 +69,7 @@ class RobotProcess(DebuggableProcess):
             (self.left_pressed and self.right_pressed)
 
     def run(self):
-        # self.enable_debug(7878)
+        self.enable_debug(7878)
         self.enable_logging('robot')
 
         # self.display = OledDisplay() if self.running_on_arm else None
@@ -147,6 +147,8 @@ class RobotProcess(DebuggableProcess):
     def process_message(self, message):
         if message > Directions.Start and message < Directions.End:
             self.process_press(message)
+        elif message == Throttle.Down or message == Throttle.Up:
+            self.speed_adjust(message)
 
     def process_press(self, direction):
         '''
