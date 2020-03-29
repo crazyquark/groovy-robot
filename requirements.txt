@@ -13,6 +13,7 @@ sounddevice
 
 # installed w/ apt:
 # eventlet
+# redis
 # pyaudio
 # numpy
 

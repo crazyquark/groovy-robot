@@ -19,12 +19,14 @@ sudo apt install -y python3-pyaudio
 sudo apt install -y python3-cffi
 sudo apt install -y python3-eventlet
 sudo apt install -y python3-opencv
+sudo apt install -y python3-redis
 sudo apt install -y libusb-1.0.0-dev
 sudo apt install -y joystick
 sudo apt install -y libbluetooth-dev 
 sudo apt install -y pkg-config
 sudo apt install -y python3-libgpiod
 sudo apt install -y swig
+sudo apt install -y redis
 # maybe:
 # sudo apt install -y python3-opencv
 # sudo apt install -y bluez

@@ -23,7 +23,7 @@ running_on_arm = uname().machine != 'x86_64'
 # Configure template and static paths
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'STZjV3G7'
-socketio = SocketIO(app)
+socketio = SocketIO(app, message_queue='redis://')
 
 # Start secondary processes
 # app.mic_queue = AudioProcess.start_capture()
