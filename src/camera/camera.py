@@ -26,7 +26,7 @@ class Camera:
         self.prev_time = current_time
 
     def get_frame(self):
-        if not self.frame:
+        if self.frame is None:
             self.frame = self.dummy_frame()
 
         self.compute_fps()

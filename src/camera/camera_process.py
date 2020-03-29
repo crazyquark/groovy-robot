@@ -22,7 +22,7 @@ class CameraProcess(DebuggableProcess):
         self.camera_type = camera_type
 
     def run(self):
-        self.enable_debug(1212)
+        # self.enable_debug(1212)
         self.enable_logging('camera')
 
         camera = self.camera_type()
@@ -30,7 +30,7 @@ class CameraProcess(DebuggableProcess):
         while True:
             frame = camera.get_frame()
 
-            if frame:
+            if frame is not None:
                 try:
                     self.queue.put_nowait(frame)
                 except:
@@ -58,7 +58,7 @@ class CameraProcess(DebuggableProcess):
         '''
             Base64 image
         '''
-        if frame:
+        if not frame is None:
             (flag, frame) = cv2.imencode(".jpg", frame)
 
         return frame if flag else None

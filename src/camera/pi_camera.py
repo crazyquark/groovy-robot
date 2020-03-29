@@ -22,11 +22,7 @@ class PiCamera(Camera):
         # self.stream.set(cv2.CAP_PROP_FPS, 25)
         self.stream.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
         self.stream.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
-        
-        # Camera warmup
-        time.sleep(2)
-        self.stream.start()
-
+    
         # self.load_model()
 
     def load_model(self):
@@ -59,8 +55,8 @@ class PiCamera(Camera):
         cv2.putText(image, str(self.fps), (0, 12),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0))
 
-        result = cv2.imencode('.jpg', image)
-        data = np.array(result[1], dtype=np.uint8).tostring()
+        # result = cv2.imencode('.jpg', image)
+        # data = np.array(result[1], dtype=np.uint8).tostring()
 
         return data
 
@@ -143,9 +139,13 @@ class PiCamera(Camera):
 
     def get_frame(self):
         if self.stream:
-            self.frame = self.stream.read()
+            (success, self.frame) = self.stream.read()
+            if success:
+                self.process_frame(self.frame, False)
+            else:
+                self.frame = None
         
-        return super.get_frame(self)
+        return super().get_frame()
 
     def halt(self):
         '''

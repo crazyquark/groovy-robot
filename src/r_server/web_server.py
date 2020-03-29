@@ -110,11 +110,12 @@ def index():
 
 def gen_frame():
     while True:
-        frame = app.camera_queue.get()
-        encoded_image = CameraProcess.encode_frame(frame)
-        if encoded_image:
-            yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + 
-                    bytearray(encoded_image) + b'\r\n')
+        if not app.camera_queue.empty():
+            frame = app.camera_queue.get_nowait()
+            encoded_image = CameraProcess.encode_frame(frame)
+            if not encoded_image is None:
+                yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + 
+                        bytearray(encoded_image) + b'\r\n')
 
 
 @app.route('/video')
