@@ -9,7 +9,6 @@ evdev
 # alternative to pyaudio
 sounddevice
 # disable for odroid:
-picamera
 # luma.oled
 # RPi.GPIO
 

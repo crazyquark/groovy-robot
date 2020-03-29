@@ -18,6 +18,7 @@ sudo apt install -y python3-evdev
 sudo apt install -y python3-pyaudio
 sudo apt install -y python3-cffi
 sudo apt install -y python3-gevent
+sudo apt install -y python3-opencv
 sudo apt install -y libusb-1.0.0-dev
 sudo apt install -y joystick
 sudo apt install -y libbluetooth-dev 

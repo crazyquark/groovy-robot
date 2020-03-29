@@ -1,13 +1,9 @@
-import picamera
-from picamera.array import PiRGBArray
-
 import time
 import numpy as np
 
 import cv2
 
 from .camera import Camera
-
 
 class PiCamera(Camera):
     '''
@@ -26,6 +22,10 @@ class PiCamera(Camera):
         # self.stream.set(cv2.CAP_PROP_FPS, 25)
         self.stream.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
         self.stream.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+        
+        # Camera warmup
+        time.sleep(2)
+        self.stream.start()
 
         # self.load_model()
 
@@ -142,11 +142,10 @@ class PiCamera(Camera):
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0))
 
     def get_frame(self):
-        '''
-            Get current camera frame
-        '''
-        if self.frame:
-            return self.frame
+        if self.stream:
+            self.frame = self.stream.read()
+        
+        return super.get_frame(self)
 
     def halt(self):
         '''
