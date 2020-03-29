@@ -12,7 +12,7 @@ from .camera import Camera
 class PiCamera(Camera):
     '''
         Class for using a Pi Camera
-        Inspired from https://github.com/crazyquark/flask-video-streaming/blob/master/camera_pi.py
+        Inspired from https://github.com/miguelgrinberg/flask-video-streaming/blob/master/camera_pi.py
     '''
 
     def __init__(self):

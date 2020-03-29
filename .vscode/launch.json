@@ -18,12 +18,12 @@
             "name": "Attach camera",
             "type": "python",
             "request": "attach",
-            "port": 5678,
+            "port": 1212,
             "host": "192.168.1.165",
             "pathMappings": [
                 {
                     "localRoot": "${workspaceFolder}/src",
-                    "remoteRoot": "/root/groovy-robot/src"
+                    "remoteRoot": "/home/pi/groovy-robot/src"
                 }
             ]
         },
@@ -36,7 +36,7 @@
             "pathMappings": [
                 {
                     "localRoot": "${workspaceFolder}/src",
-                    "remoteRoot": "/root/groovy-robot/src"
+                    "remoteRoot": "/home/pi/groovy-robot/src"
                 }
             ]
         },

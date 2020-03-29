@@ -1,5 +1,5 @@
 from multiprocessing import Queue
-from base64 import b64encode
+import cv2
 
 from debug.debuggable_process import DebuggableProcess
 from .camera import Camera
@@ -59,6 +59,6 @@ class CameraProcess(DebuggableProcess):
             Base64 image
         '''
         if frame:
-            frame = b64encode(frame).decode('utf-8')
+            (flag, frame) = cv2.imencode(".jpg", frame)
 
-        return frame
+        return frame if flag else None

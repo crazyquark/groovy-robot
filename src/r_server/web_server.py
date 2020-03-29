@@ -1,7 +1,7 @@
 '''
     Web server implementation
 '''
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, Response
 from flask_socketio import SocketIO, emit
 from multiprocessing import Queue
 
@@ -10,7 +10,7 @@ from r_server.robot_process import RobotProcess, Directions, CameraMovement, Thr
 
 # from microphone.audio_process import AudioProcess
 from camera.camera_process import CameraProcess
-from camera.pixy_camera import PixyCamera
+from camera.pi_camera import PiCamera
 from camera.camera import Camera
 
 # Detect platform
@@ -24,7 +24,7 @@ socketio = SocketIO(app)
 
 # Start secondary processes
 # app.mic_queue = AudioProcess.start_capture()
-# app.camera_queue = CameraProcess.start_camera(camera_type=PixyCamera if running_on_arm else Camera)
+app.camera_queue = CameraProcess.start_camera(camera_type=PiCamera if running_on_arm else Camera)
 app.robot_queue = RobotProcess.start_robot(running_on_arm)
 
 # from ptvsd import enable_attach, wait_for_attach
@@ -108,6 +108,22 @@ def index():
     '''
     return render_template('main.html')
 
+def gen_frame():
+    while True:
+        frame = app.camera_queue.get()
+        encoded_image = CameraProcess.encode_frame(frame)
+        if encoded_image:
+            yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + 
+                    bytearray(encoded_image) + b'\r\n')
+
+
+@app.route('/video')
+def video():
+    '''
+        Video stream
+    '''
+    return Response(gen_frame(),
+                    mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/halt')
 def halt():

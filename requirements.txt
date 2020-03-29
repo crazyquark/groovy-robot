@@ -8,11 +8,10 @@ gevent-websocket
 evdev
 # alternative to pyaudio
 sounddevice
-# disabled for odroid:
+# disable for odroid:
+picamera
 # luma.oled
 # RPi.GPIO
-# picamera
-# soundfile
 
 # installed w/ apt:
 # gevent
