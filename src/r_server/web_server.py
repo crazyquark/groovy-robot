@@ -30,23 +30,6 @@ socketio = SocketIO(app, message_queue='redis://')
 app.camera_queue = CameraProcess.start_camera(camera_type=PiCamera if running_on_arm else Camera)
 app.robot_queue = RobotProcess.start_robot(running_on_arm)
 
-# from ptvsd import enable_attach, wait_for_attach
-# enable_attach(redirect_output=True)
-# wait_for_attach()
-
-#         if message == '1':
-#             # send frame
-#             try:
-#                 frame = app.camera_queue.get_nowait()
-#                 data = CameraProcess.encode_frame(frame)
-#             except:
-#                 continue
-#             if data:
-#                 try:
-#                     await socket.send(data)
-#                 except (ConnectionClosed, RequestTimeout):
-#                     break
-
 # @app.websocket('/mic')
 # async def mic_websocket(_, socket):
 #     while app.is_running:
