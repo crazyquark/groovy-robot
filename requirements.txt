@@ -4,7 +4,6 @@ websockets
 jinja2
 flask
 flask-socketio
-gevent-websocket
 evdev
 # alternative to pyaudio
 sounddevice
@@ -13,7 +12,7 @@ sounddevice
 # RPi.GPIO
 
 # installed w/ apt:
-# gevent
+# eventlet
 # pyaudio
 # numpy
 

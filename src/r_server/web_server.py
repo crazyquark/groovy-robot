@@ -1,6 +1,9 @@
 '''
     Web server implementation
 '''
+import eventlet
+eventlet.monkey_patch()
+
 from flask import Flask, render_template, request, Response
 from flask_socketio import SocketIO, emit
 from multiprocessing import Queue
