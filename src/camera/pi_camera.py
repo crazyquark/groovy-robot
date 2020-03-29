@@ -58,7 +58,7 @@ class PiCamera(Camera):
         # result = cv2.imencode('.jpg', image)
         # data = np.array(result[1], dtype=np.uint8).tostring()
 
-        return data
+        return image
 
     def detect_faces(self, image):
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -141,7 +141,7 @@ class PiCamera(Camera):
         if self.stream:
             (success, self.frame) = self.stream.read()
             if success:
-                self.process_frame(self.frame, False)
+                self.frame = self.process_frame(self.frame, False)
             else:
                 self.frame = None
         
