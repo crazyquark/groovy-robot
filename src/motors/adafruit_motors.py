@@ -42,7 +42,7 @@ class AdafruitMotors(Motors):
 
         if self.running_on_arm:
             # default I2C address is 0x60
-            self.motors = MotorKit()
+            self.motors = MotorKit(steppers_microsteps=32)
 
             # dc motors
             self.right_motor = self.motors.motor1
@@ -61,7 +61,7 @@ class AdafruitMotors(Motors):
             self.motors = None
 
     def step(self, dir):
-        self.stepper.onestep(direction=dir)
+        self.stepper.onestep(direction=dir, style=stepper.DOUBLE)
 
     def control_motors(self, power_left, power_right):
         if power_left == power_right == 0:

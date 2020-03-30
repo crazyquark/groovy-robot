@@ -39,7 +39,7 @@ class RobotProcess(DebuggableProcess):
         # self.setupBatterySafeStop()
 
         # Camera control
-        self.camera_state = 0
+        self.camera_state = CameraMovement.Idle
 
         # Adjust for veering left
         self.motors = AdafruitMotors(running_on_arm = self.running_on_arm)
