@@ -9,11 +9,11 @@ class CameraMovement(object):
     '''
         Enumeration of camera directions
     '''
-    Up, Down, Idle = [1, -1, 0]
+    Up, Down, Idle = range(10, 13)
 
 
 class Throttle(object):
     '''
         Simple enumerations of the directions signs: up or down
     '''
-    Up, Down = (1, -1)
+    Up, Down = range(20, 22)
