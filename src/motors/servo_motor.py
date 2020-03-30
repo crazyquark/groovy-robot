@@ -1,4 +1,4 @@
-from Adafruit_MotorHAT.Adafruit_PWM_Servo_Driver import PWM
+import Adafruit_PCA9685
 
 class ServoMotor:
     '''
@@ -40,7 +40,7 @@ class ServoMotor:
         Activates this servo; always do this first
         '''
         if not self.pwm:
-            self.pwm = PWM(self.addr)
+            self.pwm = Adafruit_PCA9685.PCA9685(address=self.addr)
             self.pwm.setPWMFreq(self.frequency)
             self.pwm.setPWM(self.channel, 4096, 0)
 
