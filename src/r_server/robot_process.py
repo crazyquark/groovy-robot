@@ -79,9 +79,9 @@ class RobotProcess(DebuggableProcess):
             try:
                 # self.get_sbc_status()
                 # Camera stepper control
-                # if self.camera_state != CameraMovement.Idle:
-                #     # Tilt camera up or down
-                #     self.motors.step(StepperDirections.Forward if self.camera_state == CameraMovement.Up else StepperDirections.Backward)
+                if self.camera_state != CameraMovement.Idle:
+                    # Tilt camera up or down
+                    self.motors.step(StepperDirections.Forward if self.camera_state == CameraMovement.Up else StepperDirections.Backward)
                 try:
                     if (not self.queue.empty()):
                         message = self.queue.get_nowait()
@@ -149,6 +149,8 @@ class RobotProcess(DebuggableProcess):
             self.process_press(message)
         elif message == Throttle.Down or message == Throttle.Up:
             self.speed_adjust(message)
+        elif message in [CameraMovement.Up, CameraMovement.Down, CameraMovement.Idle]:
+            self.camera_state = message
 
     def process_press(self, direction):
         '''
