@@ -122,7 +122,7 @@ class RobotClient {
             }
         });
 
-        // const worker = stream_mic();
+        const worker = this._streamMic();
     }
 
     _sendKey = (keyName) => {
@@ -172,7 +172,7 @@ class RobotClient {
                 console.error(reason);
             });
 
-        const micWorker = new Worker('/static/ws-worker.js');
+        const micWorker = new Worker('/static/audio-worker.js');
 
         let nextTime = audioContext.currentTime;
         micWorker.onmessage = (event) => {

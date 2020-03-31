@@ -9,9 +9,8 @@ from flask_socketio import SocketIO, emit
 from multiprocessing import Queue
 
 from r_server.robot_process import RobotProcess, Directions, CameraMovement, Throttle
-# from microphone.mic_capture import MicCapture
 
-# from microphone.audio_process import AudioProcess
+from microphone.audio_process import AudioProcess
 from camera.camera_process import CameraProcess
 from camera.pi_camera import PiCamera
 from camera.camera import Camera
@@ -26,7 +25,7 @@ app.config['SECRET_KEY'] = 'STZjV3G7'
 socketio = SocketIO(app, message_queue='redis://')
 
 # Start secondary processes
-# app.mic_queue = AudioProcess.start_capture()
+app.mic_queue = AudioProcess.start_capture()
 app.camera_queue = CameraProcess.start_camera(camera_type=PiCamera if running_on_arm else Camera)
 app.robot_queue = RobotProcess.start_robot(running_on_arm)
 
@@ -111,6 +110,20 @@ def video():
     '''
     return Response(gen_frame(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
+
+def gen_pcm():
+    while True:
+        if not app.mic_queue.empty():
+            raw_pcm = app.mic_queue.get_nowait()
+            if not raw_pcm is None:
+                yield(bytearray(raw_pcm))
+
+@app.route('/audio')
+def audio():
+    '''
+        Audio stream, raw
+    '''
+    return Response(gen_pcm())
 
 @app.route('/halt')
 def halt():
