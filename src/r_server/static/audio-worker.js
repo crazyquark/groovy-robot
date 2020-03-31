@@ -1,10 +1,13 @@
 
 onmessage = function () {
-    fetch('/audio').then(response => response.body)
-    .then(rs => {
-        const reader = rs.getReader();
-        const processData = (done, data) => {
-            postMessage(new Float32Array(data));
+    fetch('/audio')
+    .then(response => {
+        const reader = response.body.getReader();
+        const processData = ({done, value}) => {
+            const data = new Float32Array(value)
+            if (data.length > 0) {
+                postMessage(data);
+            }
 
             if (done) {
                 return;
@@ -13,6 +16,6 @@ onmessage = function () {
             return reader.read().then(processData);
         };
 
-        reader.read.then(processData);
+        reader.read().then(processData);
     });
 };

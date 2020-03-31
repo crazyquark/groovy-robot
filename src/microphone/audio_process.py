@@ -17,14 +17,6 @@ class AudioProcess(DebuggableProcess):
 
         while True:
             frame = mic.queue.get()
-
-            if self.queue.full():
-                while not self.queue.empty():
-                    try:
-                        self.queue.get_nowait()
-                    except:
-                        # empty queue error
-                        break
             try:
                 self.queue.put_nowait(frame)
             except:
