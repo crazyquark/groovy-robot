@@ -47,8 +47,18 @@ app.robot_queue = RobotProcess.start_robot(running_on_arm)
 
 
 @socketio.on('connect', namespace='/control')
-def client_connect():
+def control_connect():
     emit('status', 'connected')
+
+
+@socketio.on('connect', namespace='/audio')
+def audio_connect():
+    emit('status', 'connected')
+    while True:
+        if not app.mic_queue.empty():
+            pcm_frame = app.mic_queue.get_nowait()
+            if not pcm_frame is None:
+                emit('data', pcm_frame)
 
 
 @socketio.on('control_key', namespace='/control')
@@ -110,20 +120,6 @@ def video():
     '''
     return Response(gen_frame(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
-
-def gen_pcm():
-    while True:
-        if not app.mic_queue.empty():
-            raw_pcm = app.mic_queue.get_nowait()
-            if not raw_pcm is None:
-                yield(bytearray(raw_pcm))
-
-@app.route('/audio')
-def audio():
-    '''
-        Audio stream, raw
-    '''
-    return Response(gen_pcm())
 
 @app.route('/halt')
 def halt():

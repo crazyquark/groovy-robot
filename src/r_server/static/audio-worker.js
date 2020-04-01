@@ -1,21 +1,11 @@
 
-onmessage = function () {
-    fetch('/audio')
-    .then(response => {
-        const reader = response.body.getReader();
-        const processData = ({done, value}) => {
-            const data = new Float32Array(value)
-            if (data.length > 0) {
-                postMessage(data);
-            }
+onmessage = function (io) {
+    const audioWebsocket = io('/audio');
+    audioWebsocket.on('connect', () => {
+        console.log('Connected to audio socket');
+    });
 
-            if (done) {
-                return;
-            }
-    
-            return reader.read().then(processData);
-        };
-
-        reader.read().then(processData);
+    audioWebsocket.on('data', (event) => {
+        console.log(event);
     });
 };

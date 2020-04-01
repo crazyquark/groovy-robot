@@ -122,7 +122,7 @@ class RobotClient {
             }
         });
 
-        const worker = this._streamMic();
+        this._streamMic();
     }
 
     _sendKey = (keyName) => {
@@ -161,38 +161,49 @@ class RobotClient {
     _streamMic() {
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
         this._webAudioTouchUnlock(audioContext).then(function (unlocked) {
-            if (unlocked) {
-                // AudioContext was unlocked from an explicit user action,
-                // sound should start playing now
-            } else {
-                // There was no need for unlocking, devices other than iOS
-            }
-        },
+                if (unlocked) {
+                    // AudioContext was unlocked from an explicit user action,
+                    // sound should start playing now
+                } else {
+                    // There was no need for unlocking, devices other than iOS
+                }
+            },
             function (reason) {
                 console.error(reason);
             });
 
-        const micWorker = new Worker('/static/audio-worker.js');
+        // const micWorker = new Worker('/static/audio-worker.js');
+        const audioWebsocket = io('/audio');
+        audioWebsocket.on('connect', () => {
+            console.log('Connected to audio socket');
+        });
 
         let nextTime = audioContext.currentTime;
-        micWorker.onmessage = (event) => {
-            const data = event.data;
-            const buffer = audioContext.createBuffer(1, data.length, audioContext.sampleRate);
-            buffer.copyToChannel(data, 0);
+        audioWebsocket.on('data', (event) => {
+            nextTime = this._playAudio(event, audioContext, nextTime);
+        });
 
-            const source = audioContext.createBufferSource();
-            source.buffer = buffer;
-
-            source.connect(audioContext.destination);
-            source.start(nextTime);
-
-            nextTime += buffer.duration;
-        };
+        // micWorker.onmessage = (event) => {
+        // };
 
         // Start stream
-        micWorker.postMessage({});
+        // micWorker.postMessage(io);
 
-        return micWorker;
+        // return micWorker;
+    }
+
+    _playAudio(event, audioContext, nextTime) {
+        const data = event.data;
+        const buffer = audioContext.createBuffer(1, data.length, audioContext.sampleRate);
+        buffer.copyToChannel(data, 0);
+
+        const source = audioContext.createBufferSource();
+        source.buffer = buffer;
+        source.connect(audioContext.destination);
+        source.start(nextTime);
+        nextTime += buffer.duration;
+
+        return nextTime;
     }
 
     _webAudioTouchUnlock(context) {
