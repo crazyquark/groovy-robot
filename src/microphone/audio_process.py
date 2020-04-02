@@ -18,7 +18,7 @@ class AudioProcess(DebuggableProcess):
         while True:
             frame = mic.queue.get()
             try:
-                self.queue.put_nowait(frame)
+                self.queue.put_nowait(frame.tolist())
             except:
                 # full exception happens because empty and full are unreliable
                 continue

@@ -176,11 +176,12 @@ class RobotClient {
         const audioWebsocket = io('/audio');
         audioWebsocket.on('connect', () => {
             console.log('Connected to audio socket');
+            audioWebsocket.emit('ready', true);
         });
 
         let nextTime = audioContext.currentTime;
-        audioWebsocket.on('data', (event) => {
-            nextTime = this._playAudio(event, audioContext, nextTime);
+        audioWebsocket.on('data', (data) => {
+            nextTime = this._playAudio(DataView, audioContext, nextTime);
         });
 
         // micWorker.onmessage = (event) => {
@@ -192,8 +193,7 @@ class RobotClient {
         // return micWorker;
     }
 
-    _playAudio(event, audioContext, nextTime) {
-        const data = event.data;
+    _playAudio(data, audioContext, nextTime) {
         const buffer = audioContext.createBuffer(1, data.length, audioContext.sampleRate);
         buffer.copyToChannel(data, 0);
 

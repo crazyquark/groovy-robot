@@ -5,6 +5,14 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "firefox",
+            "request": "launch",
+            "reAttach": true,
+            "name": "Launch 192.168.1.165",
+            "url": "http://192.168.1.165:8080/",
+            "webRoot": "${workspaceFolder}/src/r_server/"
+        },
+        {
             "name": "Debug server",
             "type": "python",
             "request": "launch",
@@ -14,44 +22,6 @@
                 "GEVENT_SUPPORT": "True"
             }
         },
-        {
-            "name": "Attach camera",
-            "type": "python",
-            "request": "attach",
-            "port": 1212,
-            "host": "192.168.1.165",
-            "pathMappings": [
-                {
-                    "localRoot": "${workspaceFolder}/src",
-                    "remoteRoot": "/home/pi/groovy-robot/src"
-                }
-            ]
-        },
-        {
-            "name": "Attach audio",
-            "type": "python",
-            "request": "attach",
-            "port": 1234,
-            "host": "192.168.1.165",
-            "pathMappings": [
-                {
-                    "localRoot": "${workspaceFolder}/src",
-                    "remoteRoot": "/home/pi/groovy-robot/src"
-                }
-            ]
-        },
-        {
-            "name": "Attach robot",
-            "type": "python",
-            "request": "attach",
-            "port": 7878,
-            "host": "192.168.1.165",
-            "pathMappings": [
-                {
-                    "localRoot": "${workspaceFolder}/src",
-                    "remoteRoot": "/home/pi/groovy-robot/src"
-                }
-            ]
-        }
+
     ]
 }
