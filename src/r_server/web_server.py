@@ -55,16 +55,6 @@ def control_connect():
 def audio_connect():
     emit('status', 'connected')
 
-@socketio.on('ready', namespace='/audio')
-def audio_ready(message):
-    while True:
-        try:
-            pcm_frame = app.mic_queue.get_nowait()
-            if not pcm_frame is None:
-                emit('data', pcm_frame)
-        except:
-            continue
-
 @socketio.on('control_key', namespace='/control')
 def on_control_key(message):
     if message == 'w':

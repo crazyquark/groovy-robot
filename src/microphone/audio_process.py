@@ -2,13 +2,13 @@ from multiprocessing import Queue
 
 from debug.debuggable_process import DebuggableProcess
 from .mic_capture import MicCapture, MAX_FRAMES
-
+from flask_socketio import SocketIO
 
 class AudioProcess(DebuggableProcess):
     def __init__(self, queue):
         super(AudioProcess, self).__init__()
         self.queue = queue
-
+        self.socket = SocketIO(message_queue='redis://')
     def run(self):
         # self.enable_debug(port=1234)
         self.enable_logging('microphone')
@@ -17,11 +17,12 @@ class AudioProcess(DebuggableProcess):
 
         while True:
             frame = mic.queue.get()
-            try:
-                self.queue.put_nowait(frame.tolist())
-            except:
+            # try:
+                # self.queue.put_nowait(frame.tolist())
+            self.socket.emit('data', frame.tolist(), namespace='/audio')
+            # except:
                 # full exception happens because empty and full are unreliable
-                continue
+                # continue
 
     @classmethod
     def start_capture(cls):

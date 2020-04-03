@@ -176,7 +176,6 @@ class RobotClient {
         const audioWebsocket = io('/audio');
         audioWebsocket.on('connect', () => {
             console.log('Connected to audio socket');
-            audioWebsocket.emit('ready', true);
         });
 
         let nextTime = audioContext.currentTime;
