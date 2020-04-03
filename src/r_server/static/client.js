@@ -180,7 +180,7 @@ class RobotClient {
 
         let nextTime = audioContext.currentTime;
         audioWebsocket.on('data', (data) => {
-            nextTime = this._playAudio(DataView, audioContext, nextTime);
+            nextTime = this._playAudio(data, audioContext, nextTime);
         });
 
         // micWorker.onmessage = (event) => {
@@ -193,6 +193,7 @@ class RobotClient {
     }
 
     _playAudio(data, audioContext, nextTime) {
+        data = new Float32Array(data)
         const buffer = audioContext.createBuffer(1, data.length, audioContext.sampleRate);
         buffer.copyToChannel(data, 0);
 
