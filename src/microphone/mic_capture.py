@@ -12,7 +12,7 @@ class MicCapture:
     ''' Captures mic input as audio chunks '''
 
     def __init__(self):
-        self.queue = queue.Queue(maxsize=MAX_FRAMES)
+        # self.queue = queue.Queue(maxsize=MAX_FRAMES)
 
         self.alsaMessageSuppress()
         self.audio = pyaudio.PyAudio()
@@ -20,14 +20,11 @@ class MicCapture:
         self.stream = self.audio.open(format=FORMAT,
             rate=RATE, input=True, 
             channels=CHANNELS,
-            frames_per_buffer=CHUNK,
-            stream_callback=self.stream_callback)
-        self.stream.start_stream()
+            frames_per_buffer=CHUNK)
 
-    def stream_callback(self, in_data, frame_count, time_info, status_flags):
-        ''' Get an audio chunk from internal stream '''
-        self.queue.put(in_data)
-        return (in_data, pyaudio.paContinue)
+    def get_frame(self):
+        frame = self.stream.read(CHUNK)
+        return frame
 
     def close(self):
         ''' Close stream '''
@@ -38,7 +35,7 @@ class MicCapture:
     def alsaMessageSuppress(self):
         ERROR_HANDLER_FUNC = CFUNCTYPE(None, c_char_p, c_int, c_char_p, c_int, c_char_p)
         def py_error_handler(filename, line, function, err, fmt):
-            print('Debug Message Suppressed')
+            print(err)
         
         c_error_handler = ERROR_HANDLER_FUNC(py_error_handler)
         asound = cdll.LoadLibrary('libasound.so.2')

@@ -5,9 +5,8 @@ from .mic_capture import MicCapture, MAX_FRAMES
 from flask_socketio import SocketIO
 
 class AudioProcess(DebuggableProcess):
-    def __init__(self, queue):
+    def __init__(self):
         super(AudioProcess, self).__init__()
-        self.queue = queue
         self.socket = SocketIO(message_queue='redis://')
     def run(self):
         # self.enable_debug(port=1234)
@@ -17,7 +16,7 @@ class AudioProcess(DebuggableProcess):
 
         while True:
             try:
-                frame = mic.queue.get()
+                frame = mic.get_frame()
                 # self.queue.put_nowait(frame.tolist())
                 self.socket.emit('data', frame, namespace='/audio')
             except Exception as ex:
@@ -31,11 +30,9 @@ class AudioProcess(DebuggableProcess):
         if hasattr(cls, 'instance'):
             return cls.queue
 
-        cls.queue = Queue(MAX_FRAMES)
-        cls.instance = AudioProcess(cls.queue)
+        # cls.queue = Queue(MAX_FRAMES)
+        cls.instance = AudioProcess()
         cls.instance.start()
-
-        return cls.queue
 
     @classmethod
     def stop_capture(cls):

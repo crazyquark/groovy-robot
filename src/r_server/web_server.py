@@ -25,7 +25,7 @@ app.config['SECRET_KEY'] = 'STZjV3G7'
 socketio = SocketIO(app, message_queue='redis://')
 
 # Start secondary processes
-app.mic_queue = AudioProcess.start_capture()
+AudioProcess.start_capture()
 app.camera_queue = CameraProcess.start_camera(camera_type=PiCamera if running_on_arm else Camera)
 app.robot_queue = RobotProcess.start_robot(running_on_arm)
 
