@@ -6,7 +6,7 @@ flask
 flask-socketio
 evdev
 # alternative to pyaudio
-sounddevice
+# sounddevice
 # disable for odroid:
 # luma.oled
 # RPi.GPIO
