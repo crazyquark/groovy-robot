@@ -16,13 +16,14 @@ class AudioProcess(DebuggableProcess):
         mic = MicCapture()
 
         while True:
-            frame = mic.queue.get()
-            # try:
+            try:
+                frame = mic.queue.get()
                 # self.queue.put_nowait(frame.tolist())
-            self.socket.emit('data', frame.tolist(), namespace='/audio')
-            # except:
+                self.socket.emit('data', frame, namespace='/audio')
+            except Exception as ex:
                 # full exception happens because empty and full are unreliable
                 # continue
+                print(ex)
 
     @classmethod
     def start_capture(cls):
