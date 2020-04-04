@@ -14,7 +14,7 @@ class MicCapture:
 
     def __init__(self):
         self.stream = sd.InputStream(samplerate=RATE, 
-            channels=CHANNELS, device=0, 
+            channels=CHANNELS, device=2, 
             blocksize=CHUNK,
             callback=self.stream_callback)
 
