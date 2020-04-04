@@ -1,8 +1,12 @@
 '''
     Web server implementation
 '''
+# See https://github.com/eventlet/eventlet/issues/592
 import eventlet
 eventlet.monkey_patch()
+import __original_module_threading as orig_threading
+import threading
+orig_threading.current_thread.__globals__['_active'] = threading._active
 
 from flask import Flask, render_template, request, Response
 from flask_socketio import SocketIO, emit
@@ -23,11 +27,6 @@ running_on_arm = uname().machine != 'x86_64'
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'STZjV3G7'
 socketio = SocketIO(app, message_queue='redis://')
-
-# Start secondary processes
-AudioProcess.start_capture()
-app.camera_queue = CameraProcess.start_camera(camera_type=PiCamera if running_on_arm else Camera)
-app.robot_queue = RobotProcess.start_robot(running_on_arm)
 
 # @app.websocket('/mic')
 # async def mic_websocket(_, socket):
@@ -131,4 +130,9 @@ def halt():
 
 
 if __name__ == '__main__':
+    # Start secondary processes
+    app.camera_queue = CameraProcess.start_camera(camera_type=PiCamera if running_on_arm else Camera)
+    app.robot_queue = RobotProcess.start_robot(running_on_arm)
+    AudioProcess.start_capture()
+
     socketio.run(app, host='0.0.0.0', port=8080, debug=False)
