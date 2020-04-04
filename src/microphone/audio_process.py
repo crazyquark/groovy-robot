@@ -12,12 +12,11 @@ class AudioProcess(DebuggableProcess):
         # self.enable_debug(port=1234)
         self.enable_logging('microphone')
 
-        mic = MicCapture()
+        self.mic = MicCapture()
 
         while True:
             try:
-                frame = mic.get_frame()
-                # self.queue.put_nowait(frame.tolist())
+                frame = self.mic.queue.get_nowait().tobytes()
                 self.socket.emit('data', frame, namespace='/audio')
             except Exception as ex:
                 # full exception happens because empty and full are unreliable
@@ -32,6 +31,7 @@ class AudioProcess(DebuggableProcess):
 
         # cls.queue = Queue(MAX_FRAMES)
         cls.instance = AudioProcess()
+        cls.instance.daemon = True
         cls.instance.start()
 
     @classmethod
