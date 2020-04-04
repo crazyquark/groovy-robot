@@ -1,43 +1,31 @@
 import queue
-import pyaudio
-from ctypes import *
+import time
 
-FORMAT = pyaudio.paInt16
+import sounddevice as sd
+
+SAMPLEWIDTH = 2 # int16
 CHANNELS = 1
 RATE = 44100
 CHUNK = 4096
-MAX_FRAMES = 20
+MAX_FRAMES = 5
 
 class MicCapture:
     ''' Captures mic input as audio chunks '''
 
     def __init__(self):
-        # self.queue = queue.Queue(maxsize=MAX_FRAMES)
+        self.stream = sd.InputStream(samplerate=RATE, 
+            channels=CHANNELS, device=0, 
+            blocksize=CHUNK,
+            callback=self.stream_callback)
 
-        self.alsaMessageSuppress()
-        self.audio = pyaudio.PyAudio()
-        
-        self.stream = self.audio.open(format=FORMAT,
-            rate=RATE, input=True, 
-            channels=CHANNELS,
-            frames_per_buffer=CHUNK)
+        self.queue = queue.Queue()
 
-    def get_frame(self):
-        frame = self.stream.read(CHUNK)
-        return frame
+        self.stream.start()
+
+    def stream_callback(self, in_data, frame_count, time_info, status):
+        ''' Get an audio chunk from internal stream '''
+        self.queue.put(in_data.copy())
 
     def close(self):
         ''' Close stream '''
-        self.stream.stop_stream()
         self.stream.close()
-        self.audio.terminate()
-
-    def alsaMessageSuppress(self):
-        ERROR_HANDLER_FUNC = CFUNCTYPE(None, c_char_p, c_int, c_char_p, c_int, c_char_p)
-        def py_error_handler(filename, line, function, err, fmt):
-            print(err)
-        
-        c_error_handler = ERROR_HANDLER_FUNC(py_error_handler)
-        asound = cdll.LoadLibrary('libasound.so.2')
-        # Set error handler
-        asound.snd_lib_error_set_handler(c_error_handler)
