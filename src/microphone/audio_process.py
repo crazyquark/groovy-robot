@@ -31,7 +31,6 @@ class AudioProcess(DebuggableProcess):
 
         # cls.queue = Queue(MAX_FRAMES)
         cls.instance = AudioProcess()
-        cls.instance.daemon = True
         cls.instance.start()
 
     @classmethod

@@ -28,15 +28,15 @@ class PiCamera(Camera):
     def load_model(self):
         # based on: https://github.com/djmv/MobilNet_SSD_opencv
         # MIT License
-        self.cv_classnames = {0: 'background',
-                              1: 'aeroplane', 2: 'bicycle', 3: 'bird', 4: 'boat',
-                              5: 'bottle', 6: 'bus', 7: 'car', 8: 'cat', 9: 'chair',
-                              10: 'cow', 11: 'diningtable', 12: 'dog', 13: 'horse',
-                              14: 'motorbike', 15: 'person', 16: 'pottedplant',
-                              17: 'sheep', 18: 'sofa', 19: 'train', 20: 'tvmonitor'}
+        # self.cv_classnames = {0: 'background',
+        #                       1: 'aeroplane', 2: 'bicycle', 3: 'bird', 4: 'boat',
+        #                       5: 'bottle', 6: 'bus', 7: 'car', 8: 'cat', 9: 'chair',
+        #                       10: 'cow', 11: 'diningtable', 12: 'dog', 13: 'horse',
+        #                       14: 'motorbike', 15: 'person', 16: 'pottedplant',
+        #                       17: 'sheep', 18: 'sofa', 19: 'train', 20: 'tvmonitor'}
 
-        self.net = cv2.dnn.readNetFromCaffe(
-            'cv/MobileNetSSD_deploy.prototxt', 'cv/MobileNetSSD_deploy.caffemodel')
+        # self.net = cv2.dnn.readNetFromCaffe(
+        #     'cv/MobileNetSSD_deploy.prototxt', 'cv/MobileNetSSD_deploy.caffemodel')
 
         # Based on https://github.com/shantnu/FaceDetect/blob/master/face_detect_cv3.py
         self.faces_detector = cv2.CascadeClassifier(

@@ -8,6 +8,7 @@ class DebuggableProcess(Process):
     '''
     def __init__(self):
         super(DebuggableProcess, self).__init__()
+        self.daemon = True
 
     def enable_logging(self, name):
         sys.stdout = open(name + '.out', 'a')
