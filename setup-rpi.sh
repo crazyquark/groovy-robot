@@ -27,6 +27,9 @@ sudo apt install -y pkg-config
 sudo apt install -y python3-libgpiod
 sudo apt install -y swig
 sudo apt install -y redis
+sudo apt install -y libatlas-base-dev
+sudo apt install -y libatlas-base-dev
+
 # maybe:
 # sudo apt install -y python3-opencv
 # sudo apt install -y bluez
