@@ -18,7 +18,6 @@ sudo apt install -y python3-evdev
 sudo apt install -y python3-pyaudio
 sudo apt install -y python3-cffi
 sudo apt install -y python3-eventlet
-sudo apt install -y python3-opencv
 sudo apt install -y python3-redis
 sudo apt install -y libusb-1.0.0-dev
 sudo apt install -y joystick
@@ -29,6 +28,7 @@ sudo apt install -y swig
 sudo apt install -y redis
 sudo apt install -y libatlas-base-dev
 sudo apt install -y libatlas-base-dev
+sudo apt install -y libjasper1
 
 # maybe:
 # sudo apt install -y python3-opencv
