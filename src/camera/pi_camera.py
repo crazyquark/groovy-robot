@@ -52,8 +52,8 @@ class PiCamera(Camera):
             self.detect_faces(image)
         
         # print FPS on image
-        cv2.putText(image, str(self.fps), (0, 12),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0))
+        # cv2.putText(image, str(self.fps), (0, 12),
+        #             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0))
 
         # result = cv2.imencode('.jpg', image)
         # data = np.array(result[1], dtype=np.uint8).tostring()

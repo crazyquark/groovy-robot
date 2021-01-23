@@ -29,6 +29,6 @@ class Camera:
         if self.frame is None:
             self.frame = self.dummy_frame()
 
-        self.compute_fps()
+        # self.compute_fps()
 
         return self.frame
