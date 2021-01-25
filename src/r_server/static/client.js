@@ -108,12 +108,16 @@ class RobotClient {
         this.socket = io('/control');
         this.socket.on('connect', () => {
             console.log('Connected to control socket');
+
+            // Start image processing
+            this._setupAI();
         });
         this.socket.on('disconnect', () => {
             console.log('Disconnected from control socket');
 
             this.connect();
             // worker.terminate();
+
         });
 
         this.socket.on('status', (event) => {
@@ -161,13 +165,13 @@ class RobotClient {
     _streamMic() {
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
         this._webAudioTouchUnlock(audioContext).then(function (unlocked) {
-                if (unlocked) {
-                    // AudioContext was unlocked from an explicit user action,
-                    // sound should start playing now
-                } else {
-                    // There was no need for unlocking, devices other than iOS
-                }
-            },
+            if (unlocked) {
+                // AudioContext was unlocked from an explicit user action,
+                // sound should start playing now
+            } else {
+                // There was no need for unlocking, devices other than iOS
+            }
+        },
             function (reason) {
                 console.error(reason);
             });
@@ -204,6 +208,22 @@ class RobotClient {
         nextTime += buffer.duration;
 
         return nextTime;
+    }
+
+    _setupAI() {
+        const video = document.getElementById('video');
+
+        // Load model
+        cocoSsd.load().then(model => {
+            // Detect objects in the image.
+            setInterval(() => {
+                model.detect(video).then(predictions => {
+                    if (predictions.length > 0) {
+                        console.log('Predictions: ', predictions);
+                    }
+                });
+            }, 1000);
+        });
     }
 
     _webAudioTouchUnlock(context) {

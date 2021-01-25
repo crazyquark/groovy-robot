@@ -7,11 +7,16 @@
     <link rel="stylesheet" href="/static/node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/style.css">
 
-    <script src="/static/node_modules/nipplejs/dist/nipplejs.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="/static/node_modules/popper.js/dist/umd/popper.min.js"></script>
     <script src="/static/node_modules/jquery/dist/jquery.min.js"></script>
     <script src="/static/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="/static/node_modules/socket.io-client/dist/socket.io.js"></script>
+    <script src="/static/node_modules/nipplejs/dist/nipplejs.js"></script>
     <script src="/static/node_modules/@tensorflow/tfjs/dist/tf.min.js"></script>
+    <script src="/static/node_modules/@tensorflow-models/coco-ssd/dist/coco-ssd.min.js"></script>
+    
     <script src="/static/client.js"></script>
 
 
@@ -29,7 +34,7 @@
         </div>
         <button type="button" class="btn btn-primary" id="cam+">Camera + (e)</button>
         <button type="button" class="btn btn-primary" id="cam-">Camera - (q)</button>
-        <br/>
+        <br />
         <button type="button" class="btn btn-primary" id="spd+">Speed + (x)</button>
         <button type="button" class="btn btn-primary" id="spd-">Speed - (z)</button>
     </div>
