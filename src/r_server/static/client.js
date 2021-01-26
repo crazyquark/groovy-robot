@@ -233,9 +233,9 @@ class RobotClient {
 
             // Detect objects in the image.
             const redraw = () => {
-                model.detect(video).then(predictions => {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+                model.detect(video).then(predictions => {
                     for (const prediction of predictions) {
                         // {bbox, class, score}
                         const x = prediction.bbox[0];
@@ -255,12 +255,13 @@ class RobotClient {
 
                         ctx.fillStyle = 'red';
                         ctx.fillText(prediction.class, x + 2, y + 2);
-
                     }
+
+                    requestAnimationFrame(redraw);
                 });
             };
-        
-            setInterval(redraw, 100);
+            
+            requestAnimationFrame(redraw);
         });
     }
 
