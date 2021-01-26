@@ -226,18 +226,41 @@ class RobotClient {
         canvas.height = 480;
 
         // Load model
-        cocoSsd.load().then(model => {
-            // Detect objects in the image.
-            setInterval(() => {
-                model.detect(video).then(predictions => {
-                    if (predictions.length > 0) {
-                        console.log('Predictions: ', predictions);
+        cocoSsd.load('lite_mobilenet_v2').then(model => {
+            const font = "16px sans-serif";
+            ctx.font = font;
+            ctx.textBaseline = 'top';
 
-                        ctx.fillStyle = 'blue';
-                        ctx.fillText('Found', 30, 30);
+            // Detect objects in the image.
+            const redraw = () => {
+                model.detect(video).then(predictions => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                    for (const prediction of predictions) {
+                        // {bbox, class, score}
+                        const x = prediction.bbox[0];
+                        const y = prediction.bbox[1];
+                        const width = prediction.bbox[2];
+                        const height = prediction.bbox[3];
+
+                        ctx.strokeStyle = 'blue';
+                        ctx.strokeRect(x, y, width, height);
+
+                        prediction.class = prediction.class.toUpperCase();
+
+                        ctx.fillStyle = 'green';
+                        const textWidth = ctx.measureText(prediction.class).width;
+                        const textHeight = parseInt(font, 10); // base 10
+                        ctx.fillRect(x, y, textWidth + 4, textHeight + 4);
+
+                        ctx.fillStyle = 'red';
+                        ctx.fillText(prediction.class, x + 2, y + 2);
+
                     }
                 });
-            }, 1000);
+            };
+        
+            setInterval(redraw, 100);
         });
     }
 
