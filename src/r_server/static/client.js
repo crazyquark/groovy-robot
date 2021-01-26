@@ -102,15 +102,15 @@ class RobotClient {
         });
 
         this._setupKeyHandlers();
+
+        // Start image processing
+        this._setupAI();
     }
 
     connect() {
         this.socket = io('/control');
         this.socket.on('connect', () => {
             console.log('Connected to control socket');
-
-            // Start image processing
-            this._setupAI();
         });
         this.socket.on('disconnect', () => {
             console.log('Disconnected from control socket');
@@ -212,8 +212,16 @@ class RobotClient {
 
     _setupAI() {
         const canvas = document.getElementById('overlay');
+        if (!canvas) {
+            // If the canvas was not yet loaded, try again later
+            setTimeout(() => {
+                this._setupAI();
+            }, 500);
+
+            return;
+        }
+
         const ctx = canvas.getContext('2d');
-        
         canvas.width = 640;
         canvas.height = 480;
 
@@ -224,9 +232,9 @@ class RobotClient {
                 model.detect(video).then(predictions => {
                     if (predictions.length > 0) {
                         console.log('Predictions: ', predictions);
-                        
+
                         ctx.fillStyle = 'blue';
-                        ctx.fillText('Found', 30,30);
+                        ctx.fillText('Found', 30, 30);
                     }
                 });
             }, 1000);
