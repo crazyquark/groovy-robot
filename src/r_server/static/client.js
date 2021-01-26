@@ -211,7 +211,11 @@ class RobotClient {
     }
 
     _setupAI() {
-        const video = document.getElementById('video');
+        const canvas = document.getElementById('overlay');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = 640;
+        canvas.height = 480;
 
         // Load model
         cocoSsd.load().then(model => {
@@ -220,6 +224,9 @@ class RobotClient {
                 model.detect(video).then(predictions => {
                     if (predictions.length > 0) {
                         console.log('Predictions: ', predictions);
+                        
+                        ctx.fillStyle = 'blue';
+                        ctx.fillText('Found', 30,30);
                     }
                 });
             }, 1000);

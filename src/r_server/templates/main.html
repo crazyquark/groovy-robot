@@ -16,7 +16,7 @@
     <script src="/static/node_modules/nipplejs/dist/nipplejs.js"></script>
     <script src="/static/node_modules/@tensorflow/tfjs/dist/tf.min.js"></script>
     <script src="/static/node_modules/@tensorflow-models/coco-ssd/dist/coco-ssd.min.js"></script>
-    
+
     <script src="/static/client.js"></script>
 
 
@@ -28,10 +28,10 @@
 <body>
     <div id="main">
         <div id="camera">
-            <center>
-                <img id="video" src="/video"><br>
-            </center>
+            <img id="video" src="/video" />
+            <!-- <canvas id="overlay" width="640" height="480"></canvas> -->
         </div>
+        <br />
         <button type="button" class="btn btn-primary" id="cam+">Camera + (e)</button>
         <button type="button" class="btn btn-primary" id="cam-">Camera - (q)</button>
         <br />
